@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { post } from '../services/request.service';
+import { withRouter } from 'react-router-dom';
 import 'whatwg-fetch';
 
 class SignInForm extends Component {
@@ -22,15 +24,19 @@ class SignInForm extends Component {
     event.preventDefault();
     const userValues = this.state;
     if (userValues.email === userValues.emailConfirmation) {
-      fetch('/signIn', {
-        method: 'POST',
-        body: userValues
-      });
+      post('/login', userValues)
+        .then(response => {
+          console.log(response);
+          localStorage.setItem('token', response.token);
+          this.props.history.push('/setProfil/' + response.pseudo);
+        })
+        .catch(error => {
+          console.log(error);
+        });
     } else {
       const email = event.target.email;
       const emailConfirmation = event.target.emailConfirmation;
       console.log(email, emailConfirmation);
-      // SET BORDER RED WITH WRONG ENTRIES MESSAGE
     }
   };
 
@@ -91,4 +97,4 @@ class SignInForm extends Component {
   }
 }
 
-export default SignInForm;
+export default withRouter(props => <SignInForm {...props} />);

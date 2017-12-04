@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { post } from '../services/request.service';
+import { withRouter } from 'react-router-dom';
 import 'whatwg-fetch';
 
 class LogInForm extends Component {
@@ -17,10 +19,14 @@ class LogInForm extends Component {
   submitForm = event => {
     event.preventDefault();
     const userValues = this.state;
-    fetch('/login', {
-      method: 'POST',
-      body: userValues
-    });
+    post('/login', userValues)
+      .then(response => {
+        localStorage.setItem('token', response.token);
+        this.props.history.push('/');
+      })
+      .catch(error => {
+        console.log(error);
+      });
   };
 
   render() {
@@ -47,5 +53,4 @@ class LogInForm extends Component {
     );
   }
 }
-
-export default LogInForm;
+export default withRouter(props => <LogInForm {...props} />);
