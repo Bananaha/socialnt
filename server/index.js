@@ -1,9 +1,13 @@
 const express = require('express');
 const cors = require('cors');
-const login = require('./routes/login');
 const bodyParser = require('body-parser');
 const router = express.Router();
 
+const routes = require('./routes');
+
+const dbService = require('./services/db.service');
+
+const URL = 'mongodb://localhost:27017/socialNetwork';
 const app = express();
 
 app
@@ -15,8 +19,16 @@ app
       allowHeader: ['Content-Type']
     })
   )
-  .use('/login', login)
+  .use(routes);
 
-  .listen(5000, () => {
-    console.log('server listening');
-  });
+dbService.connect(URL, (error, db) => {
+  console.log('in db connect');
+  if (error) {
+    console.log('impossible de se connecter à la base de donnée', error);
+  } else {
+    app.listen(5000, () => {
+      console.log('server listening');
+    });
+    console.log('connecté à la base de donnée mongo');
+  }
+});

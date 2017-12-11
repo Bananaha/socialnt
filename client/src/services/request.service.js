@@ -48,11 +48,12 @@ export const get = async (url, params) => {
       url += '?' + paramsToQuery(params);
     }
     const response = await fetch(API_ROOT + url, {
-      method: 'POST',
+      method: 'GET',
       headers: {
         'X-CSRF-Token': localStorage.getItem('token')
       }
     });
+    console.log(response);
     return await handleFetchResponse(response);
   } catch (error) {
     return Promise.reject(error);

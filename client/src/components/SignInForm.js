@@ -24,9 +24,9 @@ class SignInForm extends Component {
     event.preventDefault();
     const userValues = this.state;
     if (userValues.email === userValues.emailConfirmation) {
-      post('/login', userValues)
+      delete userValues.emailConfirmation;
+      post('/login/newUser', userValues)
         .then(response => {
-          console.log(response);
           localStorage.setItem('token', response.token);
           this.props.history.push('/setProfil/' + response.pseudo);
         })

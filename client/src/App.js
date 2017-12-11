@@ -4,7 +4,7 @@ import './App.css';
 import Nav from './components/Nav';
 import Login from './containers/Login';
 import Home from './containers/Home';
-import SetProfil from './components/SetProfil';
+import SetProfil from './containers/SetProfil';
 
 class App extends Component {
   constructor(props) {
