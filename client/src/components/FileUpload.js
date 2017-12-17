@@ -1,7 +1,4 @@
 import React, { Component } from 'react';
-import { post } from '../services/request.service';
-import { withRouter } from 'react-router-dom';
-import 'whatwg-fetch';
 
 class FileUpload extends Component {
   state = {
@@ -19,7 +16,7 @@ class FileUpload extends Component {
     };
 
     reader.readAsDataURL(file);
-    this.props.onChange(event);
+    this.props.onChange(file);
   };
 
   render() {
@@ -27,7 +24,7 @@ class FileUpload extends Component {
       <div>
         <input type="file" onChange={e => this.handleImageChange(e)} />
         <div>
-          <img src={this.state.imagePreviewUrl} />
+          <img style={{width: 200 + "px", height: "auto"}} src={this.state.imagePreviewUrl} alt="avatar"/>
         </div>
       </div>
     );

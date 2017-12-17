@@ -14,13 +14,19 @@ class SetProfil extends Component {
     firstName: '',
     lastName: '',
     email: '',
-    photo: ''
+    avatar: ''
   };
 
   handleChange = key => event => {
     const value = event.target.value;
     this.setState({
       [key]: value
+    });
+  };
+
+  handleFileChange = file => {
+    this.setState({
+      file
     });
   };
 
@@ -36,28 +42,28 @@ class SetProfil extends Component {
           firstName: userInformations.firstName,
           lastName: userInformations.lastName,
           email: userInformations.email,
-          photo: userInformations.photo
+          file: userInformations.file
         });
       })
       .catch(error => {
         console.log(error);
-        this.props.history.push('/');
       });
   }
 
   skipEditingProfil = () => {
-    this.props.history.push('/');
+    this.props.history.push('/profil/' + this.state.pseudo);
   };
 
-  updateProfil = () => {
+  updateProfil = (e) => {
+    e.preventDefault()
     const userValues = this.state;
-    post('/users/editProfil', userValues)
+    post('/users/editProfil', userValues, userValues.file)
       .then(() => {
         console.log('profilUpdate');
-        this.props.history.push('/');
+        this.props.history.push('/profil/' + this.state.pseudo);
       })
       .catch(error => {
-        console.log(error);
+        console.log('ERROR', error);
       });
   };
 
@@ -121,10 +127,10 @@ class SetProfil extends Component {
             Genre :
             <select
               name="sex"
-              value={this.state.sex}
+              value={this.state.sex || ''}
               onChange={this.handleChange('sex')}
             >
-              <option value="choice">--Choisir--</option>
+              <option value="">--Choisir--</option>
               <option value="homme">Homme</option>
               <option value="femme">Femme</option>
             </select>
@@ -150,11 +156,11 @@ class SetProfil extends Component {
             />
           </label>
           <label>
-            Photo de profil :
+            file de profil :
             <FileUpload
-              name="photo"
-              value={this.state.photo}
-              onChange={this.handleChange('photo')}
+              name="file"
+              value={this.state.file}
+              onChange={this.handleFileChange}
             />
           </label>
           <button type="submit">Valider</button>

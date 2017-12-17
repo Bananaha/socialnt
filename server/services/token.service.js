@@ -6,7 +6,7 @@ var tokenDelay = { expiresIn: '1 days' };
 var authentication = (req, res, next) => {
   var token = req.headers['X-CSRF-Token'];
   if (token) {
-    jwt.veryfy(token, secret, (error, decoded) => {
+    jwt.verify(token, secret, (error, decoded) => {
       if (error) {
         return res.json({
           success: false,

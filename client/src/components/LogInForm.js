@@ -22,7 +22,7 @@ class LogInForm extends Component {
     post('/login', userValues)
       .then(response => {
         localStorage.setItem('token', response.token);
-        this.props.history.push('/');
+        this.props.history.push('/profil/' + response.pseudo);
       })
       .catch(error => {
         console.log(error);
@@ -31,25 +31,26 @@ class LogInForm extends Component {
 
   render() {
     return (
-      <form onSubmit={this.submitForm}>
-        <input
-          name="pseudo"
-          value={this.state.pseudo}
-          onChange={this.handleChange('pseudo')}
-          type="text"
-          placeholder="Pseudonyme"
-          required
-        />
-        <input
-          name="password"
-          value={this.state.password}
-          onChange={this.handleChange('password')}
-          type="password"
-          placeholder="Mot de Passe"
-          required
-        />
-        <button type="submit">Valider</button>
-      </form>
+      <div>
+        <form onSubmit={this.submitForm}>
+          <input
+            name="pseudo"
+            onChange={this.handleChange('pseudo')}
+            type="text"
+            placeholder="Pseudonyme"
+            required
+          />
+          <input
+            name="password"
+            onChange={this.handleChange('password')}
+            type="password"
+            placeholder="Mot de Passe"
+            required
+          />
+          <button type="submit">Valider</button>
+        </form>
+      </div>
+
     );
   }
 }

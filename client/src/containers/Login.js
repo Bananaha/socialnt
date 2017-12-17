@@ -15,13 +15,18 @@ class Login extends Component {
     });
   };
 
+  forgotPassword = () => {
+    this.props.history.push('/resetPassword')
+  }
+
   render() {
     return (
       <div className="Login">
-        {this.state.showRegisterForm ? <SignInForm /> : <LogInForm />}
+        {this.state.showRegisterForm ? <SignInForm /> : <div><LogInForm /><button onClick={this.forgotPassword}>Mot de passe oublié ?</button></div>}
         <button onClick={this.toggleRegisterForm}>
           {this.state.showRegisterForm ? 'Se connecter' : "S'inscrire"}
         </button>
+
       </div>
     );
   }

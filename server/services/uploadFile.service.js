@@ -1,13 +1,21 @@
-// const multer = require('multer');
+var multer = require('multer')
 
-// const upload = multer({ dest: 'uploads/' }).single('avatar');
+var storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, './Avatars')
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname)
+  },
+  fileFilter: (req, file, cb) => {
+    if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
+      return cb(new Error('Only image files are allowed!'), false);
+    }
+    cb(null, true);
+  }
+})
 
-// upload(payload => {
-//   if (error) {
-//     console.log('error during file upload');
-//   } else {
-//     console.log(payload);
-//   }
-// });
 
-// module.exports = upload;
+var upload = multer({ storage: storage});
+
+module.exports = upload;

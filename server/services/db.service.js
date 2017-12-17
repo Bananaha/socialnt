@@ -1,4 +1,5 @@
 const mongo = require('mongodb').MongoClient;
+var ObjectId = require('mongodb').ObjectID;
 
 const state = {
   db: null
@@ -43,6 +44,20 @@ const getOne = (collectionName, filters) => {
     });
   });
 };
+// FIND DOCUMENT BY ID
+// @params id 'string'
+
+var getById = id => {
+  return new Promise((resolve, reject) => {
+    state.db.bios.findOne(ObjectId(id), (error, result) => {
+      if (error) {
+        return reject(error);
+      }
+      return resolve(result);
+    });
+  });
+};
+
 // UPDATE ONE DOCUMENT FROM DB
 // @params collectionName 'string' 'name of db collection'
 // @params query
