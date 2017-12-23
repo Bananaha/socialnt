@@ -14,10 +14,10 @@ app
   .use(bodyParser.urlencoded({ extended: true }))
   .use(bodyParser.json())
   .use(
-    cors({
-      origin: ['http://localhost:3000', 'http://localhost:5000'],
-      allowHeader: ['Content-Type']
-    })
+  cors({
+    origin: ['http://localhost:3001', 'http://localhost:5000'],
+    allowHeader: ['Content-Type']
+  })
   )
   .use(routes);
 

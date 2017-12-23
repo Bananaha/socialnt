@@ -16,7 +16,7 @@ class Login extends Component {
   };
 
   forgotPassword = () => {
-    this.props.history.push('/resetPassword')
+    this.props.history.push('/resetPassword/')
   }
 
   render() {

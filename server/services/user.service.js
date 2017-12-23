@@ -1,12 +1,18 @@
+const uuidv4 = require('uuid/v4')
+const moment = require('moment')
 const dbService = require('../services/db.service');
 const uploadFile = require('../services/uploadFile.service');
-const mailService = require('../services/mail.service')
-const collectionName = 'users';
+const mailService = require('../services/mail.service');
+const passwordService = require('../services/password.service')
+
+const COLLECTION_NAME = 'users';
+
+
 
 const findOne = (req, res) => {
 	const payload = req.params
 	return dbService
-		.getOne(collectionName, payload)
+		.getOne(COLLECTION_NAME, payload)
 		.then(user => {
 			res.status(200).json(user)
 		})
@@ -20,7 +26,7 @@ const update = (req, res) => {
 	avatar = req.file ? req.file.filename : ''
 	return dbService
 		.update(
-		collectionName,
+		COLLECTION_NAME,
 		{ pseudo: req.body.pseudo },
 		{
 			$set: {
@@ -37,30 +43,73 @@ const update = (req, res) => {
 		)
 		.then(() => {
 			console.log('success');
-			res.status(200).json({});
+			res.status(200).json({ message: 'Votre profil a été mis à jour' });
 		})
 		.catch(error => {
 			console.log('USERS.ROUTE => update user profil ERROR', error);
-			res.status(500).send(error);
+			res.status(500).json({ error: error });
 		});
 };
 
-const reset = (req, res) => {
-	console.log(req.params)
+
+const createResetUrl = (req, res) => {
+
 	const userMail = req.params
-	dbService.getOne(collectionName, userMail).then(result => {
-		console.log(result)
-		const user = {
-			pseudo: result.pseudo,
-			email: result.email
-		}
-		if (result) {
-			mailService.sendMail(user)
-		}
+
+	dbService.getOne(COLLECTION_NAME, userMail)
+		.then(result => {
+
+			if (result) {
+
+				const uuid = uuidv4();
+				const resetLink = 'http://localhost:3001/resetPassword/' + uuid;
+				const expirationDate = moment().add(1, 'days').format('YYYY-MM-DD');
+
+				dbService.update(COLLECTION_NAME, { pseudo: result.pseudo }, {
+					$set: {
+						resetPasswordLink: resetLink,
+						resetPasswordLinkExpirationDate: expirationDate
+					}
+				})
+				.then(() => {
+					const user = {
+						pseudo: result.pseudo,
+						email: result.email,
+						link: resetLink
+					}
+					mailService.sendMail(user, (error, result) => {
+						if (error) {
+							res.status(500).json({ error: error + 'mail not send' })
+							return;
+						}
+
+					})
+					res.status(200).json({ message: 'mail send'})
+				})
+				.catch(error => {
+					res.status(500).json({ error: error + 'db not update'})
+				})
+			}
+			else {
+				res.status(500).json({ error: error })
+			}
+		})
+	.catch(error => {
+		res.status(500).json({error: error + 'cannot get user fail'})
 	})
 }
+
+const checkResetUrl = (req, res) => {
+	const token = req.body.token.split('/')
+	console.log(token)
+}
+
+
+
 module.exports = {
 	findOne,
 	update,
-	reset
+	createResetUrl,
+	checkResetUrl
 };
+

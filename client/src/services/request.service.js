@@ -75,7 +75,7 @@ export const post = async (url, data, files) => {
       method: "POST",
       ...req
     });
-    console.log('coucou')
+    console.log('POST')
     return await handleFetchResponse(response);
   } catch (error) {
     return Promise.reject(error);

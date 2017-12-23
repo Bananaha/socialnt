@@ -26,7 +26,8 @@ class App extends Component {
           <Route exact path="/login" component={Login} />
           <Route exact path="/profil/:pseudo" component={Profil} />
           <Route exact path="/setProfil/:pseudo" component={SetProfil} />
-          <Route exact path="/resetPassword" component={ResetPassword} />
+          <Route exact path="/resetPassword/" component={ResetPassword} />
+          <Route exact path="/resetPassword/:token" component={ResetPassword} />
           <Redirect to="/" />
         </Switch>
       </div>
