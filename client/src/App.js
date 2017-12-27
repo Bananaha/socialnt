@@ -1,19 +1,19 @@
-import React, { Component } from 'react';
-import { Route, Switch, Redirect, withRouter } from 'react-router-dom';
-import './App.css';
-import Nav from './components/Nav';
-import Login from './containers/Login';
-import Profil from './containers/Profil';
-import SetProfil from './containers/SetProfil';
-import ResetPassword from './containers/ResetPassword';
+import React, { Component } from "react";
+import { Route, Switch, Redirect, withRouter } from "react-router-dom";
+import "./App.css";
+import Nav from "./components/Nav";
+import Login from "./containers/Login";
+import Profil from "./containers/Profil";
+import SetProfil from "./containers/SetProfil";
+import ResetPassword from "./containers/ResetPassword";
 
-class App extends Component {
+export class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       links: [
-        { titre: 'lien1', href: 'www.google.com' },
-        { titre: 'lien2', href: 'www.linkedin.com' }
+        { titre: "lien1", href: "www.google.com" },
+        { titre: "lien2", href: "www.linkedin.com" }
       ]
     };
   }

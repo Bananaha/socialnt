@@ -1,5 +1,5 @@
-const mongo = require('mongodb').MongoClient;
-var ObjectId = require('mongodb').ObjectID;
+const mongo = require("mongodb").MongoClient;
+var ObjectId = require("mongodb").ObjectID;
 
 const state = {
   db: null
@@ -37,19 +37,6 @@ const create = (collectionName, props) => {
 const getOne = (collectionName, filters) => {
   return new Promise((resolve, reject) => {
     state.db.collection(collectionName).findOne(filters, (error, result) => {
-      if (error) {
-        return reject(error);
-      }
-      return resolve(result);
-    });
-  });
-};
-// FIND DOCUMENT BY ID
-// @params id 'string'
-
-var getById = id => {
-  return new Promise((resolve, reject) => {
-    state.db.bios.findOne(ObjectId(id), (error, result) => {
       if (error) {
         return reject(error);
       }

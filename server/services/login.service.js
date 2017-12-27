@@ -1,8 +1,7 @@
-const uuidv4 = require('uuid/v4')
+const uuidv4 = require("uuid/v4");
 
-
-const dbService = require('../services/db.service');
-const collection = 'users';
+const dbService = require("../services/db.service");
+const collection = "users";
 
 const signIn = (req, res) => {
   const userInformations = req.body;
@@ -15,7 +14,7 @@ const signIn = (req, res) => {
       if (user) {
         res
           .status(403)
-          .json({ message: 'pseudonyme utilisé par un autre utilisateur' });
+          .json({ message: "pseudonyme utilisé par un autre utilisateur" });
       } else {
         dbService
           .create(collection, userInformations)
@@ -25,13 +24,19 @@ const signIn = (req, res) => {
               .json({ token: req.__token, pseudo: userInformations.pseudo });
           })
           .catch(error => {
-            console.log('ERROR => IN LOGIN SERVICE_SIGNIN USER NOT CREATE', error);
+            console.log(
+              "ERROR => IN LOGIN SERVICE_SIGNIN USER NOT CREATE",
+              error
+            );
             res.status(500).json({ error: error });
           });
       }
     })
     .catch(error => {
-      console.log('ERROR => IN LOGIN SERVICE_SIGNIN CANNOT PROCEED IN USER PSEUDO SEARCH', error);
+      console.log(
+        "ERROR => IN LOGIN SERVICE_SIGNIN CANNOT PROCEED IN USER PSEUDO SEARCH",
+        error
+      );
       res.status(500).json({ error: error });
     });
 };
@@ -47,16 +52,19 @@ const logIn = (req, res) => {
           .json({ token: req.__token, pseudo: userInformations.pseudo });
       }
       if (user && userInformations.password !== user.password) {
-        res
-          .status(403)
-          .json({ error: 'mauvais pseudo ou mot de passe/utilisateur introuvable' })
+        res.status(403).json({
+          error: "mauvais pseudo ou mot de passe/utilisateur introuvable"
+        });
       }
       if (!user) {
-        res.status(404).json({ error: 'l\'utilisateur n\'existe pas.' })
+        res.status(404).json({ error: "l'utilisateur n'existe pas." });
       }
     })
     .catch(error => {
-      console.log('ERROR => IN LOGIN SERVICE_LOGIN CANNOT PROCEED IN USER PSEUDO SEARCH', error)
+      console.log(
+        "ERROR => IN LOGIN SERVICE_LOGIN CANNOT PROCEED IN USER PSEUDO SEARCH",
+        error
+      );
       res.status(500).json({ error: error });
     });
 };

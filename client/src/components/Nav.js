@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 
 class Nav extends Component {
   render() {
-    console.log('in nav', this.props);
     return (
       <div>
         <h1>Hello</h1>

@@ -1,16 +1,16 @@
-var jwt = require('jsonwebtoken');
+var jwt = require("jsonwebtoken");
 
-var secret = 'hushHush';
-var tokenDelay = { expiresIn: '1 days' };
+var secret = "hushHush";
+var tokenDelay = { expiresIn: "1 days" };
 
 var authentication = (req, res, next) => {
-  var token = req.headers['X-CSRF-Token'];
+  var token = req.headers["X-CSRF-Token"];
   if (token) {
     jwt.verify(token, secret, (error, decoded) => {
       if (error) {
         return res.json({
           success: false,
-          message: 'Failed to authenticate token.'
+          message: "Failed to authenticate token."
         });
       } else {
         req.__token = decoded;

@@ -1,12 +1,13 @@
-import React, { Component } from 'react';
-import { post } from '../services/request.service';
-import { withRouter } from 'react-router-dom';
-import 'whatwg-fetch';
+import React, { Component } from "react";
+import { post } from "../services/request.service";
+import { withRouter } from "react-router-dom";
+import "whatwg-fetch";
 
 class RequestPasswordForm extends Component {
   state = {
-    email: ''
-  }
+    email: "",
+    message: ""
+  };
 
   handleChange = key => event => {
     const value = event.target.value;
@@ -17,30 +18,37 @@ class RequestPasswordForm extends Component {
 
   submitForm = event => {
     event.preventDefault();
-    post('/users/reset/', {email: this.state.email}).then((result) => {
-      this.props.onChange()
-    })
-      .catch((error) => {
-        console.log(error)
+    post("/users/reset/", { email: this.state.email })
+      .then(result => {
+        this.setState({
+          message:
+            "Un lien de réinitialisation de mot de passe vient d'être envoyé à " +
+            this.state.email
+        });
       })
+      .catch(error => {
+        console.log(error);
+      });
   };
 
   render() {
-    console.log(this.props)
+    console.log(this.props);
     return (
-      <form onSubmit={this.submitForm}>
-        <input
-          name="email"
-          onChange={this.handleChange("email")}
-          type="email"
-          placeholder="Adresse email"
-          required
-        />
-        <button type="submit">Valider</button>
-      </form>
-    )
+      <div>
+        <form onSubmit={this.submitForm}>
+          <input
+            name="email"
+            onChange={this.handleChange("email")}
+            type="email"
+            placeholder="Adresse email"
+            required
+          />
+          <button type="submit">Valider</button>
+        </form>
+        <p>{this.state.message}</p>
+      </div>
+    );
   }
 }
 
 export default withRouter(props => <RequestPasswordForm {...props} />);
-

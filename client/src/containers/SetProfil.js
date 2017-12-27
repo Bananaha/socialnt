@@ -25,6 +25,7 @@ class SetProfil extends Component {
   };
 
   handleFileChange = file => {
+    console.log(file)
     this.setState({
       file
     });

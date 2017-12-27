@@ -1,12 +1,11 @@
-const moment = require('moment');
-const uuidv4 = require('uuid/v4')
-
+const moment = require("moment");
+const uuidv4 = require("uuid/v4");
 
 const createResetUrl = () => {
-  console.log('coucou')
-  const resetUrl = uuidv4()
+  console.log("coucou");
+  const resetUrl = uuidv4();
   console.log(resetUrl);
-  return resetUrl
-}
+  return resetUrl;
+};
 
-module.exports = { createResetUrl: createResetUrl }
+module.exports = createResetUrl;
