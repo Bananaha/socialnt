@@ -1,12 +1,13 @@
-import React, { Component } from 'react';
-import { post } from '../services/request.service';
-import { withRouter } from 'react-router-dom';
-import 'whatwg-fetch';
+import React, { Component } from "react";
+import { post } from "../services/request.service";
+import { withRouter } from "react-router-dom";
+import "whatwg-fetch";
 
 class LogInForm extends Component {
   state = {
-    pseudo: '',
-    password: ''
+    pseudo: "",
+    password: "",
+    alert: ""
   };
 
   handleChange = key => event => {
@@ -19,39 +20,40 @@ class LogInForm extends Component {
   submitForm = event => {
     event.preventDefault();
     const userValues = this.state;
-    post('/login', userValues)
+    post("/login", userValues)
       .then(response => {
-        localStorage.setItem('token', response.token);
-        this.props.history.push('/profil/' + response.pseudo);
+        console.log(response.token);
+        localStorage.setItem("token", response.token);
+        this.props.history.push("/profil/" + response.pseudo);
       })
       .catch(error => {
-        console.log(error);
+        this.setState({ alert: error.alert });
       });
   };
 
   render() {
-    console.log(this.props)
+    console.log(this.props);
     return (
       <div>
         <form onSubmit={this.submitForm}>
           <input
             name="pseudo"
-            onChange={this.handleChange('pseudo')}
+            onChange={this.handleChange("pseudo")}
             type="text"
             placeholder="Pseudonyme"
             required
           />
           <input
             name="password"
-            onChange={this.handleChange('password')}
+            onChange={this.handleChange("password")}
             type="password"
             placeholder="Mot de Passe"
             required
           />
           <button type="submit">Valider</button>
         </form>
+        <p>{this.state.alert}</p>
       </div>
-
     );
   }
 }

@@ -1,20 +1,20 @@
-import React, { Component } from 'react';
-import { post, get } from '../services/request.service';
-import { withRouter } from 'react-router-dom';
-import 'whatwg-fetch';
+import React, { Component } from "react";
+import { post, get } from "../services/request.service";
+import { withRouter } from "react-router-dom";
+import "whatwg-fetch";
 
-import FileUpload from '../components/FileUpload';
+import FileUpload from "../components/FileUpload";
 
 class SetProfil extends Component {
   state = {
-    sex: '',
-    birthDate: '',
-    city: '',
-    pseudo: '',
-    firstName: '',
-    lastName: '',
-    email: '',
-    avatar: ''
+    sex: "",
+    birthDate: "",
+    city: "",
+    pseudo: "",
+    firstName: "",
+    lastName: "",
+    email: "",
+    avatar: ""
   };
 
   handleChange = key => event => {
@@ -25,14 +25,15 @@ class SetProfil extends Component {
   };
 
   handleFileChange = file => {
-    console.log(file)
+    console.log(file);
     this.setState({
       file
     });
   };
 
   componentDidMount() {
-    get('/users/' + this.props.match.params.pseudo)
+    console.log("in set profil");
+    get("/users/" + this.props.match.params.pseudo)
       .then(userInformations => {
         console.log(userInformations);
         this.setState({
@@ -52,19 +53,19 @@ class SetProfil extends Component {
   }
 
   skipEditingProfil = () => {
-    this.props.history.push('/profil/' + this.state.pseudo);
+    this.props.history.push("/profil/" + this.state.pseudo);
   };
 
-  updateProfil = (e) => {
-    e.preventDefault()
+  updateProfil = e => {
+    e.preventDefault();
     const userValues = this.state;
-    post('/users/editProfil', userValues, userValues.file)
+    post("/users/editProfil", userValues, userValues.file)
       .then(() => {
-        console.log('profilUpdate');
-        this.props.history.push('/profil/' + this.state.pseudo);
+        console.log("profilUpdate");
+        this.props.history.push("/profil/" + this.state.pseudo);
       })
       .catch(error => {
-        console.log('ERROR', error);
+        console.log("ERROR", error);
       });
   };
 
@@ -73,30 +74,30 @@ class SetProfil extends Component {
     return (
       <div>
         <p>
-          Bienvenue {this.props.match.params.pseudo}, Avant de commencer,
-          renseigner votre profil afin que les autres membres puissent mieux
-          vous connaître.
+          Bienvenue {this.props.match.params.pseudo}, Vous venez de rejoindre la
+          communauté Cumulus. Avant de commencer, renseignez votre profil afin
+          que les autres membres puissent mieux vous connaître et vous trouver.
         </p>
         <form onSubmit={this.updateProfil}>
           <label>
-            {' '}
+            {" "}
             Prénom
             <input
               name="firstName"
               value={this.state.firstName}
-              onChange={this.handleChange('firstName')}
+              onChange={this.handleChange("firstName")}
               type="text"
               placeholder="Prénom"
               required
             />
           </label>
           <label>
-            {' '}
+            {" "}
             Nom :
             <input
               name="lastName"
               value={this.state.lastName}
-              onChange={this.handleChange('lastName')}
+              onChange={this.handleChange("lastName")}
               type="text"
               placeholder="Nom"
               required
@@ -107,7 +108,7 @@ class SetProfil extends Component {
             <input
               name="pseudo"
               value={this.state.pseudo}
-              onChange={this.handleChange('pseudo')}
+              onChange={this.handleChange("pseudo")}
               type="text"
               placeholder="Pseudonyme"
               required
@@ -118,7 +119,7 @@ class SetProfil extends Component {
             <input
               name="email"
               value={this.state.email}
-              onChange={this.handleChange('email')}
+              onChange={this.handleChange("email")}
               type="email"
               placeholder="Adresse mail"
               required
@@ -128,8 +129,8 @@ class SetProfil extends Component {
             Genre :
             <select
               name="sex"
-              value={this.state.sex || ''}
-              onChange={this.handleChange('sex')}
+              value={this.state.sex || ""}
+              onChange={this.handleChange("sex")}
             >
               <option value="">--Choisir--</option>
               <option value="homme">Homme</option>
@@ -142,7 +143,7 @@ class SetProfil extends Component {
               name="birthDate"
               type="date"
               value={this.state.birthDate}
-              onChange={this.handleChange('birthDate')}
+              onChange={this.handleChange("birthDate")}
               placeholder="Date de naissance"
             />
           </label>
@@ -152,7 +153,7 @@ class SetProfil extends Component {
               name="city"
               type="text"
               value={this.state.city}
-              onChange={this.handleChange('city')}
+              onChange={this.handleChange("city")}
               placeholder="Ville"
             />
           </label>

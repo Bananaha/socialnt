@@ -20,6 +20,7 @@ class Profil extends Component {
   componentDidMount() {
     get("/users/" + this.props.match.params.pseudo)
       .then(userInformations => {
+        console.log("response", userInformations);
         this.setState({
           sex: userInformations.sex,
           birthDate: userInformations.birthDate,
@@ -30,7 +31,8 @@ class Profil extends Component {
         });
       })
       .catch(error => {
-        console.log(error);
+        console.log("ERROR", error);
+        this.props.history.goBack();
       });
   }
 

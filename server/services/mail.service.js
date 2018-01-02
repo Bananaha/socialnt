@@ -13,7 +13,7 @@ const transporter = nodemailer.createTransport(mailConfig);
 
 // send mail with defined transport object
 
-const sendMail = user => {
+const resetPassword = user => {
   console.log("in sendMail", user.link);
   const mailOptions = {
     from: '"Claire" <claire.poyo@gmail.com>',
@@ -38,12 +38,38 @@ const sendMail = user => {
   };
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
-      return console.log(error);
+      console.log("TRANSPORTER MAIL ERROR RESET PASSWORD", error);
+      return error;
+    }
+    console.log("Message sent: " + info.response);
+  });
+};
+
+const welcome = user => {
+  console.log("in welcomeMail");
+  const mailOptions = {
+    from: '"Claire" <claire.poyo@gmail.com>',
+    to: user.email,
+    subject: "Bienvenue sur Cumulus",
+    text:
+      "Bienvenue  " +
+      user.pseudo +
+      "! Vous venez de vous inscrire sur Cumulus et nous vous en remercions. N'hésitez pas à partager vos meilleurs moments avec la communauté Cumulus. A plus tard. :) Cumulus Team",
+    html:
+      "<h1>Bienvenue  " +
+      user.pseudo +
+      "!</h1><p>Vous venez de vous inscrire sur Cumulus et nous vous en remercions. N'hésitez pas à partager vos meilleurs moments avec la communauté Cumulus.</p><p>A plus tard. :)</p><p>Cumulus</p>"
+  };
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.log("TRANSPORTER MAIL ERROR > WELCOME", error);
+      return error;
     }
     console.log("Message sent: " + info.response);
   });
 };
 
 module.exports = {
-  sendMail: sendMail
+  resetPassword,
+  welcome
 };

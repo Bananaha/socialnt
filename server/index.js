@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
+require("dotenv").config();
 
 const routes = require("./routes");
 
@@ -20,14 +21,15 @@ app
   )
   .use(routes);
 
+const server = app.listen(5000);
+const io = require("socket.io")(server);
+const socketServer = require("./services/socket.service")(io);
+io.set("origins", "http://localhost:3000");
+
 dbService.connect(URL, (error, db) => {
-  console.log("in db connect");
   if (error) {
     console.log("impossible de se connecter à la base de donnée", error);
   } else {
-    app.listen(5000, () => {
-      console.log("server listening");
-    });
     console.log("connecté à la base de donnée mongo");
   }
 });

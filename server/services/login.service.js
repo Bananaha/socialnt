@@ -1,34 +1,42 @@
 const uuidv4 = require("uuid/v4");
 
+const mailService = require("../services/mail.service");
 const dbService = require("../services/db.service");
-const collection = "users";
+
+const COLLECTION_NAME = "users";
 
 const signIn = (req, res) => {
   const userInformations = req.body;
-  userInformations.id = uuidv4();
-
+  userInformations.profil = "member";
   dbService
-    .getOne(collection, { pseudo: userInformations.pseudo })
+    .getOne(COLLECTION_NAME, { pseudo: userInformations.pseudo })
     .then(user => {
-      console.log(user);
       if (user) {
         res
           .status(403)
-          .json({ message: "pseudonyme utilisé par un autre utilisateur" });
+          .json({ alert: "pseudonyme utilisé par un autre utilisateur" });
       } else {
         dbService
-          .create(collection, userInformations)
-          .then(() => {
-            res
-              .status(200)
-              .json({ token: req.__token, pseudo: userInformations.pseudo });
+          .create(COLLECTION_NAME, userInformations)
+          .then(result => {
+            const user = result.ops[0];
+            mailService.welcome(user);
+
+            res.status(200).json({
+              token: req.__token,
+              pseudo: userInformations.pseudo,
+              alert: "Bravo, vous êtes maintenant inscrit sur Cumulus."
+            });
           })
           .catch(error => {
             console.log(
               "ERROR => IN LOGIN SERVICE_SIGNIN USER NOT CREATE",
               error
             );
-            res.status(500).json({ error: error });
+            res.status(500).json({
+              alert:
+                "Le processus d'inscription n'a pu aboutir. Contactez un administrateur"
+            });
           });
       }
     })
@@ -37,14 +45,17 @@ const signIn = (req, res) => {
         "ERROR => IN LOGIN SERVICE_SIGNIN CANNOT PROCEED IN USER PSEUDO SEARCH",
         error
       );
-      res.status(500).json({ error: error });
+      res.status(500).json({
+        alert:
+          "Le processus d'inscription n'a pu aboutir. Contactez un administrateur"
+      });
     });
 };
 
 const logIn = (req, res) => {
   const userInformations = req.body;
   dbService
-    .getOne(collection, userInformations)
+    .getOne(COLLECTION_NAME, { pseudo: userInformations.pseudo })
     .then(user => {
       if (user && userInformations.password === user.password) {
         res
@@ -53,11 +64,11 @@ const logIn = (req, res) => {
       }
       if (user && userInformations.password !== user.password) {
         res.status(403).json({
-          error: "mauvais pseudo ou mot de passe/utilisateur introuvable"
+          alert: "mauvais pseudo ou mot de passe/utilisateur introuvable"
         });
       }
       if (!user) {
-        res.status(404).json({ error: "l'utilisateur n'existe pas." });
+        res.status(404).json({ alert: "l'utilisateur n'existe pas." });
       }
     })
     .catch(error => {
@@ -65,7 +76,10 @@ const logIn = (req, res) => {
         "ERROR => IN LOGIN SERVICE_LOGIN CANNOT PROCEED IN USER PSEUDO SEARCH",
         error
       );
-      res.status(500).json({ error: error });
+      res.status(500).json({
+        alert:
+          "Impossible de se connecter pour le moment. Contactez un administrateur"
+      });
     });
 };
 

@@ -1,32 +1,48 @@
-var jwt = require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
+const dbService = require("../services/db.service");
 
-var secret = "hushHush";
-var tokenDelay = { expiresIn: "1 days" };
+const secret = "hushHush";
+const tokenDelay = { expiresIn: "1 days" };
 
-var authentication = (req, res, next) => {
-  var token = req.headers["X-CSRF-Token"];
-  if (token) {
-    jwt.verify(token, secret, (error, decoded) => {
+const authentication = (req, res, next) => {
+  const clientToken = req.headers["x-csrf-token"];
+  console.log(clientToken);
+  if (clientToken !== "null") {
+    jwt.verify(clientToken, secret, (error, decoded) => {
+      console.log("TOKEN IS VERIFY");
       if (error) {
-        return res.json({
-          success: false,
-          message: "Failed to authenticate token."
-        });
+        console.log("ERROR IN VERIFY");
+        res.redirect("/login");
       } else {
-        req.__token = decoded;
+        console.log("TOKEN VERIFICATION SUCCECCFULL");
+        req.__token = clientToken;
+        console.log("req.__token", req.__token);
+        req.__user = decoded.data;
         next();
       }
     });
   } else {
-    token = jwt.sign(
-      {
-        data: req.body.pseudo
-      },
-      secret,
-      tokenDelay
-    );
-    req.__token = token;
-    next();
+    console.log("NO TOKEN FOUND");
+    dbService
+      .getOne("users", { pseudo: req.body.pseudo })
+      .then(user => {
+        userId = user._id.toString();
+        token = jwt.sign(
+          {
+            data: userId
+          },
+          secret,
+          tokenDelay
+        );
+        req.__token = token;
+        console.log(req.__token);
+        req.__user = userId;
+        next();
+      })
+      .catch(error => {
+        console.log(error);
+        return res.redirect("/login");
+      });
   }
 };
 

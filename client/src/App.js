@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 import { Route, Switch, Redirect, withRouter } from "react-router-dom";
+
+import openSocket from "socket.io-client";
+
 import "./App.css";
 import Nav from "./components/Nav";
 import Login from "./containers/Login";
@@ -12,10 +15,11 @@ export class App extends Component {
     super(props);
     this.state = {
       links: [
-        { titre: "lien1", href: "www.google.com" },
-        { titre: "lien2", href: "www.linkedin.com" }
+        { titre: "Profil", href: "www.google.com" },
+        { titre: "Deconnexion", href: "www.linkedin.com" }
       ]
     };
+    const socket = openSocket("http://localhost:5000");
   }
 
   render() {

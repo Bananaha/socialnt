@@ -24,7 +24,7 @@ class MessagesList extends Component {
       .catch(error => {
         console.log(error);
         this.setState({
-          alert: error
+          alert: error.alert
         });
         setTimeout(() => {
           this.setState({ alert: "" });
@@ -46,8 +46,18 @@ class MessagesList extends Component {
             {this.state.messages.map((message, index) => {
               return (
                 <div>
-                  <span key={message._id}>{message.autor}</span>
-                  <span key={message._id}>{message.dest}</span>
+                  <div>
+                    {message.dest ? (
+                      <div>
+                        <span key={message._id}>{message.autor}</span>
+                        <span> | </span>
+                        <span key={message._id}>{message.dest}</span>
+                      </div>
+                    ) : (
+                      <span key={message._id}>{message.autor}</span>
+                    )}
+                  </div>
+
                   <p key={message._id}>{message.content}</p>
                   <span key={message._id}>{message.date}</span>
                 </div>

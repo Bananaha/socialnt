@@ -2,39 +2,47 @@
 
 const moment = require("moment");
 const async = require("async");
+const _ = require("lodash");
 const dbService = require("../services/db.service");
 const ObjectId = require("mongodb").ObjectID;
 
+moment.locale("fr");
 const COLLECTION_NAME = "messages";
 
 const save = (req, res) => {
   return dbService
-    .getOne("users", { pseudo: req.body.autorPseudo })
+    .getOne("users", { _id: ObjectId(req.__user) })
     .then(user => {
-      const autor = user._id;
-      let status = "public";
-      let dest = "none";
+      if (user) {
+        console.log(user);
+        const autor = user._id;
+        let status = "public";
 
-      dbService
-        .create(COLLECTION_NAME, {
-          date: moment().format("YYYY-MM-DD hh:MM"),
-          content: req.body.message,
-          attachment: req.body.attachment,
-          autor: autor,
-          dest: dest,
-          status: status
-        })
-        .then(result => {
-          res
-            .status(200)
-            .json({ message: "Votre message a été posté avec succès." });
-        })
-        .catch(error => {
-          console.log("ERROR => MESSAGE SERVICES save ", error);
-          res
-            .status(500)
-            .json({ message: "Le message n'a pas pu être enregistré." });
-        });
+        dbService
+          .create(COLLECTION_NAME, {
+            date: moment().format("YYYY-MM-DD hh:MM"),
+            content: req.body.message,
+            attachment: req.body.attachment,
+            autor: autor,
+            status: status
+          })
+          .then(result => {
+            res
+              .status(200)
+              .json({ message: "Votre message a été posté avec succès." });
+          })
+          .catch(error => {
+            console.log("ERROR => MESSAGE SERVICES save ", error);
+            res
+              .status(500)
+              .json({ message: "Le message n'a pas pu être enregistré." });
+          });
+      } else {
+        console.log("ERROR => MESSAGE SERVICES save ", error);
+        res
+          .status(500)
+          .json({ message: "Le message n'a pas pu être enregistré." });
+      }
     })
     .catch(error => {
       console.log(error);
@@ -42,31 +50,27 @@ const save = (req, res) => {
 };
 
 const find = (req, res) => {
-  console.log(req.params);
   return dbService
-    .getOne("users", req.params)
+    .getOne("users", { _id: ObjectId(req.__user) })
     .then(user => {
       if (user) {
-        console.log("USER FOUND", user);
         return dbService
           .getAll(COLLECTION_NAME, {
             $or: [{ autor: user._id }, { dest: user._id }]
           })
           .then(messages => {
-            console.log("MESSAGES FOUND");
             async.each(messages, (message, msgcb) => {
               const autorId = message.autor.toString();
-              const destId = message.dest.toString();
               const userId = user._id.toString();
-
+              let destId;
+              if (message.dest) {
+                destId = message.dest.toString();
+              }
+              message.date = moment(message.date).format("LLLL");
               if (autorId === userId) {
-                console.log(message.autor, " === ", user._id);
-                console.log("message.autor === user._id");
                 message.autor = user.pseudo;
                 msgcb();
               } else if (autorId !== userId) {
-                console.log(message.autor, " !== ", user._id);
-                console.log("message.autor !== user._id");
                 return dbService
                   .getAll("users", { _id: message.autor })
                   .then(autor => {
@@ -76,12 +80,10 @@ const find = (req, res) => {
                   .catch(error => {
                     msgcb("autor not found", error);
                   });
-              } else if (destId === userId) {
-                console.log(destId, " === ", userId);
-                console.log("destId === userId");
-              } else if (destId !== userId) {
-                console.log(destId, " !== ", userId);
-                console.log("destId !== userId");
+              } else if (destId && destId === userId) {
+                message.dest = user.pseudo;
+                msgcb();
+              } else if (destId && destId !== userId) {
                 return dbService
                   .getAll("users", { _id: message.dest })
                   .then(dest => {
@@ -102,8 +104,8 @@ const find = (req, res) => {
                   console.log("finish w/o error");
                 }
               };
-
-            res.status(200).json({ messages: messages });
+            const sortedMessages = _.orderBy(messages, ["date"], ["desc"]);
+            res.status(200).json({ messages: sortedMessages });
           })
           .catch(error => {
             console.log("message not found", error);

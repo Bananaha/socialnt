@@ -6,7 +6,7 @@ import "whatwg-fetch";
 class RequestPasswordForm extends Component {
   state = {
     email: "",
-    message: ""
+    alert: ""
   };
 
   handleChange = key => event => {
@@ -27,7 +27,7 @@ class RequestPasswordForm extends Component {
         });
       })
       .catch(error => {
-        console.log(error);
+        this.setState({ alert: error.alert });
       });
   };
 
@@ -45,7 +45,7 @@ class RequestPasswordForm extends Component {
           />
           <button type="submit">Valider</button>
         </form>
-        <p>{this.state.message}</p>
+        <p>{this.state.alert}</p>
       </div>
     );
   }

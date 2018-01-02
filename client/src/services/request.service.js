@@ -7,7 +7,7 @@ const handleFetchResponse = async (response, url) => {
     if (!response.ok) {
       return Promise.reject(parsedResponse);
     }
-    if (process.env.REACT_APP_CACHE === 'true' && url) {
+    if (process.env.REACT_APP_CACHE === "true" && url) {
       cache[url] = JSON.stringify(parsedResponse);
     }
     return parsedResponse;
@@ -34,9 +34,9 @@ const withTokenHeader = (headers = {}) => ({
   "X-CSRF-Token": localStorage.getItem("token")
 });
 
-const joinJSONPath = (...args) => args.filter(arg => arg).join('.');
+const joinJSONPath = (...args) => args.filter(arg => arg).join(".");
 
-const appendFormData = (formData, data, name = '') => {
+const appendFormData = (formData, data, name = "") => {
   if (typeof data === "object" && data && !(data instanceof Date)) {
     Object.keys(data).forEach(key => {
       appendFormData(formData, data[key], joinJSONPath(name, key));
@@ -59,23 +59,23 @@ export const post = async (url, data, files) => {
   const hasFile = Array.isArray(files) ? files.length > 0 : !!files;
   const req = !hasFile
     ? {
-      headers: withTokenHeader({
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      }),
-      body: JSON.stringify(data),
-    }
+        headers: withTokenHeader({
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        }),
+        body: JSON.stringify(data)
+      }
     : {
-      headers: withTokenHeader({}),
-      body: toFormData(data, files),
-    };
-  console.log('post with files?', !!files, req.body);
+        headers: withTokenHeader({}),
+        body: toFormData(data, files)
+      };
+  console.log("post with files?", !!files, req.body);
   try {
     const response = await fetch(API_ROOT + url, {
-      method: 'POST',
+      method: "POST",
       ...req
     });
-    console.log('POST');
+    console.log("POST");
     return await handleFetchResponse(response);
   } catch (error) {
     return Promise.reject(error);
@@ -107,7 +107,7 @@ export const get = async (url, params) => {
       return JSON.parse(cache[finalUrl]);
     }
     const response = await fetch(finalUrl, {
-      method: 'GET',
+      method: "GET",
       headers: withTokenHeader()
     });
     return await handleFetchResponse(response, finalUrl);
@@ -119,5 +119,5 @@ export const get = async (url, params) => {
 export default {
   post,
   get,
-  del,
+  del
 };

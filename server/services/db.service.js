@@ -1,5 +1,5 @@
 const mongo = require("mongodb").MongoClient;
-var ObjectId = require("mongodb").ObjectID;
+const ObjectId = require("mongodb").ObjectID;
 
 const state = {
   db: null
