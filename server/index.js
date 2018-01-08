@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
+const checkProfil = require("./services/token.service").checkProfil;
 require("dotenv").config();
 
 const routes = require("./routes");
@@ -19,7 +20,7 @@ app
       allowHeader: ["Content-Type"]
     })
   )
-  .use(routes);
+  .use(checkProfil, routes);
 
 const server = app.listen(5000);
 const io = require("socket.io")(server);

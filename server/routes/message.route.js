@@ -1,12 +1,15 @@
 const express = require("express");
 const Router = express.Router;
 
-const authentication = require("../services/token.service").authentication;
+const permission = require("../services/permission.service")
+  .permissionDispatcher;
 const messageService = require("../services/message.service");
 const router = new Router();
 
-router.route("/newMessage").post(authentication, messageService.save);
-router.route("/deleteMessage").delete(authentication, messageService.suppress);
-router.route("/:pseudo").get(authentication, messageService.find);
+router
+  .route("/newMessage")
+  .post(permission("sendMessage"), messageService.save);
+router.route("/deleteMessage").delete(messageService.suppress);
+router.route("/:id").get(messageService.find);
 
 module.exports = router;

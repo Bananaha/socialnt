@@ -18,7 +18,7 @@ class Profil extends Component {
   };
 
   componentDidMount() {
-    get("/users/" + this.props.match.params.pseudo)
+    get("/users/" + this.props.match.params.id)
       .then(userInformations => {
         console.log("response", userInformations);
         this.setState({
@@ -37,7 +37,7 @@ class Profil extends Component {
   }
 
   editProfil = () => {
-    this.props.history.push("/setProfil/" + this.state.pseudo);
+    this.props.history.push("/setProfil/" + this.props.match.params.id);
   };
 
   render() {

@@ -20,11 +20,12 @@ const signIn = (req, res) => {
           .create(COLLECTION_NAME, userInformations)
           .then(result => {
             const user = result.ops[0];
+            console.log(user);
             mailService.welcome(user);
 
             res.status(200).json({
               token: req.__token,
-              pseudo: userInformations.pseudo,
+              pseudo: user._id.toString(),
               alert: "Bravo, vous êtes maintenant inscrit sur Cumulus."
             });
           })
@@ -58,9 +59,10 @@ const logIn = (req, res) => {
     .getOne(COLLECTION_NAME, { pseudo: userInformations.pseudo })
     .then(user => {
       if (user && userInformations.password === user.password) {
-        res
-          .status(200)
-          .json({ token: req.__token, pseudo: userInformations.pseudo });
+        res.status(200).json({
+          token: req.__token,
+          id: user._id.toString()
+        });
       }
       if (user && userInformations.password !== user.password) {
         res.status(403).json({

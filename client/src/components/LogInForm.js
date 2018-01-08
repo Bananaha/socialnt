@@ -20,11 +20,12 @@ class LogInForm extends Component {
   submitForm = event => {
     event.preventDefault();
     const userValues = this.state;
+    delete userValues.alert;
     post("/login", userValues)
       .then(response => {
         console.log(response.token);
         localStorage.setItem("token", response.token);
-        this.props.history.push("/profil/" + response.pseudo);
+        this.props.history.push("/profil/" + response.id);
       })
       .catch(error => {
         this.setState({ alert: error.alert });

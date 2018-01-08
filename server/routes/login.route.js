@@ -7,6 +7,6 @@ const authentication = require("../services/token.service").authentication;
 const router = new Router();
 
 router.route("/").post(authentication, loginService.logIn);
-router.route("/newUser").post(authentication, loginService.signIn);
+router.route("/newUser").post(loginService.signIn);
 
 module.exports = router;

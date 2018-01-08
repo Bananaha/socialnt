@@ -6,7 +6,21 @@ const ObjectId = require("mongodb").ObjectID;
 
 const COLLECTION_NAME = "users";
 
-const findOne = (req, res) => {
+const findById = (req, res) => {
+  console.log("user.service => findOne");
+  const payload = req.params.id;
+  console.log("REQ PARAMS", req.params);
+  return dbService
+    .getOne(COLLECTION_NAME, { _id: ObjectId(payload) })
+    .then(user => {
+      res.status(200).json(user);
+    })
+    .catch(error => {
+      console.log("ERROR => USER SERVICES FIND ONE", error);
+      res.status(403).json({ error });
+    });
+};
+const findProfil = (req, res) => {
   const payload = req.params;
   return dbService
     .getOne(COLLECTION_NAME, { _id: ObjectId(req.__user) })
@@ -49,6 +63,6 @@ const update = (req, res) => {
 };
 
 module.exports = {
-  findOne,
+  findById,
   update
 };

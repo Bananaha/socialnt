@@ -28,8 +28,8 @@ export class App extends Component {
         <Nav links={this.state.links} />
         <Switch>
           <Route exact path="/login" component={Login} />
-          <Route exact path="/profil/:pseudo" component={Profil} />
-          <Route exact path="/setProfil/:pseudo" component={SetProfil} />
+          <Route exact path="/profil/:id" component={Profil} />
+          <Route exact path="/setProfil/:id" component={SetProfil} />
           <Route exact path="/resetPassword/" component={ResetPassword} />
           <Route exact path="/resetPassword/:token" component={ResetPassword} />
           <Redirect to="/" />

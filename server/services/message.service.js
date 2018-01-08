@@ -10,6 +10,7 @@ moment.locale("fr");
 const COLLECTION_NAME = "messages";
 
 const save = (req, res) => {
+  console.log("save message", req.body);
   return dbService
     .getOne("users", { _id: ObjectId(req.__user) })
     .then(user => {
@@ -38,7 +39,7 @@ const save = (req, res) => {
               .json({ message: "Le message n'a pas pu être enregistré." });
           });
       } else {
-        console.log("ERROR => MESSAGE SERVICES save ", error);
+        console.log("ERROR => MESSAGE SERVICES save ");
         res
           .status(500)
           .json({ message: "Le message n'a pas pu être enregistré." });
@@ -50,8 +51,9 @@ const save = (req, res) => {
 };
 
 const find = (req, res) => {
+  console.log("findMessage", req.params);
   return dbService
-    .getOne("users", { _id: ObjectId(req.__user) })
+    .getOne("users", { _id: ObjectId(req.params.id) })
     .then(user => {
       if (user) {
         return dbService

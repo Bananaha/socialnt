@@ -11,8 +11,8 @@ class MessagesList extends Component {
   };
 
   updateWallMessages = () => {
-    const pseudo = this.props.match.params.pseudo;
-    get("/message/" + pseudo)
+    const id = this.props.match.params.id;
+    get("/message/" + id)
       .then(result => {
         console.log(result.messages);
         this.setState({
