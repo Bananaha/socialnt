@@ -4,14 +4,16 @@ const Router = express.Router;
 const loginService = require("../services/login.service");
 const passwordService = require("../services/password.service");
 const userService = require("../services/user.service");
-const authentication = require("../services/token.service").authentication;
-const permission = require("../services/permission.service.js").permission;
+const permission = require("../services/permission.service")
+  .permissionDispatcher;
 
 const upload = require("../services/uploadFile.service");
 
 const router = new Router();
 
-router.route("/:id").get(userService.findById);
+router
+  .route("/:targetUser")
+  .get(permission("viewProfil"), userService.findById);
 router.route("/editProfil").post(upload.single("file"), userService.update);
 
 router.route("/reset/:token").get(passwordService.checkResetUrl);

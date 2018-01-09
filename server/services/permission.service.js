@@ -4,60 +4,64 @@ const dbService = require("./db.service");
 const ObjectId = require("mongodb").ObjectID;
 
 const viewProfil = (currentUser, targetUser) => {
-  let permissionGranted = false;
-  if (targetUser === currentUser) {
-    permissionGranted = true;
-  }
-
-  if (currentUser === "member") {
+  console.log("++++", targetUser, currentUser);
+  if (targetUser.toString() === currentUser.toString()) {
+    console.log("same user");
+    return true;
+  } else {
+    console.log("different user");
     return dbService
-      .getOne("users", { _id: req.__user })
+      .getOne("users", { _id: currentUser })
       .then(user => {
         if (user) {
-          userFriends = user.friends;
+          const userFriends = user.friends;
+          console.log(userFriends);
           userFriends.forEach(friend => {
             if (targetUser === friend) {
-              permissionGranted = true;
+              return true;
             } else {
-              permissionGranted = false;
+              return false;
             }
           });
         }
       })
       .catch(error => {
         console.log("PERMISSION VIEW PROFIL => DB ERROR ==== ", error);
-        permissionGranted = false;
+        return false;
       });
-  } else {
-    return false;
   }
 };
 
 const sendMessage = (currentUser, targetUser) => {
-  let permissionGranted = false;
-  if (targetUser === currentUser) {
-    permissionGranted = true;
+  console.log("++++", targetUser, currentUser);
+  if (targetUser.toString() === currentUser.toString()) {
+    console.log("same user");
+    return true;
   } else {
+    console.log("different user");
     dbService
       .getOne("users", { _id: currentUser })
       .then(user => {
         if (user) {
-          userFriends = user.friends;
-          userFriends.forEach(friend => {
-            if (targetUser === friend) {
-              permissionGranted = true;
-            } else {
-              permissionGranted = false;
-            }
-          });
+          const userFriends = user.friends;
+          if (userFriends) {
+            userFriends.forEach(friend => {
+              if (targetUser === friend) {
+                return true;
+              } else {
+                return false;
+              }
+            });
+          } else {
+            return false;
+          }
         }
       })
       .catch(error => {
         console.log("PERMISSION SEND MESSAGE => DB ERROR ==== ", error);
-        permissionGranted = false;
+        return false;
       });
   }
-  return permissionGranted;
 };
 
 const can = {
@@ -68,30 +72,33 @@ const can = {
 const permissionDispatcher = request => {
   return (req, res, next) => {
     const currentUser = req.__user;
-    const targetUser = req.body;
+    const targetUser = req.body.targetUser || req.params.targetUser;
     console.log(targetUser, currentUser);
     if (req.__profil) {
-      const userProfil = req.__profil;
-      switch (userProfil) {
+      switch (req.__profil) {
         case "admin":
           next();
           break;
         case "member":
           if (request) {
-            for (let key in can) {
-              if (key === request) {
-                console.log("key", key);
-              }
-              switch (key) {
-                case "viewProfil":
-                  return viewProfil(currentUser, targetUser);
-                  break;
-                case "sendMessage":
-                  return sendMessage(currentUser, targetUser);
-                  break;
-                default:
-                  break;
-              }
+            console.log(request);
+            let permissionGranted;
+            switch (request) {
+              case "viewProfil":
+                permissionGranted = viewProfil(currentUser, targetUser);
+                break;
+              case "sendMessage":
+                permissionGranted = sendMessage(currentUser, targetUser);
+                break;
+              default:
+                break;
+            }
+            if (permissionGranted) {
+              next();
+            } else {
+              res.status(403).json({
+                alert: "Vous n'êtes pas autorisé à effectuer cette action"
+              });
             }
           } else {
             next();

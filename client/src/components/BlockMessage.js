@@ -20,7 +20,7 @@ class BlockMessage extends Component {
   submitMessage = event => {
     event.preventDefault();
     const messageInfos = {
-      autorPseudo: this.props.match.params.pseudo,
+      targetUser: this.props.match.params.id,
       message: this.state.userMessage
     };
 
@@ -33,6 +33,7 @@ class BlockMessage extends Component {
         setTimeout(() => {
           this.setState({ alert: "" });
         }, 5000);
+        this.props.onSubmit();
       })
       .catch(error => {
         this.setState({ alert: error.message });

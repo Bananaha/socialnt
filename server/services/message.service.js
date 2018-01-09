@@ -21,7 +21,7 @@ const save = (req, res) => {
 
         dbService
           .create(COLLECTION_NAME, {
-            date: moment().format("YYYY-MM-DD hh:MM"),
+            date: new Date(),
             content: req.body.message,
             attachment: req.body.attachment,
             autor: autor,
@@ -57,9 +57,13 @@ const find = (req, res) => {
     .then(user => {
       if (user) {
         return dbService
-          .getAll(COLLECTION_NAME, {
-            $or: [{ autor: user._id }, { dest: user._id }]
-          })
+          .getAll(
+            COLLECTION_NAME,
+            {
+              $or: [{ autor: user._id }, { dest: user._id }]
+            },
+            5
+          )
           .then(messages => {
             async.each(messages, (message, msgcb) => {
               const autorId = message.autor.toString();

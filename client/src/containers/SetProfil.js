@@ -33,7 +33,7 @@ class SetProfil extends Component {
 
   componentDidMount() {
     console.log("in set profil");
-    get("/users/" + this.props.match.params.pseudo)
+    get("/users/" + this.props.match.params.id)
       .then(userInformations => {
         console.log(userInformations);
         this.setState({
@@ -53,7 +53,7 @@ class SetProfil extends Component {
   }
 
   skipEditingProfil = () => {
-    this.props.history.push("/profil/" + this.state.pseudo);
+    this.props.history.push("/profil/" + this.props.match.params.id);
   };
 
   updateProfil = e => {
@@ -62,7 +62,7 @@ class SetProfil extends Component {
     post("/users/editProfil", userValues, userValues.file)
       .then(() => {
         console.log("profilUpdate");
-        this.props.history.push("/profil/" + this.state.pseudo);
+        this.props.history.push("/profil/" + this.props.match.params.id);
       })
       .catch(error => {
         console.log("ERROR", error);

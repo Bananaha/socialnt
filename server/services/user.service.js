@@ -8,7 +8,7 @@ const COLLECTION_NAME = "users";
 
 const findById = (req, res) => {
   console.log("user.service => findOne");
-  const payload = req.params.id;
+  const payload = req.params.targetUser;
   console.log("REQ PARAMS", req.params);
   return dbService
     .getOne(COLLECTION_NAME, { _id: ObjectId(payload) })
