@@ -20,8 +20,9 @@ app
       allowHeader: ["Content-Type"]
     })
   )
-  .use(checkProfil, routes);
-
+  .use(checkProfil, routes)
+  .use("/images", express.static(__dirname + "/images"));
+console.log(__dirname + "./images");
 const server = app.listen(5000);
 const io = require("socket.io")(server);
 const socketServer = require("./services/socket.service")(io);

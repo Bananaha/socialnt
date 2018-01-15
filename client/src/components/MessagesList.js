@@ -7,20 +7,33 @@ import BlockMessage from "./BlockMessage";
 class MessagesList extends Component {
   state = {
     messages: "",
+    nbMessages: "",
+    pagination: "",
     alert: "",
     loader: true
   };
 
-  updateMessages = () => {
+  // compute pagination based on messages number
+  computeMessages = messages => {
+    console.log(messages);
+    let pages = [];
+    for (let i = messages.nbMessages, nbPages = 1; i > 0; i -= 10, nbPages++) {
+      pages.push(nbPages);
+    }
+    this.setState({
+      pagination: pages,
+      messages: messages.messages,
+      nbMessages: messages.nbMessages,
+      loader: false
+    });
+  };
+
+  // request all messages where the author or recipient is the profil owner
+  updateMessages = page => {
     const id = this.props.match.params.id;
-    get("/message/" + id)
+    get(`/message/${id}/${page}`)
       .then(result => {
-        console.log(result.messages);
-        this.setState({
-          messages: result.messages,
-          loader: false
-        });
-        console.log(this.state.messages);
+        this.computeMessages(result);
       })
       .catch(error => {
         console.log(error);
@@ -37,6 +50,12 @@ class MessagesList extends Component {
     this.updateMessages();
   }
 
+  loadNextMessages = page => event => {
+    event.preventDefault();
+
+    this.updateMessages(page);
+  };
+
   render() {
     return (
       <div>
@@ -45,26 +64,39 @@ class MessagesList extends Component {
           <p>Loading..</p>
         ) : (
           <div>
-            {this.state.messages.map((message, index) => {
-              return (
-                <div>
+            <div>
+              {this.state.messages.map((message, index) => {
+                return (
                   <div>
-                    {message.dest ? (
-                      <div>
+                    <div>
+                      {message.dest ? (
+                        <div>
+                          <span key={index + message.autor}>
+                            {message.autor}
+                          </span>
+                          <span> | </span>
+                          <span key={index + message.dest}>{message.dest}</span>
+                        </div>
+                      ) : (
                         <span key={index + message.autor}>{message.autor}</span>
-                        <span> | </span>
-                        <span key={index + message.dest}>{message.dest}</span>
-                      </div>
-                    ) : (
-                      <span key={index + message.autor}>{message.autor}</span>
-                    )}
-                  </div>
+                      )}
+                    </div>
 
-                  <p key={index + message.content}>{message.content}</p>
-                  <span key={index + message.date}>{message.date}</span>
-                </div>
-              );
-            })}
+                    <p key={index + message.content}>{message.content}</p>
+                    <span key={index + message.date}>{message.date}</span>
+                  </div>
+                );
+              })}
+            </div>
+            <div>
+              {this.state.pagination.map((page, index) => {
+                return (
+                  <button onClick={this.loadNextMessages(page)} key={index}>
+                    {page}
+                  </button>
+                );
+              })}
+            </div>
           </div>
         )}
       </div>

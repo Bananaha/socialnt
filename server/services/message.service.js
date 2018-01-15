@@ -3,6 +3,7 @@
 const moment = require("moment");
 const async = require("async");
 const _ = require("lodash");
+
 const dbService = require("../services/db.service");
 const ObjectId = require("mongodb").ObjectID;
 
@@ -10,7 +11,6 @@ moment.locale("fr");
 const COLLECTION_NAME = "messages";
 
 const save = (req, res) => {
-  console.log("save message", req.body);
   return dbService
     .getOne("users", { _id: ObjectId(req.__user) })
     .then(user => {
@@ -52,19 +52,27 @@ const save = (req, res) => {
 
 const find = (req, res) => {
   console.log("findMessage", req.params);
+  const PER_PAGE = 10;
+  const page = req.params.page || 1;
   return dbService
     .getOne("users", { _id: ObjectId(req.params.id) })
     .then(user => {
       if (user) {
         return dbService
-          .getAll(
+          .findAndCount(
             COLLECTION_NAME,
             {
               $or: [{ autor: user._id }, { dest: user._id }]
             },
-            5
+            { date: -1 },
+            PER_PAGE * page - PER_PAGE,
+            PER_PAGE
           )
-          .then(messages => {
+          .then(results => {
+            const messages = results[0];
+            const nbMessages = results[1];
+            console.log("messages", messages);
+            console.log("nbMessages", nbMessages);
             async.each(messages, (message, msgcb) => {
               const autorId = message.autor.toString();
               const userId = user._id.toString();
@@ -111,7 +119,9 @@ const find = (req, res) => {
                 }
               };
             const sortedMessages = _.orderBy(messages, ["date"], ["desc"]);
-            res.status(200).json({ messages: sortedMessages });
+            res
+              .status(200)
+              .json({ messages: messages, nbMessages: nbMessages });
           })
           .catch(error => {
             console.log("message not found", error);

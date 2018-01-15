@@ -1,5 +1,9 @@
+"use strict";
+
 const uuidv4 = require("uuid/v4");
 const moment = require("moment");
+const async = require("async");
+
 const dbService = require("../services/db.service");
 const mailService = require("../services/mail.service");
 const ObjectId = require("mongodb").ObjectID;
@@ -7,9 +11,7 @@ const ObjectId = require("mongodb").ObjectID;
 const COLLECTION_NAME = "users";
 
 const findById = (req, res) => {
-  console.log("user.service => findOne");
   const payload = req.params.targetUser;
-  console.log("REQ PARAMS", req.params);
   return dbService
     .getOne(COLLECTION_NAME, { _id: ObjectId(payload) })
     .then(user => {
@@ -20,6 +22,43 @@ const findById = (req, res) => {
       res.status(403).json({ error });
     });
 };
+
+const findMany = (req, res) => {
+  const query = new RegExp(req.params.value, "i");
+
+  return dbService
+    .getAll(
+      COLLECTION_NAME,
+      {
+        $or: [{ firstName: query }, { lastName: query }, { pseudo: query }]
+      },
+      { pseudo: 1 },
+      10
+    )
+    .then(results => {
+      console.log(results);
+      if (results.length > 0) {
+        results.map(result => {
+          for (let key in result) {
+            if (key !== "pseudo" || key !== "firstName" || key !== "lastName") {
+              delete result.key;
+            }
+          }
+        });
+        console.log("ici", results);
+        res.status(200).json({ results: results });
+      } else {
+        res.status(200).json({
+          results: ["Aucun utilisateur ne correspond à votre recherche"]
+        });
+      }
+    })
+    .catch(error => {
+      console.log(error);
+      res.status(500).json({ alert: error });
+    });
+};
+
 const findProfil = (req, res) => {
   const payload = req.params;
   return dbService
@@ -64,5 +103,6 @@ const update = (req, res) => {
 
 module.exports = {
   findById,
-  update
+  update,
+  findMany
 };

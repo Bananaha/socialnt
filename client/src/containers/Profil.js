@@ -13,7 +13,8 @@ class Profil extends Component {
     firstName: "",
     lastName: "",
     email: "",
-    avatar: ""
+    avatar: "",
+    loader: true
   };
 
   componentDidMount() {
@@ -27,7 +28,9 @@ class Profil extends Component {
           city: userInformations.city,
           pseudo: userInformations.pseudo,
           firstName: userInformations.firstName,
-          lastName: userInformations.lastName
+          lastName: userInformations.lastName,
+          avatar: userInformations.avatar,
+          loader: false
         });
       })
       .catch(error => {
@@ -43,25 +46,27 @@ class Profil extends Component {
   render() {
     return (
       <div className="Home">
-        <h1>Home</h1>
-        <div>
-          <img
-            src={"../../../server/Avatars/" + this.state.avatar}
-            alt="avatar"
-          />
-          <p>{this.state.pseudo}</p>
-          <p>
-            {this.state.firstName} {this.state.lastName}
-          </p>
-          <p>
-            {this.state.birthDate} {this.state.sex}
-          </p>
-          <p>{this.state.city}</p>
-          <button onClick={this.editProfil}>Editer mon profil</button>
-          <MessagesList />
-        </div>
-
-        <p />
+        {this.state.loader ? (
+          <p>Loading...</p>
+        ) : (
+          <div>
+            <img
+              style={{ width: 200 + "px", height: "auto" }}
+              src={process.env.REACT_APP_HOST + "/images/" + this.state.avatar}
+              alt="avatar"
+            />
+            <p>{this.state.pseudo}</p>
+            <p>
+              {this.state.firstName} {this.state.lastName}
+            </p>
+            <p>
+              {this.state.birthDate} {this.state.sex}
+            </p>
+            <p>{this.state.city}</p>
+            <button onClick={this.editProfil}>Editer mon profil</button>
+            <MessagesList />
+          </div>
+        )}
       </div>
     );
   }

@@ -62,16 +62,48 @@ const update = (collectionName, filters, doc) => {
   });
 };
 
-const getAll = (collectionName, filter) => {
+// getAll documents from a collection
+// @params 'string' collectionName
+// @params 'object' filter
+// @params 'number' limit
+// @params 'object' sort
+
+const getAll = (collectionName, filter, projection, limit) => {
   return new Promise((resolve, reject) => {
     state.db
       .collection(collectionName)
-      .find(filter)
+      .find(filter, projection)
+      .limit(limit)
       .toArray((error, result) => {
         if (error) {
           return reject(error);
         }
         return resolve(result);
+      });
+  });
+};
+
+const findAndCount = (collectionName, filter, sort, skip, limit) => {
+  return new Promise((resolve, reject) => {
+    state.db
+      .collection(collectionName)
+      .find(filter)
+      .count((err, count) => {
+        if (err) {
+          return reject(error);
+        }
+        state.db
+          .collection(collectionName)
+          .find(filter)
+          .sort(sort)
+          .skip(skip)
+          .limit(limit)
+          .toArray((error, result) => {
+            if (error) {
+              return reject(error);
+            }
+            return resolve([result, count]);
+          });
       });
   });
 };
@@ -94,6 +126,7 @@ module.exports = {
   connect,
   create,
   getAll,
+  findAndCount,
   getOne,
   update,
   state

@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
 class FileUpload extends Component {
   state = {
-    file: '',
-    imagePreviewUrl: ''
+    file: "",
+    imagePreviewUrl: ""
   };
 
   handleImageChange = event => {
@@ -24,7 +24,11 @@ class FileUpload extends Component {
       <div>
         <input type="file" onChange={e => this.handleImageChange(e)} />
         <div>
-          <img style={{width: 200 + "px", height: "auto"}} src={this.state.imagePreviewUrl} alt="avatar"/>
+          <img
+            style={{ width: 200 + "px", height: "auto" }}
+            src={this.state.imagePreviewUrl}
+            alt="avatar"
+          />
         </div>
       </div>
     );

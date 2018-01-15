@@ -11,7 +11,8 @@ const authentication = (req, res, next) => {
   if (clientToken !== "undefined") {
     jwt.verify(clientToken, SECRET, (error, decoded) => {
       if (error) {
-        console.log("error", error);
+        console.log("error", error, __dirname);
+
         if (req.body.pseudo) {
           dbService
             .getOne("users", { pseudo: req.body.pseudo })
@@ -32,10 +33,11 @@ const authentication = (req, res, next) => {
             })
             .catch(error => {
               console.log(error);
-              return res.redirect("/login");
+              console.log(__dirname);
+              return res.redirect("index.html");
             });
         } else {
-          res.redirect("/login");
+          res.redirect("index.html");
         }
       } else {
         req.__token = clientToken;

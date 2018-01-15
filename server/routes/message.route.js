@@ -10,6 +10,6 @@ router
   .route("/newMessage")
   .post(permission("sendMessage"), messageService.save);
 router.route("/deleteMessage").delete(messageService.suppress);
-router.route("/:id").get(messageService.find);
+router.route("/:id/:page").get(messageService.find);
 
 module.exports = router;

@@ -2,6 +2,7 @@
 
 const dbService = require("./db.service");
 const ObjectId = require("mongodb").ObjectID;
+const path = require("path");
 
 const viewProfil = (currentUser, targetUser) => {
   console.log("++++", targetUser, currentUser);
@@ -96,6 +97,11 @@ const permissionDispatcher = request => {
             if (permissionGranted) {
               next();
             } else {
+              console.log(
+                "DIRNAME ======",
+                path.join(__dirname + "/../../client/public/index.html"),
+                __dirname
+              );
               res.status(403).json({
                 alert: "Vous n'êtes pas autorisé à effectuer cette action"
               });
@@ -105,14 +111,22 @@ const permissionDispatcher = request => {
           }
           break;
         case "visitor":
-          res.status(403).json({
-            alert: "Vous devez être authentifier pour accéder à ce contenu."
-          });
+          console.log(
+            "DIRNAME ======",
+            path.join(__dirname + "/../../client/public/index.html"),
+            __dirname
+          );
+          res.status(403).redirect(path.join("/"));
           break;
         default:
-          res.status(403).json({
-            alert: "Vous devez être authentifier pour accéder à ce contenu."
-          });
+          console.log(
+            "DIRNAME ======",
+            path.join(__dirname + "/../../client/public/index.html"),
+            __dirname
+          );
+          res
+            .status(403)
+            .redirect(path.join(__dirname + "/../../client/public/index.html"));
           break;
       }
     } else {
