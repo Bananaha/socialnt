@@ -8,11 +8,10 @@ const TOKEN_DELAY = { expiresIn: "1 days" };
 const authentication = (req, res, next) => {
   console.log("authenticate");
   const clientToken = req.headers["x-csrf-token"];
-  if (clientToken !== "undefined") {
+  if (clientToken) {
     jwt.verify(clientToken, SECRET, (error, decoded) => {
       if (error) {
-        console.log("error", error, __dirname);
-
+        console.log("error", error);
         if (req.body.pseudo) {
           dbService
             .getOne("users", { pseudo: req.body.pseudo })
@@ -78,20 +77,21 @@ const authentication = (req, res, next) => {
 const checkProfil = (req, res, next) => {
   console.log("checkToken");
   const clientToken = req.headers["x-csrf-token"];
-
-  if (clientToken !== "undefined") {
+  console.log("REQ HEADER", req.headers);
+  if (clientToken) {
+    console.log("CLIENT TOKEN", clientToken);
     jwt.verify(clientToken, SECRET, (error, decoded) => {
       if (error) {
-        console.log(error);
+        console.log("ERROR", error);
         req.__profil = "visitor";
         next();
       } else {
         clientId = decoded.data;
-        console.log(clientId);
+        console.log("CLIENT-ID", clientId);
         dbService
           .getOne("users", { _id: ObjectId(clientId) })
           .then(user => {
-            console.log();
+            console.log("USER", user);
             if (user) {
               req.__profil = user.profil;
               req.__user = user._id;

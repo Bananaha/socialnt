@@ -56,8 +56,8 @@ class SetProfil extends Component {
     this.props.history.push("/profil/" + this.props.match.params.id);
   };
 
-  updateProfil = e => {
-    e.preventDefault();
+  updateProfil = event => {
+    event.preventDefault();
     const userValues = this.state;
     post("/users/editProfil", userValues, userValues.file)
       .then(() => {

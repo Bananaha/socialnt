@@ -30,26 +30,31 @@ const findMany = (req, res) => {
     .getAll(
       COLLECTION_NAME,
       {
-        $or: [{ firstName: query }, { lastName: query }, { pseudo: query }]
+        pseudo: query
       },
-      { pseudo: 1 },
+      { pseudo: 1, avatar: 1, friends: 1 },
       10
     )
     .then(results => {
-      console.log(results);
       if (results.length > 0) {
         results.map(result => {
           for (let key in result) {
-            if (key !== "pseudo" || key !== "firstName" || key !== "lastName") {
+            if (key !== "pseudo" || key !== "avatar" || key !== "friends") {
               delete result.key;
+            }
+            if (key === "friends") {
+              friends.forEach(friend => {
+                if (friend === req.__user) {
+                  result.isfriend = true;
+                }
+              });
             }
           }
         });
-        console.log("ici", results);
         res.status(200).json({ results: results });
       } else {
         res.status(200).json({
-          results: ["Aucun utilisateur ne correspond à votre recherche"]
+          alert: "Aucun utilisateur ne correspond à votre recherche"
         });
       }
     })

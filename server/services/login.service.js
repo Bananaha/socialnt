@@ -1,6 +1,7 @@
 const uuidv4 = require("uuid/v4");
 
 const mailService = require("../services/mail.service");
+const authentication = require("../services/token.service");
 const dbService = require("../services/db.service");
 
 const COLLECTION_NAME = "users";
@@ -16,11 +17,11 @@ const signIn = (req, res) => {
           .status(403)
           .json({ alert: "pseudonyme utilisé par un autre utilisateur" });
       } else {
+        userInformations.avatar = "default_avatar.png";
         dbService
           .create(COLLECTION_NAME, userInformations)
           .then(result => {
             const user = result.ops[0];
-            console.log(user);
             mailService.welcome(user);
 
             res.status(200).json({
