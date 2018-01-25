@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const dbService = require("../services/db.service");
 const ObjectId = require("mongodb").ObjectID;
+const path = require("path");
 
 const SECRET = "hushHush";
 const TOKEN_DELAY = { expiresIn: "1 days" };
@@ -11,7 +12,7 @@ const authentication = (req, res, next) => {
   if (clientToken) {
     jwt.verify(clientToken, SECRET, (error, decoded) => {
       if (error) {
-        console.log("error", error);
+        console.log(error, req.body.pseudo);
         if (req.body.pseudo) {
           dbService
             .getOne("users", { pseudo: req.body.pseudo })
@@ -26,22 +27,20 @@ const authentication = (req, res, next) => {
               );
               req.__token = token;
               req.__user = userId;
-              console.log("USER", req.__user, userId);
 
               next();
             })
             .catch(error => {
-              console.log(error);
-              console.log(__dirname);
-              return res.redirect("index.html");
+              res.status(403).redirect(path.join("/"));
+              return;
             });
         } else {
-          res.redirect("index.html");
+          res.status(403).redirect(path.join("/"));
+          return;
         }
       } else {
         req.__token = clientToken;
         req.__user = decoded.data;
-        console.log("USER", req.__user);
         next();
       }
     });
@@ -60,16 +59,17 @@ const authentication = (req, res, next) => {
           );
           req.__token = token;
           req.__user = userId;
-          console.log("USER", req.__user, userId);
 
           next();
         })
         .catch(error => {
           console.log(error);
-          return res.redirect("/login");
+          res.status(403).redirect(path.join("/"));
+          return;
         });
     } else {
-      res.redirect("/login");
+      res.status(403).redirect(path.join("/"));
+      return;
     }
   }
 };
@@ -77,9 +77,7 @@ const authentication = (req, res, next) => {
 const checkProfil = (req, res, next) => {
   console.log("checkToken");
   const clientToken = req.headers["x-csrf-token"];
-  console.log("REQ HEADER", req.headers);
   if (clientToken) {
-    console.log("CLIENT TOKEN", clientToken);
     jwt.verify(clientToken, SECRET, (error, decoded) => {
       if (error) {
         console.log("ERROR", error);
@@ -87,11 +85,9 @@ const checkProfil = (req, res, next) => {
         next();
       } else {
         clientId = decoded.data;
-        console.log("CLIENT-ID", clientId);
         dbService
           .getOne("users", { _id: ObjectId(clientId) })
           .then(user => {
-            console.log("USER", user);
             if (user) {
               req.__profil = user.profil;
               req.__user = user._id;

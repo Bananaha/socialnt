@@ -46,6 +46,17 @@ class UsersList extends Component {
   }
   sendFriendRequest = pseudo => {
     console.log("pseudo", pseudo);
+    post("/friendrequest", { targetUser: pseudo })
+      .then(() => {
+        this.setState({
+          alert: `Votre demande d'ajout à bien été envoyé à ${pseudo}`
+        });
+      })
+      .catch(error => {
+        this.setState({
+          alert: "Votre demande d'ajout n'a pu aboutir."
+        });
+      });
   };
 
   render() {

@@ -25,7 +25,6 @@ class SetProfil extends Component {
   };
 
   handleFileChange = file => {
-    console.log(file);
     this.setState({
       file
     });
@@ -35,7 +34,6 @@ class SetProfil extends Component {
     console.log("in set profil");
     get("/users/" + this.props.match.params.id)
       .then(userInformations => {
-        console.log(userInformations);
         this.setState({
           sex: userInformations.sex,
           birthDate: userInformations.birthDate,

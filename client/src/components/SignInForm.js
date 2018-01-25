@@ -36,7 +36,8 @@ class SignInForm extends Component {
             this.setState({
               alert: ""
             });
-            this.props.history.push("/setProfil/" + response.pseudo);
+            this.props.history.push("/login");
+            // this.props.history.push("/setProfil/" + response.pseudo);
           }, 5000);
         })
         .catch(error => {

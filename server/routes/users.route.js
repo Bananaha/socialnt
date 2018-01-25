@@ -14,8 +14,11 @@ const router = new Router();
 router
   .route("/:targetUser")
   .get(permission("viewProfil"), userService.findById);
-router.route("/editProfil").post(upload.single("file"), userService.update);
-router.route("/search/:value").get(userService.findMany);
+router
+  .route("/editProfil")
+  .post(permission("editProfil"), upload.single("file"), userService.update);
+router.route("/search/:value").get(permission("search"), userService.findMany);
+
 router.route("/reset/:token").get(passwordService.checkResetUrl);
 router.route("/reset").post(passwordService.createResetUrl);
 router.route("/newPassword").post(passwordService.setNewPassword);

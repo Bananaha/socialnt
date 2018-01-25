@@ -1,7 +1,20 @@
 const API_ROOT = process.env.REACT_APP_HOST;
-
+const VISITOR_ROUTES = ["login"];
 const cache = {};
+
+const isVisitorRoute = url => {
+  return VISITOR_ROUTES.some(route => {
+    return route === url.split("/")[3];
+  });
+};
+
 const handleFetchResponse = async (response, url) => {
+  console.log(response);
+  if (response.status === 401) {
+    if (!isVisitorRoute(response.url)) {
+      console.log("pas auth");
+    }
+  }
   try {
     const parsedResponse = await response.json();
     if (!response.ok) {

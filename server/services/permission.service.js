@@ -1,136 +1,59 @@
 "use strict";
 
-const dbService = require("./db.service");
-const ObjectId = require("mongodb").ObjectID;
 const path = require("path");
+const profiles = require("./profiles");
 
-const viewProfil = (currentUser, targetUser) => {
-  console.log("++++", targetUser, currentUser);
-  if (targetUser.toString() === currentUser.toString()) {
-    console.log("same user");
-    return true;
-  } else {
-    console.log("different user");
-    return dbService
-      .getOne("users", { _id: currentUser })
-      .then(user => {
-        if (user) {
-          const userFriends = user.friends;
-          console.log(userFriends);
-          userFriends.forEach(friend => {
-            if (targetUser === friend) {
-              return true;
-            } else {
-              return false;
-            }
-          });
-        }
-      })
-      .catch(error => {
-        console.log("PERMISSION VIEW PROFIL => DB ERROR ==== ", error);
-        return false;
-      });
+const handleRequestAnswer = canDoAction => {
+  if (typeof canDoAction === "boolean") {
+    return new Promise((resolve, reject) => {
+      return canDoAction ? resolve() : reject();
+    });
   }
+  return canDoAction;
 };
 
-const sendMessage = (currentUser, targetUser) => {
-  console.log("++++", targetUser, currentUser);
-  if (targetUser.toString() === currentUser.toString()) {
-    console.log("same user");
-    return true;
-  } else {
-    console.log("different user");
-    dbService
-      .getOne("users", { _id: currentUser })
-      .then(user => {
-        if (user) {
-          const userFriends = user.friends;
-          if (userFriends) {
-            userFriends.forEach(friend => {
-              if (targetUser === friend) {
-                return true;
-              } else {
-                return false;
-              }
-            });
-          } else {
-            return false;
-          }
-        }
-      })
-      .catch(error => {
-        console.log("PERMISSION SEND MESSAGE => DB ERROR ==== ", error);
-        return false;
-      });
-  }
-};
-
-const can = {
-  viewProfil: "viewProfil",
-  sendMessage: "sendMessage"
+const PERMISSIONS_CALLBACKS = {
+  viewProfil: "canViewProfil",
+  sendMessage: "canSendMessage",
+  editProfil: "canEditProfil",
+  search: "canSearch"
 };
 
 const permissionDispatcher = request => {
   return (req, res, next) => {
+    // no profile => redirect + error
+    if (!req.__profil) {
+      res.status(403).redirect(path.join("/"));
+      return;
+    }
+
     const currentUser = req.__user;
     const targetUser = req.body.targetUser || req.params.targetUser;
-    console.log(targetUser, currentUser);
-    if (req.__profil) {
-      switch (req.__profil) {
-        case "admin":
-          next();
-          break;
-        case "member":
-          if (request) {
-            console.log(request);
-            let permissionGranted;
-            switch (request) {
-              case "viewProfil":
-                permissionGranted = viewProfil(currentUser, targetUser);
-                break;
-              case "sendMessage":
-                permissionGranted = sendMessage(currentUser, targetUser);
-                break;
-              default:
-                break;
-            }
-            if (permissionGranted) {
-              next();
-            } else {
-              console.log(
-                "DIRNAME ======",
-                path.join(__dirname + "/../../client/public/index.html"),
-                __dirname
-              );
-              res.status(403).json({
-                alert: "Vous n'êtes pas autorisé à effectuer cette action"
-              });
-            }
-          } else {
-            next();
-          }
-          break;
-        case "visitor":
-          console.log(
-            "DIRNAME ======",
-            path.join(__dirname + "/../../client/public/index.html"),
-            __dirname
-          );
-          res.status(403).redirect(path.join("/"));
-          break;
-        default:
-          console.log(
-            "DIRNAME ======",
-            path.join(__dirname + "/../../client/public/index.html"),
-            __dirname
-          );
+
+    const matchingProfile = profiles[req.__profil];
+    const permissionCallback = PERMISSIONS_CALLBACKS[request];
+    const canDoAction = matchingProfile[permissionCallback](
+      currentUser,
+      targetUser
+    );
+
+    handleRequestAnswer(canDoAction)
+      .then(() => {
+        console.log("approuved");
+        next();
+      })
+      .catch(() => {
+        console.log("reject");
+        if (req.__profil === "visitor") {
           res
             .status(403)
             .redirect(path.join(__dirname + "/../../client/public/index.html"));
-          break;
-      }
-    } else {
-    }
+          return;
+        }
+        res.status(403).json({
+          alert: "Vous n'êtes pas autorisé à effectuer cette action"
+        });
+      });
   };
 };
 
