@@ -24,42 +24,19 @@ const findById = (req, res) => {
 };
 
 const findMany = (req, res) => {
-  const query = new RegExp(req.params.value, "i");
-
+  const queries = req.params.values;
   return dbService
-    .getAll(
-      COLLECTION_NAME,
-      {
-        pseudo: query
-      },
-      { pseudo: 1, avatar: 1, friends: 1 },
-      10
-    )
+    .getAll(COLLECTION_NAME, { $text: { $search: queries } }, 5)
     .then(results => {
-      if (results.length > 0) {
-        results.map(result => {
-          for (let key in result) {
-            if (key !== "pseudo" || key !== "avatar" || key !== "friends") {
-              delete result.key;
-            }
-            if (key === "friends") {
-              friends.forEach(friend => {
-                if (friend === req.__user) {
-                  result.isfriend = true;
-                }
-              });
-            }
-          }
-        });
+      if (results) {
+        console.log(results);
         res.status(200).json({ results: results });
       } else {
-        res.status(200).json({
-          alert: "Aucun utilisateur ne correspond à votre recherche"
-        });
+        res.status(404);
       }
     })
     .catch(error => {
-      console.log(error);
+      console.log("SEARCH ERROR", error);
       res.status(500).json({ alert: error });
     });
 };

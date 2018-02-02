@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
-import { get } from "../services/request.service";
+import { get, post } from "../services/request.service";
 import "whatwg-fetch";
 
 class UsersList extends Component {
@@ -44,12 +44,12 @@ class UsersList extends Component {
       this.getMatchingUsers();
     }, 200);
   }
-  sendFriendRequest = pseudo => {
-    console.log("pseudo", pseudo);
-    post("/friendrequest", { targetUser: pseudo })
+  sendFriendRequest = event => {
+    event.preventDefault();
+    post("/friendrequest", { targetUser: event.target.value })
       .then(() => {
         this.setState({
-          alert: `Votre demande d'ajout à bien été envoyé à ${pseudo}`
+          alert: "Votre demande d'ajout a bien été envoyée"
         });
       })
       .catch(error => {
@@ -86,7 +86,7 @@ class UsersList extends Component {
                   {result.isFriend ? (
                     <span>Ami</span>
                   ) : (
-                    <button onClick={this.sendFriendRequest(result.pseudo)}>
+                    <button value={result._id} onClick={this.sendFriendRequest}>
                       Ajouter
                     </button>
                   )}

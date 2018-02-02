@@ -16,7 +16,8 @@ const PERMISSIONS_CALLBACKS = {
   viewProfil: "canViewProfil",
   sendMessage: "canSendMessage",
   editProfil: "canEditProfil",
-  search: "canSearch"
+  search: "canSearch",
+  friendRequest: "canFriendRequest"
 };
 
 const permissionDispatcher = request => {
@@ -32,11 +33,18 @@ const permissionDispatcher = request => {
 
     const matchingProfile = profiles[req.__profil];
     const permissionCallback = PERMISSIONS_CALLBACKS[request];
+
+    console.log(
+      "matchingProfile",
+      matchingProfile,
+      "permissionCallback",
+      permissionCallback
+    );
+
     const canDoAction = matchingProfile[permissionCallback](
       currentUser,
       targetUser
     );
-
     handleRequestAnswer(canDoAction)
       .then(() => {
         console.log("approuved");

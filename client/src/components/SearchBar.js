@@ -16,30 +16,30 @@ class SearchBar extends Component {
   handleChange = event => {
     const value = event.target.value;
     this.setState({
-      searchQuery: value
+      searchQuery: value,
+      loader: true,
+      results: [],
+      alert: ""
     });
     if (value === "") {
       this.setState({
-        loader: true,
         results: value
       });
       return;
     }
     clearTimeout(this.timeOut);
     this.timeOut = setTimeout(() => {
-      console.log("value", value);
       get(`/users/search/${value}`)
         .then(users => {
-          console.log(users);
-          if (users.results) {
+          console.log(users.results);
+          if (users.results.length > 0) {
             this.setState({
               loader: false,
-              results: users.results,
-              alert: ""
+              results: users.results
             });
           } else {
             this.setState({
-              loader: false,
+              loader: true,
               alert: "Ce pseudo n'existe pas."
             });
           }
@@ -72,7 +72,6 @@ class SearchBar extends Component {
           {this.state.loader
             ? ""
             : this.state.results.map((result, index) => {
-                console.log(result._id);
                 return (
                   <div key={result.pseudo}>
                     <a href={`/profil/${result._id}`}>{result.pseudo}</a>

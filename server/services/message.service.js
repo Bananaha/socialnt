@@ -51,7 +51,6 @@ const save = (req, res) => {
 };
 
 const find = (req, res) => {
-  console.log("findMessage", req.params);
   const PER_PAGE = 10;
   const page = req.params.page || 1;
   return dbService
@@ -71,8 +70,6 @@ const find = (req, res) => {
           .then(results => {
             const messages = results[0];
             const nbMessages = results[1];
-            console.log("messages", messages);
-            console.log("nbMessages", nbMessages);
             async.each(messages, (message, msgcb) => {
               const autorId = message.autor.toString();
               const userId = user._id.toString();

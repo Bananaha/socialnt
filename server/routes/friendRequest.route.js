@@ -10,3 +10,5 @@ const router = new Router();
 router
   .route("/")
   .post(permission("friendRequest"), friendRequestService.request);
+
+module.exports = router;
