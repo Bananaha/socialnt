@@ -30,13 +30,20 @@ class UsersList extends Component {
         console.log(error);
       });
   };
+
+  clearAlert = () => {
+    return setTimeout(() => {
+      this.setState({
+        alert: ""
+      });
+    }, 5000);
+  };
+
   componentDidMount() {
-    console.log("coucou mount");
     this.getMatchingUsers();
   }
 
   componentWillReceiveProps() {
-    console.log("coucou update");
     this.setState({
       loader: true
     });
@@ -47,15 +54,17 @@ class UsersList extends Component {
   sendFriendRequest = event => {
     event.preventDefault();
     post("/friendrequest", { targetUser: event.target.value })
-      .then(() => {
+      .then(result => {
         this.setState({
-          alert: "Votre demande d'ajout a bien été envoyée"
+          alert: result.alert
         });
+        this.clearAlert();
       })
       .catch(error => {
         this.setState({
-          alert: "Votre demande d'ajout n'a pu aboutir."
+          alert: error.alert
         });
+        this.clearAlert();
       });
   };
 

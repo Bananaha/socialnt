@@ -1,3 +1,6 @@
+const dbService = require("../services/db.service");
+const ObjectId = require("mongodb").ObjectID;
+
 const eventTypes = {
   refreshStat: "refreshStat"
 };
@@ -20,6 +23,14 @@ const dispatchSocketEvent = (eventType, socket, io, payload) => {
 
 const refreshStat = () => {
   console.log("toto");
+  return dbService
+    .findAndCount("messages", {})
+    .then(nbMessages => {
+      console.log(nbMessages);
+    })
+    .catch(error => {
+      console.log(error);
+    });
 };
 
 module.exports = io => {

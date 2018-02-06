@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import { Route, Switch, Redirect, withRouter } from "react-router-dom";
 
-import openSocket from "socket.io-client";
-
 import "./App.css";
 import Nav from "./components/Nav";
 import Login from "./containers/Login";
@@ -20,7 +18,6 @@ export class App extends Component {
         { titre: "Deconnexion", href: "www.linkedin.com" }
       ]
     };
-    const socket = openSocket("http://localhost:5000");
   }
 
   render() {

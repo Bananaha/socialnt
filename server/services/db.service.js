@@ -1,4 +1,6 @@
+("use strict");
 const mongo = require("mongodb").MongoClient;
+const ObjectId = require("mongodb").ObjectID;
 
 const state = {
   db: null
@@ -114,27 +116,42 @@ const findAndCount = (collectionName, filter, sort, skip, limit) => {
       });
   });
 };
-
-const aggregate = (
-  mainCollection,
-  mainCollectionKey,
-  secondCollection,
-  secondCollectionKey,
-  secondCollectionNameOutput
-) => {
+const count = (collectionName, filter) => {
   return new Promise((resolve, reject) => {
     state.db
-      .collection(mainCollection)
-      .aggregate([
-        {
-          $lookup: {
-            from: secondCollection,
-            localField: mainCollectionKey,
-            foreignField: secondCollectionKey,
-            as: secondCollectionNameOutput
-          }
+      .collection(collectionName)
+      .find(filter)
+      .count((err, count) => {
+        if (err) {
+          return reject(error);
         }
-      ])
+        return resolve([result, count]);
+      });
+  });
+};
+
+const aggregate = (
+  mainCollectionName,
+  mainCollectionTargetField,
+  mainCollectionTarget,
+  othersCollections
+) => {
+  const aggregationInfos = [{ $match: mainCollectionTarget }];
+  for (var i = 0, len = othersCollections.length; i < len; i++) {
+    const lookUpInfos = {
+      $lookup: {
+        from: othersCollections[i].collectionName,
+        localField: mainCollectionTargetField,
+        foreignField: othersCollections[i].collectionField,
+        as: othersCollections[i].collectionAlias
+      }
+    };
+    aggregationInfos.push(lookUpInfos);
+  }
+  return new Promise((resolve, reject) => {
+    state.db
+      .collection(mainCollectionName)
+      .aggregate(aggregationInfos)
       .toArray((error, result) => {
         if (error) {
           return reject(error);
@@ -163,6 +180,7 @@ module.exports = {
   create,
   getAll,
   findAndCount,
+  count,
   getOne,
   update,
   aggregate,
