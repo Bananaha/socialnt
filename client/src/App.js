@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { Route, Switch, Redirect, withRouter } from "react-router-dom";
+import { connect, subscribe } from "./sockets";
+import { ON_CONNECTION } from "./sockets/types";
 
 import "./App.css";
 import Nav from "./components/Nav";
@@ -18,6 +20,13 @@ export class App extends Component {
         { titre: "Deconnexion", href: "www.linkedin.com" }
       ]
     };
+  }
+
+  componentDidMount() {
+    connect();
+    subscribe(ON_CONNECTION, payload => {
+      console.log("hola", payload);
+    });
   }
 
   render() {

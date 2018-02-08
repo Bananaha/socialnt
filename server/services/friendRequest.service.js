@@ -1,6 +1,6 @@
 const ObjectId = require("mongodb").ObjectID;
 
-const dbService = require("../services/db.service");
+const dbService = require("./db.service");
 const COLLECTION_NAME = "users";
 
 const request = (req, res) => {

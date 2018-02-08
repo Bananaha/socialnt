@@ -1,7 +1,7 @@
 const uuidv4 = require("uuid/v4");
 const moment = require("moment");
-const dbService = require("../services/db.service");
-const mailService = require("../services/mail.service");
+const dbService = require("./db.service");
+const mailService = require("./mail.service");
 
 const COLLECTION_NAME = "users";
 

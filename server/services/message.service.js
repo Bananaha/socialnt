@@ -4,7 +4,8 @@ const moment = require("moment");
 const async = require("async");
 const _ = require("lodash");
 
-const dbService = require("../services/db.service");
+const dbService = require("./db.service");
+const socketService = require("./socket/socket.service");
 const ObjectId = require("mongodb").ObjectID;
 
 moment.locale("fr");
@@ -136,8 +137,21 @@ const suppress = (req, res) => {
   console.log(req);
 };
 
+const countMessages = () => {
+  return dbService
+    .count("messages", {}, 0)
+    .then(nbMessages => {
+      console.log(nbMessages);
+      return nbMessages;
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
 module.exports = {
   save,
   find,
-  suppress
+  suppress,
+  countMessages
 };

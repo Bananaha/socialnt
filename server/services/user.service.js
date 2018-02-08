@@ -4,7 +4,7 @@ const uuidv4 = require("uuid/v4");
 const moment = require("moment");
 const async = require("async");
 
-const dbService = require("../services/db.service");
+const dbService = require("./db.service");
 const mailService = require("../services/mail.service");
 const ObjectId = require("mongodb").ObjectID;
 

@@ -93,6 +93,7 @@ const getAll = (collectionName, filter, limit) => {
 };
 
 const findAndCount = (collectionName, filter, sort, skip, limit) => {
+  console.log("skip", skip);
   return new Promise((resolve, reject) => {
     state.db
       .collection(collectionName)
@@ -117,15 +118,17 @@ const findAndCount = (collectionName, filter, sort, skip, limit) => {
   });
 };
 const count = (collectionName, filter) => {
+  console.log("count");
   return new Promise((resolve, reject) => {
     state.db
       .collection(collectionName)
       .find(filter)
       .count((err, count) => {
+        console.log("========", count);
         if (err) {
           return reject(error);
         }
-        return resolve([result, count]);
+        return resolve(count);
       });
   });
 };

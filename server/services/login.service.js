@@ -2,7 +2,7 @@ const uuidv4 = require("uuid/v4");
 
 const mailService = require("../services/mail.service");
 const authentication = require("../services/token.service");
-const dbService = require("../services/db.service");
+const dbService = require("./db.service");
 
 const COLLECTION_NAME = "users";
 

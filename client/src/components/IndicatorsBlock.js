@@ -1,21 +1,25 @@
 import React, { Component } from "react";
-import openSocket from "socket.io-client";
+import { subscribe } from "../sockets";
 
 class IndicatorsBlock extends Component {
+  state = {
+    nbConnectedUsers: "",
+    nbPublishedMessages: ""
+  };
   componentDidMount() {
-    const socket = openSocket("http://localhost:5000");
-    socket.emit("refreshStat");
+    subscribe("");
   }
+
   render() {
     return (
       <div>
         <div>
           <p>Nombre de messages postés</p>
-          <span>12</span>
+          <span>{this.state.nbPublishedMessages}</span>
         </div>
         <div>
           <p>Nombre de membres connectés</p>
-          <span>5</span>
+          <span>{this.state.nbConnectedUsers}</span>
         </div>
       </div>
     );

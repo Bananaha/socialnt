@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const dbService = require("../services/db.service");
+const dbService = require("./db.service");
 const ObjectId = require("mongodb").ObjectID;
 const path = require("path");
 

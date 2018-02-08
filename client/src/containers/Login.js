@@ -21,10 +21,6 @@ class Login extends Component {
     this.props.history.push("/resetPassword/");
   };
 
-  // componentDidMount() {
-  //   get("/");
-  // }
-
   render() {
     return (
       <div>
