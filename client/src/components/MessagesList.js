@@ -28,7 +28,7 @@ class MessagesList extends Component {
     });
   };
 
-  // request all messages where the author or recipient is the profil owner
+  // request all messages where the author or recipient is the profile owner
   updateMessages = page => {
     const id = this.props.match.params.id;
     get(`/message/${id}/${page}`)

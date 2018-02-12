@@ -31,7 +31,7 @@ class SetProfil extends Component {
   };
 
   componentDidMount() {
-    console.log("in set profil");
+    console.log("in set profile");
     get("/users/" + this.props.match.params.id)
       .then(userInformations => {
         this.setState({
@@ -51,7 +51,7 @@ class SetProfil extends Component {
   }
 
   skipEditingProfil = () => {
-    this.props.history.push("/profil/" + this.props.match.params.id);
+    this.props.history.push("/profile/" + this.props.match.params.id);
   };
 
   updateProfil = event => {
@@ -60,7 +60,7 @@ class SetProfil extends Component {
     post("/users/editProfil", userValues, userValues.file)
       .then(() => {
         console.log("profilUpdate");
-        this.props.history.push("/profil/" + this.props.match.params.id);
+        this.props.history.push("/profile/" + this.props.match.params.id);
       })
       .catch(error => {
         console.log("ERROR", error);
@@ -73,7 +73,7 @@ class SetProfil extends Component {
       <div>
         <p>
           Bienvenue {this.props.match.params.pseudo}, Vous venez de rejoindre la
-          communauté Cumulus. Avant de commencer, renseignez votre profil afin
+          communauté Cumulus. Avant de commencer, renseignez votre profile afin
           que les autres membres puissent mieux vous connaître et vous trouver.
         </p>
         <form onSubmit={this.updateProfil}>
@@ -156,7 +156,7 @@ class SetProfil extends Component {
             />
           </label>
           <label>
-            file de profil :
+            file de profile :
             <FileUpload
               name="file"
               value={this.state.file}

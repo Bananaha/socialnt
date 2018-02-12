@@ -25,7 +25,9 @@ app
 
 const server = app.listen(5000);
 const io = require("socket.io")(server);
-const socketServer = require("./services/socket/socket.service")(io);
+const socketServer = require("./services/socket/socket.service").onConnection(
+  io
+);
 
 io.set("origins", "http://localhost:3000");
 

@@ -74,7 +74,7 @@ class SearchBar extends Component {
             : this.state.results.map((result, index) => {
                 return (
                   <div key={result.pseudo}>
-                    <a href={`/profil/${result._id}`}>{result.pseudo}</a>
+                    <a href={`/profile/${result._id}`}>{result.pseudo}</a>
                   </div>
                 );
               })}

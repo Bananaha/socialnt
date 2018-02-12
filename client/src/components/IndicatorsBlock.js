@@ -1,13 +1,42 @@
 import React, { Component } from "react";
-import { subscribe } from "../sockets";
+import { subscribe, connect, emit } from "../sockets";
+import { ON_CONNECTIONS_UPDATE, ON_MESSAGE_PUBLISH } from "../sockets/types";
+import { get } from "../services/request.service";
 
 class IndicatorsBlock extends Component {
   state = {
     nbConnectedUsers: "",
     nbPublishedMessages: ""
   };
+
+  messagePublishSub = undefined;
+  connectionsUpdateSub = undefined;
+
+  listenSocketEvents() {
+    this.messagePublishSub = subscribe(ON_MESSAGE_PUBLISH, payload => {
+      this.setState({ nbPublishedMessages: payload.messagesCounts });
+    });
+
+    this.connectionsUpdateSub = subscribe(ON_CONNECTIONS_UPDATE, payload => {
+      console.log("- received connections update", payload);
+      this.setState({ nbConnectedUsers: payload.connectionsCount });
+    });
+  }
+
   componentDidMount() {
-    subscribe("");
+    get("/message").then(result => {
+      console.log(result);
+      this.setState({
+        nbPublishedMessages: result.nbMessages,
+        nbConnectedUsers: result.nbConnectedUsers
+      });
+    });
+    this.listenSocketEvents();
+  }
+
+  componentWillUnmount() {
+    this.messagePublishSub();
+    this.connectionsUpdateSub();
   }
 
   render() {

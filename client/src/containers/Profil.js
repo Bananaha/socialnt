@@ -19,9 +19,8 @@ class Profil extends Component {
 
   componentDidMount() {
     console.log(this.props.match.params.id);
-    get("/users/" + this.props.match.params.id)
+    get(`/users/${this.props.match.params.id}`)
       .then(userInformations => {
-        console.log("response", userInformations);
         this.setState({
           sex: userInformations.sex,
           birthDate: userInformations.birthDate,
@@ -63,7 +62,7 @@ class Profil extends Component {
               {this.state.birthDate} {this.state.sex}
             </p>
             <p>{this.state.city}</p>
-            <button onClick={this.editProfil}>Editer mon profil</button>
+            <button onClick={this.editProfil}>Editer mon profile</button>
             <MessagesList />
           </div>
         )}

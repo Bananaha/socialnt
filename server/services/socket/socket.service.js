@@ -1,32 +1,49 @@
-const socketActions = require("./socket.actions");
+"use strict";
 
-const sockets = [];
+const socketActions = require("./socket.action");
+const tokenService = require("../token.service");
+let sockets = [];
 
 const onConnection = io => {
   io.on("connection", socket => {
     console.log("WS CONNECTION DETECteD");
     const socketItem = {
       socket,
-      user: {
+      __user: {
         profile: "VISITOR"
       }
     };
+
     sockets.push(socketItem);
-    socketActions.attachDispatcher(socket, io);
+
+    emit("ON_CONNECTIONS_UPDATE", { connectionsCount: sockets.length });
 
     socket.on("USER_INFO", token => {
-      // check token
-      // if token bad, close ws
-      // get user
-      // socketItem.user = { profile: 'XXX', id: '123' }
+      if (token) {
+        tokenService
+          .verifyToken(token)
+          .then(result => {
+            socketItem.user = result;
+          })
+          .catch(error => {
+            socket.disconnect();
+          });
+      }
+
+      socketActions.attachDispatcher(socket, io);
+    });
+
+    socket.on("disconnect", () => {
+      sockets = sockets.filter(socketItem => socketItem.socket !== socket);
+      emit("ON_CONNECTIONS_UPDATE", { connectionsCount: sockets.length });
     });
   });
 };
 
 const emit = (event, payload, filter) => {
-  sockets
-    .filter(filter)
-    .forEach(socketItem => socketItem.socket.emit(event, payload));
+  const filteredSockets = filter ? sockets.filter(filter) : sockets;
+
+  filteredSockets.forEach(socketItem => socketItem.socket.emit(event, payload));
 };
 
 const emitForAdmin = (event, payload) => {
@@ -37,7 +54,12 @@ const emitForUsers = (event, payload, users) => {
   emit(event, payload, socketItem => users.indexOf(socketItem.user.id) !== -1);
 };
 
+const nbConnectedUsers = () => {
+  return sockets.length;
+};
+
 module.exports = {
   onConnection,
-  emit
+  emit,
+  nbConnectedUsers
 };

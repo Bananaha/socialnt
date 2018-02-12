@@ -9,58 +9,53 @@ const socketService = require("./socket/socket.service");
 const ObjectId = require("mongodb").ObjectID;
 
 moment.locale("fr");
-const COLLECTION_NAME = "messages";
 
-const save = (req, res) => {
+// EX ICI
+// const broadcastRefreshStats = () => {
+//   countMessages().then(result => {
+//     socketService.emit("REFRESH_STATS", { result });
+//   });
+// };
+
+const save = (body, userId) => {
+  const autor = userId;
+  let status = "public";
+
   return dbService
-    .getOne("users", { _id: ObjectId(req.__user) })
-    .then(user => {
-      if (user) {
-        console.log(user);
-        const autor = user._id;
-        let status = "public";
-
-        dbService
-          .create(COLLECTION_NAME, {
-            date: new Date(),
-            content: req.body.message,
-            attachment: req.body.attachment,
-            autor: autor,
-            status: status
-          })
-          .then(result => {
-            res
-              .status(200)
-              .json({ message: "Votre message a été posté avec succès." });
-          })
-          .catch(error => {
-            console.log("ERROR => MESSAGE SERVICES save ", error);
-            res
-              .status(500)
-              .json({ message: "Le message n'a pas pu être enregistré." });
-          });
-      } else {
-        console.log("ERROR => MESSAGE SERVICES save ");
-        res
-          .status(500)
-          .json({ message: "Le message n'a pas pu être enregistré." });
-      }
+    .create("messages", {
+      date: new Date(),
+      content: body.message,
+      attachment: body.attachment,
+      autor: autor,
+      status: status
     })
-    .catch(error => {
-      console.log(error);
+    .then(result => {
+      countMessages()
+        .then(messagesCounts => {
+          socketService.emit("ON_MESSAGE_PUBLISH", { messagesCounts });
+        })
+        .catch(error => {
+          console.error("Error while counting messages", error);
+        });
     });
 };
 
 const find = (req, res) => {
+  console.log(req.params);
   const PER_PAGE = 10;
-  const page = req.params.page || 1;
+  let page;
+  if (req.params.page === "undefined") {
+    page = 1;
+  } else {
+    page = req.params.page;
+  }
   return dbService
     .getOne("users", { _id: ObjectId(req.params.id) })
     .then(user => {
       if (user) {
         return dbService
           .findAndCount(
-            COLLECTION_NAME,
+            "messages",
             {
               $or: [{ autor: user._id }, { dest: user._id }]
             },
@@ -138,14 +133,15 @@ const suppress = (req, res) => {
 };
 
 const countMessages = () => {
+  console.log("countMessage");
   return dbService
     .count("messages", {}, 0)
     .then(nbMessages => {
-      console.log(nbMessages);
+      console.log("COUNTMESSAGE OK", nbMessages);
       return nbMessages;
     })
     .catch(error => {
-      console.log(error);
+      console.log("COUNTMESSAGE CATCH", error);
     });
 };
 

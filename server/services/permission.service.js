@@ -23,7 +23,7 @@ const PERMISSIONS_CALLBACKS = {
 const permissionDispatcher = request => {
   return (req, res, next) => {
     // no profile => redirect + error
-    if (!req.__profil) {
+    if (!req.__profile) {
       res.status(403).redirect(path.join("/"));
       return;
     }
@@ -31,15 +31,10 @@ const permissionDispatcher = request => {
     const currentUser = req.__user;
     const targetUser = req.body.targetUser || req.params.targetUser;
 
-    const matchingProfile = profiles[req.__profil];
+    const matchingProfile = profiles[req.__profile];
     const permissionCallback = PERMISSIONS_CALLBACKS[request];
 
-    console.log(
-      "matchingProfile",
-      matchingProfile,
-      "permissionCallback",
-      permissionCallback
-    );
+    console.log(request);
 
     const canDoAction = matchingProfile[permissionCallback](
       currentUser,
@@ -52,7 +47,7 @@ const permissionDispatcher = request => {
       })
       .catch(() => {
         console.log("reject");
-        if (req.__profil === "visitor") {
+        if (req.__profile === "visitor") {
           res
             .status(403)
             .redirect(path.join(__dirname + "/../../client/public/index.html"));

@@ -8,7 +8,7 @@ const COLLECTION_NAME = "users";
 
 const signIn = (req, res) => {
   const userInformations = req.body;
-  userInformations.profil = "member";
+  userInformations.profile = "member";
   dbService
     .getOne(COLLECTION_NAME, { pseudo: userInformations.pseudo })
     .then(user => {

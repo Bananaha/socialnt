@@ -75,10 +75,10 @@ const update = (req, res) => {
     )
     .then(() => {
       console.log("success");
-      res.status(200).json({ message: "Votre profil a été mis à jour" });
+      res.status(200).json({ message: "Votre profile a été mis à jour" });
     })
     .catch(error => {
-      console.log("USERS.ROUTE => update user profil ERROR", error);
+      console.log("USERS.ROUTE => update user profile ERROR", error);
       res.status(500).json({ error });
     });
 };

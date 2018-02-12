@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Route, Switch, Redirect, withRouter } from "react-router-dom";
 import { connect, subscribe } from "./sockets";
-import { ON_CONNECTION } from "./sockets/types";
 
 import "./App.css";
 import Nav from "./components/Nav";
@@ -24,9 +23,6 @@ export class App extends Component {
 
   componentDidMount() {
     connect();
-    subscribe(ON_CONNECTION, payload => {
-      console.log("hola", payload);
-    });
   }
 
   render() {
@@ -35,7 +31,7 @@ export class App extends Component {
         <Nav links={this.state.links} />
         <Switch>
           <Route exact path="/login" component={Login} />
-          <Route exact path="/profil/:id" component={Profil} />
+          <Route exact path="/profile/:id" component={Profil} />
           <Route exact path="/setProfil/:id" component={SetProfil} />
           <Route exact path="/resetPassword/" component={ResetPassword} />
           <Route exact path="/resetPassword/:token" component={ResetPassword} />

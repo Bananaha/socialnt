@@ -78,23 +78,43 @@ const checkProfil = (req, res, next) => {
   console.log("checkToken");
   const clientToken = req.headers["x-csrf-token"];
   if (clientToken) {
-    jwt.verify(clientToken, SECRET, (error, decoded) => {
-      if (error) {
-        console.log("ERROR", error);
-        req.__profil = "visitor";
+    verifyToken(clientToken)
+      .then(result => {
+        req.__profile = result.profile;
+        req.__user = result.user;
         next();
+      })
+      .catch(() => {
+        req.__profile = "visitor";
+        next();
+      });
+  } else {
+    req.__profile = "visitor";
+    next();
+  }
+};
+
+const verifyToken = token => {
+  return new Promise((resolve, reject) => {
+    jwt.verify(token, SECRET, (error, decoded) => {
+      if (error) {
+        resolve({
+          profile: "visitor"
+        });
       } else {
         clientId = decoded.data;
         dbService
           .getOne("users", { _id: ObjectId(clientId) })
           .then(user => {
             if (user) {
-              req.__profil = user.profil;
-              req.__user = user._id;
-              next();
+              resolve({
+                profile: user.profile,
+                user: user._id
+              });
             } else {
-              req.__profil = "visitor";
-              next();
+              resolve({
+                profile: "visitor"
+              });
             }
           })
           .catch(error => {
@@ -102,17 +122,15 @@ const checkProfil = (req, res, next) => {
               "ERROR IN CHECK TOKEN, TOKEN FOUND BUT ENABLE TO REQUEST INFORMATION IN DB IN ORDER TO SET PROFIL",
               error
             );
-            res.status(500);
+            reject(error);
           });
       }
     });
-  } else {
-    req.__profil = "visitor";
-    next();
-  }
+  });
 };
 
 module.exports = {
   authentication,
-  checkProfil
+  checkProfil,
+  verifyToken
 };

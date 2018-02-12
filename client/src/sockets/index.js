@@ -2,6 +2,7 @@ import openSocket from "socket.io-client";
 import TYPES from "./types";
 
 let socket;
+const token = localStorage.getItem("token");
 const subscribers = {};
 
 export const subscribe = (eventName, eventCb) => {
@@ -24,8 +25,8 @@ export const emit = (event, payload) => {
 
 export const connect = () => {
   socket = openSocket("http://localhost:5000");
-
-  socket.emit(TYPES_USER_INFO, token);
+  console.log(token);
+  socket.emit(TYPES.USER_INFO, token);
 
   Object.values(TYPES).forEach(eventType => {
     socket.on(eventType, payload => {
