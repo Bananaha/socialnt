@@ -23,6 +23,13 @@ const findById = (req, res) => {
     });
 };
 
+const getFriends = userId => {
+  if (!userId) {
+    return Promise.reject();
+  }
+  return dbService.getAll(COLLECTION_NAME, { friends: { $in: [userId] } });
+};
+
 const findMany = (req, res) => {
   const queries = req.params.values;
   return dbService
@@ -86,5 +93,6 @@ const update = (req, res) => {
 module.exports = {
   findById,
   update,
-  findMany
+  findMany,
+  getFriends
 };

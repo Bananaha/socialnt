@@ -9,6 +9,7 @@ import Profil from "./containers/Profil";
 import SetProfil from "./containers/SetProfil";
 import ResetPassword from "./containers/ResetPassword";
 import UsersList from "./containers/UsersList";
+import Chat from "./components/Chat";
 
 export class App extends Component {
   constructor(props) {
@@ -38,6 +39,7 @@ export class App extends Component {
           <Route exact path="/search/:query" component={UsersList} />
           <Redirect to="/login" />
         </Switch>
+        <Chat />
       </div>
     );
   }

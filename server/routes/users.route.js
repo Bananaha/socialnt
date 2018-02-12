@@ -11,12 +11,22 @@ const upload = require("../services/uploadFile.service");
 
 const router = new Router();
 
+const getFriends = (req, res) => {
+  userService.getFriends(req.__user).then(friends => {
+    res.status(200).json(friends);
+  });
+};
+
+router.get("/friends", getFriends);
+
 router
   .route("/:targetUser")
   .get(permission("viewProfil"), userService.findById);
+
 router
   .route("/editProfil")
   .post(permission("editProfil"), upload.single("file"), userService.update);
+
 router.route("/search/:values").get(permission("search"), userService.findMany);
 
 router.route("/reset/:token").get(passwordService.checkResetUrl);
