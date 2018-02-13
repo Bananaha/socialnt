@@ -156,7 +156,7 @@ class SetProfil extends Component {
             />
           </label>
           <label>
-            file de profile :
+            Photo de profil :
             <FileUpload
               name="file"
               value={this.state.file}

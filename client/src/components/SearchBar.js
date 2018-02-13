@@ -50,17 +50,15 @@ class SearchBar extends Component {
     }, 300);
   };
 
-  searchUsers = event => {
+  onSubmit = event => {
     event.preventDefault();
-    const query = this.state.searchQuery;
-    console.log("query", query);
-    this.props.history.push("/search/" + query);
+    this.props.onSubmit(this.state.searchQuery);
   };
 
   render() {
     return (
       <div>
-        <form onSubmit={this.searchUsers}>
+        <form onSubmit={this.onSubmit}>
           <input
             onInput={this.handleChange}
             type="text"
