@@ -23,14 +23,17 @@ const onConnection = io => {
         tokenService
           .verifyToken(token)
           .then(result => {
-            socketItem.user = result;
+            socketItem.user = {
+              _id: result.user,
+              profile: result.profile
+            };
           })
           .catch(error => {
             socket.disconnect();
           });
       }
 
-      socketActions.attachDispatcher(socket, io);
+      socketActions.attachDispatcher(socketItem, { emit, emitForUsers });
     });
 
     socket.on("disconnect", () => {
@@ -42,7 +45,7 @@ const onConnection = io => {
 
 const emit = (event, payload, filter) => {
   const filteredSockets = filter ? sockets.filter(filter) : sockets;
-
+  console.log("EMIT", event, payload);
   filteredSockets.forEach(socketItem => socketItem.socket.emit(event, payload));
 };
 
@@ -51,7 +54,11 @@ const emitForAdmin = (event, payload) => {
 };
 
 const emitForUsers = (event, payload, users) => {
-  emit(event, payload, socketItem => users.indexOf(socketItem.user.id) !== -1);
+  emit(
+    event,
+    payload,
+    socketItem => users.indexOf(socketItem.user._id.toString()) !== -1
+  );
 };
 
 const nbConnectedUsers = () => {

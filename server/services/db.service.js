@@ -67,6 +67,19 @@ const update = (collectionName, filters, doc) => {
   });
 };
 
+const updateAndReturn = (collectionName, filters, doc) => {
+  return new Promise((resolve, reject) => {
+    state.db
+      .collection(collectionName)
+      .findOneAndUpdate(filters, doc, (error, result) => {
+        if (error) {
+          return reject(error);
+        }
+        return resolve(result);
+      });
+  });
+};
+
 // getAll documents from a collection
 // @params 'string' collectionName
 // @params 'object' filter
@@ -186,6 +199,7 @@ module.exports = {
   count,
   getOne,
   update,
+  updateAndReturn,
   aggregate,
   state
 };

@@ -1,14 +1,40 @@
-const TYPES = {};
+const chatService = require("../chat.service");
 
-const attachDispatcher = (socket, io) => {
+const TYPES = {
+  SEND_CHAT_MESSAGE: "SEND_CHAT_MESSAGE"
+};
+
+const attachDispatcher = (socketItem, socketCallbacks) => {
   Object.keys(TYPES).forEach(eventType => {
-    socket.on(eventType, payload => {
-      dispatchSocketEvent(eventType, socket, io, payload);
+    socketItem.socket.on(eventType, payload => {
+      dispatchSocketEvent(eventType, socketItem, payload, socketCallbacks);
     });
   });
 };
 
-const dispatchSocketEvent = (eventType, socket, io, payload) => {};
+const dispatchSocketEvent = (
+  eventType,
+  socketItem,
+  payload,
+  socketCallbacks
+) => {
+  switch (eventType) {
+    case TYPES.SEND_CHAT_MESSAGE:
+      chatService
+        .addMessage(payload.conversationId, payload.message, socketItem.user)
+        .then(result => {
+          socketCallbacks.emitForUsers(
+            "ON_CHAT_MESSAGE",
+            result.message,
+            result.users.map(id => id.toString())
+          );
+        });
+      break;
+
+    default:
+      break;
+  }
+};
 
 const nbConnectedUsers = (socket, io) => {
   console.log("toto");

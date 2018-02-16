@@ -2,10 +2,33 @@ const ObjectId = require("mongodb").ObjectID;
 
 const dbService = require("./db.service");
 
+const addMessage = (conversationId, message, user) => {
+  const createdMessage = {
+    text: message,
+    autor: user._id,
+    date: Date.now()
+  };
+
+  return dbService
+    .updateAndReturn(
+      "chatConversations",
+      { _id: ObjectId(conversationId) },
+      {
+        $push: {
+          messages: createdMessage
+        }
+      }
+    )
+    .then(res => ({
+      message: createdMessage,
+      users: res.value.users
+    }));
+};
+
 const createConversation = (friendId, userId) => {
   return dbService
     .create("chatConversations", {
-      friends: [ObjectId(friendId), userId]
+      users: [ObjectId(friendId), userId]
     })
     .then(conversation => conversation.ops[0])
     .catch(error => {
@@ -13,21 +36,37 @@ const createConversation = (friendId, userId) => {
     });
 };
 
-const getOneConversation = (friendId, userId) => {
-  console.log(friendId);
-  return dbService
+const getOrCreateByUsers = (friendId, userId) =>
+  dbService
     .getOne("chatConversations", {
-      friends: { $all: [userId, ObjectId(friendId)] }
+      users: { $all: [userId, ObjectId(friendId)] }
     })
     .then(conversation => {
-      if (conversation) {
-        return conversation;
-      } else {
-        return createConversation(friendId, userId);
-      }
-    });
+      return conversation || createConversation(friendId, userId);
+    })
+    .then(conversation => getWithAggregatedUsers(conversation._id));
+
+const getWithAggregatedUsers = conversationId => {
+  const othersCollections = [
+    {
+      collectionName: "users",
+      collectionField: "_id",
+      collectionAlias: "users"
+    }
+  ];
+  return dbService
+    .aggregate(
+      "chatConversations",
+      "users",
+      {
+        _id: conversationId
+      },
+      othersCollections
+    )
+    .then(conversations => conversations[0]);
 };
 
 module.exports = {
-  getOneConversation
+  getOrCreateByUsers,
+  addMessage
 };

@@ -67,23 +67,21 @@ class MessagesList extends Component {
             <div>
               {this.state.messages.map((message, index) => {
                 return (
-                  <div>
+                  <div key={message._id}>
                     <div>
                       {message.dest ? (
                         <div>
-                          <span key={index + message.autor}>
-                            {message.autor}
-                          </span>
+                          <span>{message.autor}</span>
                           <span> | </span>
-                          <span key={index + message.dest}>{message.dest}</span>
+                          <span>{message.dest}</span>
                         </div>
                       ) : (
-                        <span key={index + message.autor}>{message.autor}</span>
+                        <span>{message.autor}</span>
                       )}
                     </div>
 
-                    <p key={index + message.content}>{message.content}</p>
-                    <span key={index + message.date}>{message.date}</span>
+                    <p>{message.content}</p>
+                    <span>{message.date}</span>
                   </div>
                 );
               })}
