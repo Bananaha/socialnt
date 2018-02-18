@@ -17,11 +17,16 @@ const PERMISSIONS_CALLBACKS = {
   sendPost: "canSendPost",
   editProfil: "canEditProfil",
   search: "canSearch",
-  friendRequest: "canFriendRequest"
+  searchFriends: "canSearchFriends",
+  friendRequest: "canFriendRequest",
+  findUserProfil: "canFindUserProfil",
+  deleteProfil: "canDeleteProfil",
+  deleteAllProfils: "canDeleteAllProfils"
 };
 
 const permissionDispatcher = request => {
   return (req, res, next) => {
+    console.log(req.body, req.params);
     console.log(req.__profile, req.__user);
     // no profile => redirect + error
     if (!req.__profile) {
@@ -47,7 +52,7 @@ const permissionDispatcher = request => {
         next();
       })
       .catch(error => {
-        console.log("reject", error);
+        console.log("reject", error, req.__profile);
         if (req.__profile === "visitor") {
           res
             .status(403)

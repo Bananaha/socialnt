@@ -18,10 +18,7 @@ export class App extends Component {
       { titre: "Deconnexion", href: "www.linkedin.com" }
     ]
   };
-  getToken = () => {
-    localStorage.getItem("token");
-    console.log(localStorage.getItem("token"));
-  };
+
   componentDidMount() {
     connect();
   }
@@ -29,7 +26,7 @@ export class App extends Component {
   render() {
     return (
       <div>
-        {/* {this.getToken ? <Nav links={this.state.links} /> : ""} */}
+        <Nav links={this.state.links} />
 
         <Switch>
           <Route exact path="/login" component={Login} />
@@ -40,7 +37,7 @@ export class App extends Component {
           <Route exact path="/search/:query" component={UsersList} />
           <Redirect to="/login" />
         </Switch>
-        {/* {this.getToken ? <Chat /> : ""} */}
+        <Chat />
       </div>
     );
   }

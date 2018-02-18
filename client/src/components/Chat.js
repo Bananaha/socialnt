@@ -54,9 +54,12 @@ class Chat extends Component {
         conversations: conversations
       });
     });
-    get("/users/friends").then(friends => {
-      this.setState({ friends, loading: false });
-    });
+    // get("/users/friends").then(friends => {
+    //   this.setState({ friends, loading: false });
+    // })
+    // .catch(error => {
+    //   console.log("chat get usersFriends", error)
+    // })
   }
 
   renderFriend = friend => {
@@ -74,7 +77,8 @@ class Chat extends Component {
         <SearchBar
           onSubmit={this.getConversation}
           onSelect={this.getConversation}
-          requestPath="/users/search/friend/"
+          requestPath="/users/search/friends/"
+          placeholder="Chercher un ami"
         />
         {this.state.loading ? (
           ""

@@ -57,6 +57,7 @@ class SetProfil extends Component {
   updateProfil = event => {
     event.preventDefault();
     const userValues = this.state;
+    userValues.targetUser = this.props.match.params.id;
     post("/users/editProfil", userValues, userValues.file)
       .then(() => {
         console.log("profilUpdate");

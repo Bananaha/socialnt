@@ -13,15 +13,23 @@ const canEditProfil = (currentUser, targetUser) =>
   helper.isSameUser(currentUser, targetUser) ||
   helper.isFriend(currentUser, targetUser);
 
-const canSearch = currentUser => true;
 const canFriendRequest = (currentUser, targetUser) =>
   !helper.isSameUser(currentUser, targetUser) ||
   !helper.isFriend(currentUser, targetUser);
+const canSearchFriends = currentUser => true;
+const canSearch = currentUser => true;
+const canFindUserProfil = currentUser => true;
+const canDeleteProfil = () => true;
+const canDeleteAllProfils = () => false;
 
 module.exports = {
   canViewProfil,
   canSendPost,
   canEditProfil,
   canSearch,
-  canFriendRequest
+  canSearchFriends,
+  canFriendRequest,
+  canFindUserProfil,
+  canDeleteProfil,
+  canDeleteAllProfils
 };

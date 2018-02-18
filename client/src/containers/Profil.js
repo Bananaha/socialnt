@@ -3,6 +3,7 @@ import { get } from "../services/request.service";
 import { withRouter } from "react-router-dom";
 import "whatwg-fetch";
 
+import DeleteButton from "../components/DeleteButton";
 import PostsList from "../components/PostsList";
 class Profil extends Component {
   state = {
@@ -41,6 +42,11 @@ class Profil extends Component {
     this.props.history.push("/setProfil/" + this.props.match.params.id);
   };
 
+  deleteProfil = event => {
+    event.preventDefault();
+    console.log("delete");
+  };
+
   render() {
     return (
       <div className="Home">
@@ -62,6 +68,10 @@ class Profil extends Component {
             </p>
             <p>{this.state.city}</p>
             <button onClick={this.editProfil}>Editer mon profile</button>
+            <DeleteButton
+              onClick={this.deleteProfil}
+              text="Supprimer le profil"
+            />
             <PostsList />
           </div>
         )}

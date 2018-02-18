@@ -75,9 +75,11 @@ const checkProfil = (req, res, next) => {
 };
 
 const verifyToken = token => {
+  console.log("verifyToken token", token);
   return new Promise((resolve, reject) => {
     jwt.verify(token, CONSTANTS.SECRET, (error, decoded) => {
       if (error) {
+        console.log(error);
         resolve({
           profile: "visitor"
         });
@@ -86,6 +88,7 @@ const verifyToken = token => {
         dbService
           .getOne("users", { _id: ObjectId(clientId) })
           .then(user => {
+            console.log("USER", user);
             if (user) {
               resolve({
                 profile: user.profile,

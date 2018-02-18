@@ -188,6 +188,34 @@ const close = done => {
   }
 };
 
+const deleteOne = (collectionName, id) => {
+  return new Promise((resolve, reject) => {
+    state.db
+      .collection(collectionName)
+      .deleteOne({ _id: ObjectId(id) })
+      .toArray((error, result) => {
+        if (error) {
+          return reject(error);
+        }
+        return resolve(result);
+      });
+  });
+};
+
+const deleteMany = collectionName => {
+  return new Promise((resolve, reject) => {
+    state.db
+      .collection(collectionName)
+      .deleteMany({})
+      .toArray((error, result) => {
+        if (error) {
+          return reject(error);
+        }
+        return resolve(result);
+      });
+  });
+};
+
 module.exports = {
   close,
   connect,

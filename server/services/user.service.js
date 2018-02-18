@@ -23,14 +23,26 @@ const findById = (req, res) => {
     });
 };
 
-const getFriends = userId => {
-  if (!userId) {
+const getFriends = (targetUser, currentUser) => {
+  console.log(targetUser, currentUser);
+  if (!targetUser) {
     return Promise.reject();
   }
+
+  const query = new RegExp(targetUser, "i");
+
   return dbService
-    .getAll(COLLECTION_NAME, { friends: { $in: [userId] } })
+    .getAll(
+      COLLECTION_NAME,
+      {
+        $or: [{ firstName: query }, { lastName: query }, { seudo: query }],
+        friends: { $in: [currentUser] }
+      },
+      10
+    )
     .then(friends => {
       console.log(friends);
+      return friends;
     })
     .catch(error => {
       console.error("getFriends userService", error);
@@ -38,13 +50,14 @@ const getFriends = userId => {
 };
 
 const findMany = (req, res) => {
+  console.log(req.query);
   const queries = req.params.values;
   return dbService
     .getAll(COLLECTION_NAME, { $text: { $search: queries } }, 5)
     .then(results => {
       if (results) {
         console.log(results);
-        res.status(200).json({ results: results });
+        res.status(200).json(results);
       } else {
         res.status(404);
       }
@@ -97,9 +110,25 @@ const update = (req, res) => {
     });
 };
 
+const deleteProfil = id => {
+  dbService
+    .deleteOne(COLLECTION_NAME, id)
+    .then(result => console.log("delete profil", result))
+    .catch(error => console.log("delete profil error", error));
+};
+
+const deleteAllProfils = id => {
+  dbService
+    .deleteMany(COLLECTION_NAME)
+    .then(result => console.log("delete all profils", result))
+    .catch(error => console.log("delete all profils", error));
+};
+
 module.exports = {
   findById,
   update,
   findMany,
-  getFriends
+  getFriends,
+  deleteProfil,
+  deleteAllProfils
 };

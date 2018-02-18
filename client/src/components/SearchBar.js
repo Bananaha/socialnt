@@ -29,13 +29,14 @@ class SearchBar extends Component {
     }
     clearTimeout(this.timeOut);
     this.timeOut = setTimeout(() => {
+      console.log(value);
       get(`${this.props.requestPath}${value}`)
         .then(users => {
-          console.log(users.results);
-          if (users.results.length > 0) {
+          console.log(users);
+          if (users.length > 0) {
             this.setState({
               loader: false,
-              results: users.results
+              results: users
             });
           } else {
             this.setState({
@@ -58,6 +59,7 @@ class SearchBar extends Component {
   onSelectItem = id => {
     // TODO ===> si je suis sur mon profil et que j'accède à un autre profil, le template de change pas
     this.props.onSelect(id);
+    this.setState({ results: [] });
   };
 
   render() {
@@ -67,7 +69,7 @@ class SearchBar extends Component {
           <input
             onInput={this.handleChange}
             type="text"
-            placeholder="Chercher un utilisateur"
+            placeholder={this.props.placeholder}
           />
           <button>Ok</button>
         </form>

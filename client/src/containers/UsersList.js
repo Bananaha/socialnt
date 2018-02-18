@@ -14,9 +14,9 @@ class UsersList extends Component {
     const query = this.props.match.params.query;
     get(`/users/search/${query}`)
       .then(users => {
-        if (users.results.length > 0) {
+        if (users.length > 0) {
           this.setState({
-            searchResult: users.results,
+            searchResult: users,
             loader: false
           });
         } else {
