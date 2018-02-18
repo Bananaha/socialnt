@@ -23,7 +23,6 @@ class LogInForm extends Component {
     delete userValues.alert;
     post("/login", userValues)
       .then(response => {
-        console.log(response.token);
         localStorage.setItem("token", response.token);
         this.props.history.push("/profile/" + response.id);
       })
@@ -33,7 +32,6 @@ class LogInForm extends Component {
   };
 
   render() {
-    console.log(this.props);
     return (
       <div>
         <form onSubmit={this.submitForm}>

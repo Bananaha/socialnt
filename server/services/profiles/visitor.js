@@ -1,12 +1,12 @@
 const canViewProfil = () => false;
-const canSendMessage = () => false;
+const canSendPost = () => false;
 const canEditProfil = () => false;
 const canSearch = () => false;
 const canFriendRequest = () => false;
 
 module.exports = {
   canViewProfil,
-  canSendMessage,
+  canSendPost,
   canEditProfil,
   canSearch,
   canFriendRequest

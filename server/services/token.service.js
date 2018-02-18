@@ -2,76 +2,56 @@ const jwt = require("jsonwebtoken");
 const dbService = require("./db.service");
 const ObjectId = require("mongodb").ObjectID;
 const path = require("path");
-
-const SECRET = "hushHush";
-const TOKEN_DELAY = { expiresIn: "1 days" };
-
+const CONSTANTS = require("../CONSTANTS").token;
+console.log("CONSTANTs", CONSTANTS.SECRET);
 const authentication = (req, res, next) => {
-  console.log("authenticate");
-  const clientToken = req.headers["x-csrf-token"];
-  if (clientToken) {
-    jwt.verify(clientToken, SECRET, (error, decoded) => {
-      if (error) {
-        console.log(error, req.body.pseudo);
-        if (req.body.pseudo) {
-          dbService
-            .getOne("users", { pseudo: req.body.pseudo })
-            .then(user => {
-              userId = user._id.toString();
-              token = jwt.sign(
-                {
-                  data: userId
-                },
-                SECRET,
-                TOKEN_DELAY
-              );
-              req.__token = token;
-              req.__user = userId;
-
-              next();
-            })
-            .catch(error => {
-              res.status(403).redirect(path.join("/"));
-              return;
-            });
-        } else {
-          res.status(403).redirect(path.join("/"));
-          return;
-        }
+  console.log("authentication");
+  return dbService
+    .getOne("users", { pseudo: req.body.pseudo })
+    .then(user => {
+      if (!user) {
+        res.status(403).json({ response: "utilisateur introuvable" });
+        return;
+      }
+      const clientToken = req.headers["x-csrf-token"];
+      if (clientToken) {
+        jwt.verify(clientToken, CONSTANTS.SECRET, (error, decoded) => {
+          if (error || decoded.data != user._id.toString()) {
+            const token = jwt.sign(
+              {
+                data: user._id.toString()
+              },
+              CONSTANTS.SECRET,
+              CONSTANTS.TOKEN_DELAY
+            );
+            req.__token = token;
+            req.__user = user._id;
+            next();
+          } else {
+            req.__token = clientToken;
+            req.__user = decoded.data;
+            next();
+          }
+        });
       } else {
-        req.__token = clientToken;
-        req.__user = decoded.data;
+        const token = jwt.sign(
+          {
+            data: user._id
+          },
+          CONSTANTS.SECRET,
+          CONSTANTS.TOKEN_DELAY
+        );
+        req.__token = token;
+        req.__user = user._id;
+
         next();
       }
-    });
-  } else {
-    if (req.body.pseudo) {
-      dbService
-        .getOne("users", { pseudo: req.body.pseudo })
-        .then(user => {
-          userId = user._id.toString();
-          token = jwt.sign(
-            {
-              data: userId
-            },
-            SECRET,
-            TOKEN_DELAY
-          );
-          req.__token = token;
-          req.__user = userId;
-
-          next();
-        })
-        .catch(error => {
-          console.log(error);
-          res.status(403).redirect(path.join("/"));
-          return;
-        });
-    } else {
+    })
+    .catch(error => {
+      console.error(error);
       res.status(403).redirect(path.join("/"));
       return;
-    }
-  }
+    });
 };
 
 const checkProfil = (req, res, next) => {
@@ -96,7 +76,7 @@ const checkProfil = (req, res, next) => {
 
 const verifyToken = token => {
   return new Promise((resolve, reject) => {
-    jwt.verify(token, SECRET, (error, decoded) => {
+    jwt.verify(token, CONSTANTS.SECRET, (error, decoded) => {
       if (error) {
         resolve({
           profile: "visitor"

@@ -46,7 +46,7 @@ class SetProfil extends Component {
         });
       })
       .catch(error => {
-        console.log(error);
+        console.log("handleFileChange setProfil", error);
       });
   }
 

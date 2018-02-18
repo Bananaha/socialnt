@@ -14,7 +14,7 @@ const handleRequestAnswer = canDoAction => {
 
 const PERMISSIONS_CALLBACKS = {
   viewProfil: "canViewProfil",
-  sendMessage: "canSendMessage",
+  sendPost: "canSendPost",
   editProfil: "canEditProfil",
   search: "canSearch",
   friendRequest: "canFriendRequest"
@@ -22,6 +22,7 @@ const PERMISSIONS_CALLBACKS = {
 
 const permissionDispatcher = request => {
   return (req, res, next) => {
+    console.log(req.__profile, req.__user);
     // no profile => redirect + error
     if (!req.__profile) {
       res.status(403).redirect(path.join("/"));
@@ -45,8 +46,8 @@ const permissionDispatcher = request => {
         console.log("approuved");
         next();
       })
-      .catch(() => {
-        console.log("reject");
+      .catch(error => {
+        console.log("reject", error);
         if (req.__profile === "visitor") {
           res
             .status(403)

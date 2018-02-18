@@ -1,14 +1,14 @@
 const helper = require("./helper");
 
 const canViewProfil = () => true;
-const canSendMessage = () => true;
+const canSendPost = () => true;
 const canEditProfil = () => true;
 const canSearch = () => true;
 const canFriendRequest = () => true;
 
 module.exports = {
   canViewProfil,
-  canSendMessage,
+  canSendPost,
   canEditProfil,
   canSearch,
   canFriendRequest

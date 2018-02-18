@@ -41,7 +41,7 @@ class SignInForm extends Component {
           }, 5000);
         })
         .catch(error => {
-          console.log(error);
+          console.log("submitForm signin", error);
         });
     } else {
       const email = event.target.email;

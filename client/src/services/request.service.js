@@ -9,7 +9,7 @@ const isVisitorRoute = url => {
 };
 
 const handleFetchResponse = async (response, url) => {
-  console.log("response", response);
+  console.log(response, url);
   if (response.status === 401) {
     if (!isVisitorRoute(response.url)) {
       console.log("pas auth");
@@ -82,7 +82,6 @@ export const post = async (url, data, files) => {
         headers: withTokenHeader({}),
         body: toFormData(data, files)
       };
-  console.log("post with files?", !!files, req.body);
   try {
     const response = await fetch(API_ROOT + url, {
       method: "POST",
@@ -119,7 +118,7 @@ export const get = async (url, params) => {
     if (cache[finalUrl]) {
       return JSON.parse(cache[finalUrl]);
     }
-    console.log("finalUrl", finalUrl, withTokenHeader());
+
     const response = await fetch(finalUrl, {
       method: "GET",
       headers: withTokenHeader()

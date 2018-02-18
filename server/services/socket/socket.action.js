@@ -23,21 +23,25 @@ const dispatchSocketEvent = (
       chatService
         .addMessage(payload.conversationId, payload.message, socketItem.user)
         .then(result => {
+          const users = result.users.map(id => id.toString());
+          const response = {
+            message: result.message,
+            conversationId: payload.conversationId
+          };
           socketCallbacks.emitForUsers(
             "ON_CHAT_MESSAGE",
-            result.message,
+            response,
             result.users.map(id => id.toString())
           );
+        })
+        .catch(error => {
+          console.log("dispatchSocketEvent socket action", error);
         });
       break;
 
     default:
       break;
   }
-};
-
-const nbConnectedUsers = (socket, io) => {
-  console.log("toto");
 };
 
 module.exports = {

@@ -22,7 +22,10 @@ const addMessage = (conversationId, message, user) => {
     .then(res => ({
       message: createdMessage,
       users: res.value.users
-    }));
+    }))
+    .catch(error => {
+      console.log("add Message error", error);
+    });
 };
 
 const createConversation = (friendId, userId) => {

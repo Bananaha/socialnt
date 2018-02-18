@@ -12,16 +12,16 @@ import UsersList from "./containers/UsersList";
 import Chat from "./components/Chat";
 
 export class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      links: [
-        { titre: "Profil", href: "www.google.com" },
-        { titre: "Deconnexion", href: "www.linkedin.com" }
-      ]
-    };
-  }
-
+  state = {
+    links: [
+      { titre: "Profil", href: "www.google.com" },
+      { titre: "Deconnexion", href: "www.linkedin.com" }
+    ]
+  };
+  getToken = () => {
+    localStorage.getItem("token");
+    console.log(localStorage.getItem("token"));
+  };
   componentDidMount() {
     connect();
   }
@@ -29,7 +29,8 @@ export class App extends Component {
   render() {
     return (
       <div>
-        <Nav links={this.state.links} />
+        {/* {this.getToken ? <Nav links={this.state.links} /> : ""} */}
+
         <Switch>
           <Route exact path="/login" component={Login} />
           <Route exact path="/profile/:id" component={Profil} />
@@ -39,7 +40,7 @@ export class App extends Component {
           <Route exact path="/search/:query" component={UsersList} />
           <Redirect to="/login" />
         </Switch>
-        <Chat />
+        {/* {this.getToken ? <Chat /> : ""} */}
       </div>
     );
   }

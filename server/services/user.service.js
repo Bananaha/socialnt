@@ -27,7 +27,14 @@ const getFriends = userId => {
   if (!userId) {
     return Promise.reject();
   }
-  return dbService.getAll(COLLECTION_NAME, { friends: { $in: [userId] } });
+  return dbService
+    .getAll(COLLECTION_NAME, { friends: { $in: [userId] } })
+    .then(friends => {
+      console.log(friends);
+    })
+    .catch(error => {
+      console.error("getFriends userService", error);
+    });
 };
 
 const findMany = (req, res) => {
@@ -82,7 +89,7 @@ const update = (req, res) => {
     )
     .then(() => {
       console.log("success");
-      res.status(200).json({ message: "Votre profile a été mis à jour" });
+      res.status(200).json({ message: "Votre profil a été mis à jour" });
     })
     .catch(error => {
       console.log("USERS.ROUTE => update user profile ERROR", error);

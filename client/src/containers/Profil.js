@@ -3,7 +3,7 @@ import { get } from "../services/request.service";
 import { withRouter } from "react-router-dom";
 import "whatwg-fetch";
 
-import MessagesList from "../components/MessagesList";
+import PostsList from "../components/PostsList";
 class Profil extends Component {
   state = {
     sex: "",
@@ -18,7 +18,6 @@ class Profil extends Component {
   };
 
   componentDidMount() {
-    console.log(this.props.match.params.id);
     get(`/users/${this.props.match.params.id}`)
       .then(userInformations => {
         this.setState({
@@ -63,7 +62,7 @@ class Profil extends Component {
             </p>
             <p>{this.state.city}</p>
             <button onClick={this.editProfil}>Editer mon profile</button>
-            <MessagesList />
+            <PostsList />
           </div>
         )}
       </div>

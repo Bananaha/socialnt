@@ -1,33 +1,31 @@
 import React, { Component } from "react";
 import { subscribe, connect, emit } from "../sockets";
-import { ON_CONNECTIONS_UPDATE, ON_MESSAGE_PUBLISH } from "../sockets/types";
+import { ON_CONNECTIONS_UPDATE, ON_POST_PUBLISH } from "../sockets/types";
 import { get } from "../services/request.service";
 
 class IndicatorsBlock extends Component {
   state = {
     nbConnectedUsers: "",
-    nbPublishedMessages: ""
+    nbPublishedPosts: ""
   };
 
-  messagePublishSub = undefined;
+  postPublishSub = undefined;
   connectionsUpdateSub = undefined;
 
   listenSocketEvents() {
-    this.messagePublishSub = subscribe(ON_MESSAGE_PUBLISH, payload => {
-      this.setState({ nbPublishedMessages: payload.messagesCounts });
+    this.postPublishSub = subscribe(ON_POST_PUBLISH, payload => {
+      this.setState({ nbPublishedPosts: payload.postsCounts });
     });
 
     this.connectionsUpdateSub = subscribe(ON_CONNECTIONS_UPDATE, payload => {
-      console.log("- received connections update", payload);
       this.setState({ nbConnectedUsers: payload.connectionsCount });
     });
   }
 
   componentDidMount() {
-    get("/message").then(result => {
-      console.log(result);
+    get("/post").then(result => {
       this.setState({
-        nbPublishedMessages: result.nbMessages,
+        nbPublishedPosts: result.nbPosts,
         nbConnectedUsers: result.nbConnectedUsers
       });
     });
@@ -35,7 +33,7 @@ class IndicatorsBlock extends Component {
   }
 
   componentWillUnmount() {
-    this.messagePublishSub();
+    this.postPublishSub();
     this.connectionsUpdateSub();
   }
 
@@ -43,8 +41,8 @@ class IndicatorsBlock extends Component {
     return (
       <div>
         <div>
-          <p>Nombre de messages postés</p>
-          <span>{this.state.nbPublishedMessages}</span>
+          <p>Nombre de posts publiés</p>
+          <span>{this.state.nbPublishedPosts}</span>
         </div>
         <div>
           <p>Nombre de membres connectés</p>

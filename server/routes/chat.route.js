@@ -15,7 +15,7 @@ const getOneConversation = (req, res) => {
       res.status(200).json(conversation);
     })
     .catch(error => {
-      console.log(error);
+      console.log("getOneConversation chatRoute", error);
     });
 };
 router.route("/:friendId").get(getOneConversation);

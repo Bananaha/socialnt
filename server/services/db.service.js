@@ -131,13 +131,11 @@ const findAndCount = (collectionName, filter, sort, skip, limit) => {
   });
 };
 const count = (collectionName, filter) => {
-  console.log("count");
   return new Promise((resolve, reject) => {
     state.db
       .collection(collectionName)
       .find(filter)
       .count((err, count) => {
-        console.log("========", count);
         if (err) {
           return reject(error);
         }

@@ -2,41 +2,41 @@ import React, { Component } from "react";
 import { get } from "../services/request.service";
 import { withRouter } from "react-router-dom";
 import "whatwg-fetch";
-import BlockMessage from "./BlockMessage";
+import BlockPost from "./BlockPost";
 
-class MessagesList extends Component {
+class PostsList extends Component {
   state = {
-    messages: "",
-    nbMessages: "",
+    posts: "",
+    nbPosts: "",
     pagination: "",
     alert: "",
     loader: true
   };
 
-  // compute pagination based on messages number
-  computeMessages = messages => {
-    console.log(messages);
+  // compute pagination based on posts number
+  computePosts = posts => {
     let pages = [];
-    for (let i = messages.nbMessages, nbPages = 1; i > 0; i -= 10, nbPages++) {
+    for (let i = posts.nbPosts, nbPages = 1; i > 0; i -= 10, nbPages++) {
       pages.push(nbPages);
     }
     this.setState({
       pagination: pages,
-      messages: messages.messages,
-      nbMessages: messages.nbMessages,
+      posts: posts.posts,
+      nbPosts: posts.nbPosts,
       loader: false
     });
   };
 
-  // request all messages where the author or recipient is the profile owner
-  updateMessages = page => {
+  // request all posts where the author or recipient is the profile owner
+  updatePosts = page => {
     const id = this.props.match.params.id;
-    get(`/message/${id}/${page}`)
+    get(`/post/${id}/${page}`)
       .then(result => {
-        this.computeMessages(result);
+        console.log(result);
+        this.computePosts(result);
       })
       .catch(error => {
-        console.log(error);
+        console.error(error);
         this.setState({
           alert: error.alert
         });
@@ -47,41 +47,41 @@ class MessagesList extends Component {
   };
 
   componentDidMount() {
-    this.updateMessages();
+    this.updatePosts();
   }
 
-  loadNextMessages = page => event => {
+  loadNextPosts = page => event => {
     event.preventDefault();
 
-    this.updateMessages(page);
+    this.updatePosts(page);
   };
 
   render() {
     return (
       <div>
-        <BlockMessage onSubmit={this.updateMessages} />
+        <BlockPost onSubmit={this.updatePosts} />
         {this.state.loader ? (
           <p>Loading..</p>
         ) : (
           <div>
             <div>
-              {this.state.messages.map((message, index) => {
+              {this.state.posts.map((post, index) => {
                 return (
-                  <div key={message._id}>
+                  <div key={post._id}>
                     <div>
-                      {message.dest ? (
+                      {post.dest ? (
                         <div>
-                          <span>{message.autor}</span>
+                          <span>{post.autor}</span>
                           <span> | </span>
-                          <span>{message.dest}</span>
+                          <span>{post.dest}</span>
                         </div>
                       ) : (
-                        <span>{message.autor}</span>
+                        <span>{post.autor}</span>
                       )}
                     </div>
 
-                    <p>{message.content}</p>
-                    <span>{message.date}</span>
+                    <p>{post.content}</p>
+                    <span>{post.date}</span>
                   </div>
                 );
               })}
@@ -89,7 +89,7 @@ class MessagesList extends Component {
             <div>
               {this.state.pagination.map((page, index) => {
                 return (
-                  <button onClick={this.loadNextMessages(page)} key={index}>
+                  <button onClick={this.loadNextPosts(page)} key={index}>
                     {page}
                   </button>
                 );
@@ -101,4 +101,4 @@ class MessagesList extends Component {
     );
   }
 }
-export default withRouter(props => <MessagesList {...props} />);
+export default withRouter(props => <PostsList {...props} />);

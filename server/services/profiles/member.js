@@ -5,7 +5,7 @@ const canViewProfil = (currentUser, targetUser) =>
   helper.isSameUser(currentUser, targetUser) ||
   helper.isFriend(currentUser, targetUser);
 
-const canSendMessage = (currentUser, targetUser) =>
+const canSendPost = (currentUser, targetUser) =>
   helper.isSameUser(currentUser, targetUser) ||
   helper.isFriend(currentUser, targetUser);
 
@@ -20,7 +20,7 @@ const canFriendRequest = (currentUser, targetUser) =>
 
 module.exports = {
   canViewProfil,
-  canSendMessage,
+  canSendPost,
   canEditProfil,
   canSearch,
   canFriendRequest

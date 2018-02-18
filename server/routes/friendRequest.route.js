@@ -7,8 +7,17 @@ const friendRequestService = require("../services/friendRequest.service");
 
 const router = new Router();
 
-router
-  .route("/")
-  .post(permission("friendRequest"), friendRequestService.request);
+const requestFriendship = (req, res) => {
+  friendRequestService
+    .request(req.body.targetUser, req.__user)
+    .then(result => {
+      res.status(200).json(result);
+    })
+    .catch(error => {
+      res.status(409).json(error);
+    });
+};
+router.route("/").post(permission("friendRequest"), requestFriendship);
+// router.route("/").get(permission("friendRequest"), requestFriendship);
 
 module.exports = router;

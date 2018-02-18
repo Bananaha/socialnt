@@ -3,15 +3,23 @@ import { withRouter } from "react-router-dom";
 import SearchBar from "./SearchBar";
 
 class Nav extends Component {
-  searchUsers = query => {
+  searchResults = query => {
     this.props.history.push("/search/" + query);
+  };
+
+  goTo = query => {
+    this.props.history.push("/profile/" + query);
   };
 
   render() {
     return (
       <div>
         <h1>Cumulus</h1>
-        <SearchBar onSubmit={this.searchUsers} />
+        <SearchBar
+          onSubmit={this.searchResults}
+          onSelect={this.goTo}
+          requestPath="/users/search/"
+        />
         {this.props.links.map(link => {
           return <Link key={link.titre} href={link.href} titre={link.titre} />;
         })}

@@ -57,7 +57,7 @@ const emitForUsers = (event, payload, users) => {
   emit(
     event,
     payload,
-    socketItem => users.indexOf(socketItem.user._id.toString()) !== -1
+    socketItems => users.indexOf(socketItems.user._id.toString()) !== -1
   );
 };
 
@@ -68,5 +68,6 @@ const nbConnectedUsers = () => {
 module.exports = {
   onConnection,
   emit,
+  emitForUsers,
   nbConnectedUsers
 };

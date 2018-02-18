@@ -27,7 +27,7 @@ class UsersList extends Component {
         }
       })
       .catch(error => {
-        console.log(error);
+        console.log("getMtchingUsers UserList", error);
       });
   };
 

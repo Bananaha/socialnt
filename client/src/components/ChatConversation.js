@@ -20,28 +20,35 @@ export default class ChatConversation extends Component {
 
   handleChange = event => {
     const message = event.target.value;
-    console.log("message", message);
     this.setState({ message: message });
   };
 
   sendMessage = event => {
     event.preventDefault();
-    console.log(this.state.message);
     const message = this.state.message;
     emit(TYPES.SEND_CHAT_MESSAGE, {
       message: message,
       conversationId: this.props.conversation._id
     });
+    this.setState({ message: "" });
+  };
+
+  closeChat = event => {
+    event.preventDefault();
+    console.log("hide");
   };
 
   render() {
     return (
       <div>
         <div>
-          Conversation de{" "}
-          {this.props.conversation.users
-            .map(({ pseudo }) => pseudo)
-            .join(" / ")}
+          <p>
+            Conversation de{" "}
+            {this.props.conversation.users
+              .map(({ pseudo }) => pseudo)
+              .join(" / ")}
+          </p>
+          <button onClick={this.closeChat}>-</button>
         </div>
         <div>{this.renderMessages()}</div>
         <div>

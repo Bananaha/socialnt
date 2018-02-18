@@ -29,7 +29,7 @@ class SearchBar extends Component {
     }
     clearTimeout(this.timeOut);
     this.timeOut = setTimeout(() => {
-      get(`/users/search/${value}`)
+      get(`${this.props.requestPath}${value}`)
         .then(users => {
           console.log(users.results);
           if (users.results.length > 0) {
@@ -45,7 +45,7 @@ class SearchBar extends Component {
           }
         })
         .catch(error => {
-          console.log(error);
+          console.log("handleChange SearchBar", error);
         });
     }, 300);
   };
@@ -53,6 +53,11 @@ class SearchBar extends Component {
   onSubmit = event => {
     event.preventDefault();
     this.props.onSubmit(this.state.searchQuery);
+  };
+
+  onSelectItem = id => {
+    // TODO ===> si je suis sur mon profil et que j'accède à un autre profil, le template de change pas
+    this.props.onSelect(id);
   };
 
   render() {
@@ -72,7 +77,12 @@ class SearchBar extends Component {
             : this.state.results.map((result, index) => {
                 return (
                   <div key={result.pseudo}>
-                    <a href={`/profile/${result._id}`}>{result.pseudo}</a>
+                    <p
+                      key={result._id}
+                      onClick={id => this.onSelectItem(result._id)}
+                    >
+                      {result.pseudo}
+                    </p>
                   </div>
                 );
               })}

@@ -17,7 +17,7 @@ const getFriends = (req, res) => {
   });
 };
 
-router.get("/friends", getFriends);
+// router.get("/friends", getFriends);
 
 router
   .route("/:targetUser")

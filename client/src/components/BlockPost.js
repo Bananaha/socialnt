@@ -3,9 +3,9 @@ import { post } from "../services/request.service";
 import { withRouter } from "react-router-dom";
 import "whatwg-fetch";
 
-class BlockMessage extends Component {
+class BlockPost extends Component {
   state = {
-    userMessage: "",
+    userPost: "",
     alert: "",
     attachment: ""
   };
@@ -17,18 +17,18 @@ class BlockMessage extends Component {
     });
   };
 
-  submitMessage = event => {
+  submitPost = event => {
     event.preventDefault();
-    const messageInfos = {
+    const postInfos = {
       targetUser: this.props.match.params.id,
-      message: this.state.userMessage
+      post: this.state.userPost
     };
 
-    post("/message/newMessage", messageInfos)
+    post("/post/newPost", postInfos)
       .then(result => {
         this.setState({
-          alert: result.message,
-          userMessage: ""
+          alert: result.post,
+          userPost: ""
         });
         setTimeout(() => {
           this.setState({ alert: "" });
@@ -36,19 +36,19 @@ class BlockMessage extends Component {
         this.props.onSubmit();
       })
       .catch(error => {
-        this.setState({ alert: error.message });
+        this.setState({ alert: error.post });
       });
   };
 
   render() {
     return (
       <div>
-        <form onSubmit={this.submitMessage}>
+        <form onSubmit={this.submitPost}>
           <textarea
-            name="userMessage"
+            name="userPost"
             cols="30"
             rows="10"
-            onChange={this.handleChange("userMessage")}
+            onChange={this.handleChange("userPost")}
           />
           <button type="submit">Publier</button>
         </form>
@@ -58,4 +58,4 @@ class BlockMessage extends Component {
   }
 }
 
-export default withRouter(props => <BlockMessage {...props} />);
+export default withRouter(props => <BlockPost {...props} />);
