@@ -124,6 +124,15 @@ const deleteAllProfils = id => {
     .catch(error => console.log("delete all profils", error));
 };
 
+const create = newUser =>
+  dbService.create(
+    COLLECTION_NAME,
+    Object.assign(newUser, {
+      profile: "member",
+      avatar: "default_avatar.png"
+    })
+  );
+
 module.exports = {
   findById,
   update,

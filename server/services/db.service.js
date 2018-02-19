@@ -6,9 +6,17 @@ const state = {
   db: null
 };
 
-const connect = (url, done) => {
+const connect = (done) => {
   if (state.db) {
     return done();
+  }
+  
+  username:password
+
+  let url = `mongodb://${process.env.MONGO_HOST}/${process.env.MONGO_DB}`;
+
+  if (process.env.MONGO_USER && process.env.MONGO_PWD) {
+    url = `${process.env.MONGO_USER}:${process.env.MONGO_PWD}@${url}`
   }
 
   mongo.connect(url, (error, db) => {
