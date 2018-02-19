@@ -42,11 +42,6 @@ class Profil extends Component {
     this.props.history.push("/setProfil/" + this.props.match.params.id);
   };
 
-  deleteProfil = event => {
-    event.preventDefault();
-    console.log("delete");
-  };
-
   render() {
     return (
       <div className="Home">
@@ -68,10 +63,7 @@ class Profil extends Component {
             </p>
             <p>{this.state.city}</p>
             <button onClick={this.editProfil}>Editer mon profile</button>
-            <DeleteButton
-              onClick={this.deleteProfil}
-              text="Supprimer le profil"
-            />
+            <DeleteButton deletePath="/users" text="Supprimer le profil" />
             <PostsList />
           </div>
         )}

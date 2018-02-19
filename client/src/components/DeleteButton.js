@@ -1,9 +1,16 @@
 import React, { Component } from "react";
+import { del } from "../services/request.service";
 import { withRouter } from "react-router-dom";
 
 class DeleteButton extends Component {
+  state = {
+    showModal: false
+  };
   delete = item => {
-    this.props.onClick(item);
+    this.setState({ showModal: true });
+    // del(this.props.deletePath).then(() => {
+    //   this.props.history.push("/setProfil/"
+    // })
   };
 
   render() {
