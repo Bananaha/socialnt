@@ -14,7 +14,6 @@ const transporter = nodemailer.createTransport(mailConfig);
 // send mail with defined transport object
 
 const resetPassword = user => {
-  console.log("in sendMail", user.link);
   const mailOptions = {
     from: '"Claire" <claire.poyo@gmail.com>',
     to: user.email,
@@ -40,7 +39,6 @@ const resetPassword = user => {
       console.log("TRANSPORTER MAIL ERROR RESET PASSWORD", error);
       return error;
     }
-    console.log("Message sent: " + info.response);
   });
 };
 

@@ -19,6 +19,7 @@ const onConnection = io => {
     emit("ON_CONNECTIONS_UPDATE", { connectionsCount: sockets.length });
 
     socket.on("USER_INFO", token => {
+      console.log("SOCKET token", token);
       if (token) {
         tokenService
           .verifyToken(token)

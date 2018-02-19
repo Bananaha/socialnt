@@ -41,7 +41,6 @@ const suppressAll = (req, res) => {
 };
 
 const find = (req, res) => {
-  console.log(req.params.id, req.params.page, req.params.pseudo);
   postService
     .find(req.params.id, req.params.page, req.params.pseudo)
     .then(result => {

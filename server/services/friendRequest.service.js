@@ -18,7 +18,7 @@ const request = (targetUser, currentUser) => {
     .aggregate(COLLECTION_NAME, "_id", target, othersCollections)
     .then(user => {
       // if user exists check if
-      console.log("----------", user);
+
       if (user) {
         if (user.friends) {
           const areAlreadyFriends = user.friends.some(friend => {
@@ -45,7 +45,6 @@ const request = (targetUser, currentUser) => {
                 status: "pending"
               })
               .then(() => {
-                console.log("socket");
                 socketService.emit(
                   "ON_FRIEND_REQUEST",
                   {
@@ -55,9 +54,9 @@ const request = (targetUser, currentUser) => {
                     return socket.user._id === targetUser;
                   }
                 );
-                console.log("mailService");
+
                 mailService.friendRequest(user[0]);
-                console.log("return");
+
                 return { alert: "Votre demande d'ajout a bien été effectué" };
               })
               .catch(error => {

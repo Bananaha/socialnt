@@ -11,17 +11,15 @@ const upload = require("../services/uploadFile.service");
 
 const router = new Router();
 
-const getFriends = (req, res) => {
-  console.log("getFriends", req.__user);
-  userService.getFriends(req.params.values, req.__user).then(friends => {
-    console.log("==============", friends);
+const findFriends = (req, res) => {
+  userService.findFriends(req.params.values, req.__user).then(friends => {
     res.status(200).json(friends);
   });
 };
 
 const findUserProfil = (req, res) => {
-  console.log("findUserProfil", req.__user);
   const clientToken = req.headers["x-csrf-token"];
+
   tokenService
     .verifyToken(clientToken)
     .then(user => {
@@ -33,7 +31,6 @@ const findUserProfil = (req, res) => {
 };
 
 const deleteProfil = (req, res) => {
-  console.log(req);
   userService
     .deleteProfil(req.__user)
     .then(result => {
@@ -44,7 +41,6 @@ const deleteProfil = (req, res) => {
     });
 };
 const deleteAllProfils = (req, res) => {
-  console.log(req);
   userService
     .deleteAllProfils(req.__user)
     .then(result => {
@@ -55,24 +51,36 @@ const deleteAllProfils = (req, res) => {
     });
 };
 
+// EDIT PROFIL
 router
   .route("/editProfil")
   .post(permission("editProfil"), upload.single("file"), userService.update);
 
+// SEARCH USERS OR FRIENDS
 router.route("/search/:values").get(permission("search"), userService.findMany);
+
 router
   .route("/search/friends/:values")
-  .get(permission("searchFriends"), getFriends);
+  .get(permission("searchFriends"), findFriends);
+
+// LOST PASSWORD AND RECOVERY
+router.route("/reset/:token").get(passwordService.checkResetUrl);
+
+router.route("/reset").post(passwordService.createResetUrl);
+router.route("/newPassword").post(passwordService.setNewPassword);
+
+// DELETE USERS
+router.route("/all").delete(permission("deleteAllProfils"), deleteAllProfils);
+module.exports = router;
+
+router.route("/").delete(permission("deleteProfil"), deleteProfil);
+
 router
   .route("/findUserProfil")
   .get(permission("findUserProfil"), findUserProfil);
 
-router.route("/reset/:token").get(passwordService.checkResetUrl);
-router.route("/reset").post(passwordService.createResetUrl);
-router.route("/newPassword").post(passwordService.setNewPassword);
+router.route("/friends").get(permission("getFriends"), getFriends);
+
 router
   .route("/:targetUser")
   .get(permission("viewProfil"), userService.findById);
-router.route("/").delete(permission("deleteProfil"), deleteProfil);
-router.route("/all").delete(permission("deleteAllProfils"), deleteAllProfils);
-module.exports = router;

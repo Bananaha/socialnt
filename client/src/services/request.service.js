@@ -42,10 +42,16 @@ const paramsToQuery = params =>
     }, [])
     .join("&");
 
-const withTokenHeader = (headers = {}) => ({
-  ...headers,
-  "X-CSRF-Token": localStorage.getItem("token")
-});
+const withTokenHeader = (headers = {}) => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    return headers;
+  }
+  return {
+    ...headers,
+    "X-CSRF-Token": localStorage.getItem("token")
+  };
+};
 
 const joinJSONPath = (...args) => args.filter(arg => arg).join(".");
 
@@ -87,7 +93,7 @@ export const post = async (url, data, files) => {
       method: "POST",
       ...req
     });
-    console.log("POST");
+
     return await handleFetchResponse(response);
   } catch (error) {
     return Promise.reject(error);

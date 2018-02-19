@@ -23,7 +23,7 @@ const findById = (req, res) => {
     });
 };
 
-const getFriends = (targetUser, currentUser) => {
+const findFriends = (targetUser, currentUser) => {
   console.log(targetUser, currentUser);
   if (!targetUser) {
     return Promise.reject();
@@ -45,7 +45,7 @@ const getFriends = (targetUser, currentUser) => {
       return friends;
     })
     .catch(error => {
-      console.error("getFriends userService", error);
+      console.error("findFriends userService", error);
     });
 };
 
@@ -111,14 +111,14 @@ const update = (req, res) => {
 };
 
 const deleteProfil = id => {
-  dbService
+  return dbService
     .deleteOne(COLLECTION_NAME, id)
-    .then(result => console.log("delete profil", result))
+    .then(result => console.log("delete profil___userService", result))
     .catch(error => console.log("delete profil error", error));
 };
 
 const deleteAllProfils = id => {
-  dbService
+  return dbService
     .deleteMany(COLLECTION_NAME)
     .then(result => console.log("delete all profils", result))
     .catch(error => console.log("delete all profils", error));
@@ -137,6 +137,7 @@ module.exports = {
   findById,
   update,
   findMany,
+  findFriends,
   getFriends,
   deleteProfil,
   deleteAllProfils

@@ -4,8 +4,9 @@ const tokenService = require("./token.service");
 
 const COLLECTION_NAME = "users";
 
-const signIn = userInformation =>
-  dbService
+const signIn = userInformations => {
+  userInformations.profile = "member";
+  return dbService
     .getOne(COLLECTION_NAME, { pseudo: userInformations.pseudo })
     .then(user => {
       if (user) {
@@ -27,15 +28,17 @@ const signIn = userInformation =>
         alert: "Bravo, vous êtes maintenant inscrit sur Cumulus."
       };
     });
+};
 
-const logIn = userInformations =>
-  dbService
+const logIn = userInformations => {
+  return dbService
     .getOne(COLLECTION_NAME, { pseudo: userInformations.pseudo })
     .then(user => {
       if (user && userInformations.password === user.password) {
         const token = tokenService.signJwt({
           id: user._id.toString()
         });
+
         return {
           token: token,
           id: user._id.toString()
@@ -50,6 +53,7 @@ const logIn = userInformations =>
         return Promise.reject({ alert: "l'utilisateur n'existe pas." });
       }
     });
+};
 
 module.exports = {
   signIn,

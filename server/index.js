@@ -1,8 +1,8 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const checkProfil = require("./services/token.service").checkProfil;
-require("dotenv").config();
 
 const routes = require("./routes");
 

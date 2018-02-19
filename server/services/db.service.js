@@ -1,4 +1,4 @@
-("use strict");
+"use strict";
 const mongo = require("mongodb").MongoClient;
 const ObjectId = require("mongodb").ObjectID;
 
@@ -112,7 +112,6 @@ const getAll = (collectionName, filter, limit) => {
 };
 
 const findAndCount = (collectionName, filter, sort, skip, limit) => {
-  console.log("skip", skip);
   return new Promise((resolve, reject) => {
     state.db
       .collection(collectionName)
@@ -198,15 +197,11 @@ const deleteOne = (collectionName, id) => {
   return new Promise((resolve, reject) => {
     state.db
       .collection(collectionName)
-      .remove({ _id: ObjectId(id) })
-      .toArray((error, result) => {
+      .deleteOne({ _id: ObjectId(id) }, (error, result) => {
         if (error) {
-          console.log("erreur dans deleteOne in dbService", error);
           return reject(error);
         }
-        console.log("result dans deleteOne in dbService", result);
-
-        return resolve(result);
+        return resolve([result, count]);
       });
   });
 };

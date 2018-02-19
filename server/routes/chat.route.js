@@ -11,7 +11,6 @@ const getOneConversation = (req, res) => {
   chatService
     .getOrCreateByUsers(req.params.friendId, req.__user)
     .then(conversation => {
-      console.log(conversation);
       res.status(200).json(conversation);
     })
     .catch(error => {

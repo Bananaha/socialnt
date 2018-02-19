@@ -16,7 +16,6 @@ const verifyJwt = (token, onSuccess, onError) =>
   });
 
 const checkProfil = (req, res, next) => {
-  console.log("checkToken");
   const clientToken = req.headers["x-csrf-token"];
   if (clientToken) {
     verifyToken(clientToken)
@@ -36,22 +35,17 @@ const checkProfil = (req, res, next) => {
 };
 
 const verifyToken = token => {
-  console.log("verifyToken token", token);
   return new Promise((resolve, reject) => {
     jwt.verify(token, SECRET, (error, decoded) => {
       if (error) {
-        console.log(error);
         resolve({
           profile: "visitor"
         });
       } else {
-        console.log("not error");
-        clientId = decoded.data;
-        console.log(clientId, typeof clientId);
+        clientId = decoded.id;
         dbService
           .getOne("users", { _id: ObjectId(clientId) })
           .then(user => {
-            console.log("USER in verify User", user);
             if (user) {
               resolve({
                 profile: user.profile,
