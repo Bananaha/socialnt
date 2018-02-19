@@ -1,7 +1,6 @@
 const express = require("express");
 const Router = express.Router;
 
-const loginService = require("../services/login.service");
 const passwordService = require("../services/password.service");
 const userService = require("../services/user.service");
 const permission = require("../services/permission.service")

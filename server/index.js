@@ -8,7 +8,6 @@ const routes = require("./routes");
 
 const dbService = require("./services/db.service");
 
-const URL = "mongodb://localhost:27017/socialNetwork";
 const app = express();
 
 app
@@ -16,7 +15,7 @@ app
   .use(bodyParser.json())
   .use(
     cors({
-      origin: ["http://localhost:3000", "http://localhost:5000"],
+      origin: process.env.CORS_ORIGINS,
       allowHeader: ["Content-Type"]
     })
   )
@@ -29,9 +28,9 @@ const socketServer = require("./services/socket/socket.service").onConnection(
   io
 );
 
-io.set("origins", "http://localhost:3000");
+io.set("origins", process.env.CORS_ORIGINS);
 
-dbService.connect(URL, (error, db) => {
+dbService.connect((error, db) => {
   if (error) {
     console.log("impossible de se connecter à la base de donnée", error);
   } else {
