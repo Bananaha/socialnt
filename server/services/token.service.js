@@ -76,7 +76,6 @@ const verifyToken = token => {
 };
 
 module.exports = {
-  authentication,
   checkProfil,
   verifyToken,
   signJwt

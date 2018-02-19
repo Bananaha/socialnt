@@ -1,5 +1,3 @@
-import { userInfo } from "os";
-
 const mailService = require("../services/mail.service");
 const dbService = require("./db.service");
 const tokenService = require("./token.service");
