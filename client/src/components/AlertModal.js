@@ -10,7 +10,7 @@ class AlertModal extends Component {
   render() {
     return (
       <div>
-        <p>{this.props.AlertText}</p>
+        <p>{this.props.text}</p>
         <button value="true" onClick={event => this.getUserConfirmation(event)}>
           Oui
         </button>

@@ -12,12 +12,13 @@ class DeleteButton extends Component {
   };
 
   getConfirmation = response => {
-    console.log(response);
     this.setState({ showModal: false });
-    if (!response) {
+
+    if (response == "true") {
+      this.props.delete();
+    } else {
       return;
     }
-    this.props.deleteProfil;
   };
 
   render() {
