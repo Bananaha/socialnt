@@ -84,11 +84,13 @@ const verifyToken = token => {
           profile: "visitor"
         });
       } else {
+        console.log("not error");
         clientId = decoded.data;
+        console.log(clientId, typeof clientId);
         dbService
           .getOne("users", { _id: ObjectId(clientId) })
           .then(user => {
-            console.log("USER", user);
+            console.log("USER in verify User", user);
             if (user) {
               resolve({
                 profile: user.profile,

@@ -192,11 +192,14 @@ const deleteOne = (collectionName, id) => {
   return new Promise((resolve, reject) => {
     state.db
       .collection(collectionName)
-      .deleteOne({ _id: ObjectId(id) })
+      .remove({ _id: ObjectId(id) })
       .toArray((error, result) => {
         if (error) {
+          console.log("erreur dans deleteOne in dbService", error);
           return reject(error);
         }
+        console.log("result dans deleteOne in dbService", result);
+
         return resolve(result);
       });
   });
@@ -227,5 +230,7 @@ module.exports = {
   update,
   updateAndReturn,
   aggregate,
-  state
+  state,
+  deleteMany,
+  deleteOne
 };

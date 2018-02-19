@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { get } from "../services/request.service";
+import { get, del } from "../services/request.service";
 import { withRouter } from "react-router-dom";
 import "whatwg-fetch";
 
@@ -42,6 +42,17 @@ class Profil extends Component {
     this.props.history.push("/setProfil/" + this.props.match.params.id);
   };
 
+  deleteProfil = () => {
+    del("/users")
+      .then(() => {
+        localStorage.removeItem("token");
+        this.props.history.push("/login/");
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+
   render() {
     return (
       <div className="Home">
@@ -63,7 +74,10 @@ class Profil extends Component {
             </p>
             <p>{this.state.city}</p>
             <button onClick={this.editProfil}>Editer mon profile</button>
-            <DeleteButton deletePath="/users" text="Supprimer le profil" />
+            <DeleteButton
+              delete={this.deleteProfil}
+              text="Supprimer le profil"
+            />
             <PostsList />
           </div>
         )}

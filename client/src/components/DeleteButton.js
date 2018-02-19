@@ -1,21 +1,38 @@
 import React, { Component } from "react";
-import { del } from "../services/request.service";
 import { withRouter } from "react-router-dom";
+import AlertModal from "./AlertModal";
 
 class DeleteButton extends Component {
   state = {
-    showModal: false
+    showModal: false,
+    item: null
   };
-  delete = item => {
+  requestConfirmation = item => {
     this.setState({ showModal: true });
-    // del(this.props.deletePath).then(() => {
-    //   this.props.history.push("/setProfil/"
-    // })
+  };
+
+  getConfirmation = response => {
+    console.log(response);
+    this.setState({ showModal: false });
+    if (!response) {
+      return;
+    }
+    this.props.deleteProfil;
   };
 
   render() {
     return (
-      <button onClick={item => this.delete(item)}>{this.props.text}</button>
+      <div>
+        <button onClick={this.requestConfirmation}>{this.props.text}</button>
+        {this.state.showModal ? (
+          <AlertModal
+            text="Etes vous de vouloir supprimer votre profil ?"
+            getUserConfirmation={this.getConfirmation}
+          />
+        ) : (
+          ""
+        )}
+      </div>
     );
   }
 }
