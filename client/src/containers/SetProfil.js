@@ -31,7 +31,6 @@ class SetProfil extends Component {
   };
 
   componentDidMount() {
-    console.log("in set profile");
     get("/users/" + this.props.match.params.id)
       .then(userInformations => {
         this.setState({
@@ -60,7 +59,6 @@ class SetProfil extends Component {
     userValues.targetUser = this.props.match.params.id;
     post("/users/editProfil", userValues, userValues.file)
       .then(() => {
-        console.log("profilUpdate");
         this.props.history.push("/profile/" + this.props.match.params.id);
       })
       .catch(error => {
@@ -69,7 +67,6 @@ class SetProfil extends Component {
   };
 
   render() {
-    console.log(this.state);
     return (
       <div>
         <p>

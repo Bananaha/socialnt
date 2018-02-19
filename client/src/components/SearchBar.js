@@ -29,10 +29,8 @@ class SearchBar extends Component {
     }
     clearTimeout(this.timeOut);
     this.timeOut = setTimeout(() => {
-      console.log(value);
       get(`${this.props.requestPath}${value}`)
         .then(users => {
-          console.log(users);
           if (users.length > 0) {
             this.setState({
               loader: false,

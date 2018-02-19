@@ -32,7 +32,6 @@ class PostsList extends Component {
     const id = this.props.match.params.id;
     get(`/post/${id}/${page}`)
       .then(result => {
-        console.log(result);
         this.computePosts(result);
       })
       .catch(error => {

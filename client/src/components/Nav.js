@@ -29,18 +29,15 @@ class Nav extends Component {
   };
 
   onClick = item => {
-    console.log(item);
     const navItem = this.state.navItems.find(navItem => {
-      console.log("in find", item);
       return navItem.name === item;
     });
-    console.log(navItem);
+
     if (navItem.name === "Déconnexion") {
       localStorage.removeItem("token");
       this.props.history.push(navItem.href);
     }
     if (navItem.name === "Profil") {
-      console.log("navItem === Profil", navItem.name);
       get("/users/findUserProfil")
         .then(id => this.props.history.push(navItem.href + id.user))
         .catch(error => console.log(error));
