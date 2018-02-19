@@ -43,10 +43,11 @@ class Profil extends Component {
   };
 
   deleteProfil = () => {
+    console.log("deleteProfil");
     del("/users")
       .then(() => {
         localStorage.removeItem("token");
-        this.props.history.push("/login/");
+        this.props.history.push("/login");
       })
       .catch(error => {
         console.log(error);
