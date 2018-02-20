@@ -2,15 +2,50 @@
 
 const socketActions = require("./socket.action");
 const tokenService = require("../token.service");
+const userService = require("../user.service");
 let sockets = [];
+
+const updateUserInfo = (socketItem, token) => {
+  if (!token) {
+    socketItem.socket.emit("USER_INFO", {
+      profile: "visitor"
+    });
+    socketItem.user = {
+      _id: undefined,
+      profile: "visitor"
+    };
+    return;
+  }
+  tokenService
+    .verifyToken(token)
+    .then(result => {
+      return userService.findById(result.user);
+    })
+    .then(user => {
+      socketItem.user = {
+        _id: user._id,
+        profile: user.profile
+      };
+      socketItem.socket.emit("USER_INFO", {
+        profile: user.profile,
+        id: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        pseudo: user.pseudo,
+        email: user.email
+      });
+    })
+    .catch(error => {
+      socket.disconnect();
+    });
+};
 
 const onConnection = io => {
   io.on("connection", socket => {
-    console.log("WS CONNECTION DETECteD");
     const socketItem = {
       socket,
-      __user: {
-        profile: "VISITOR"
+      user: {
+        profile: "visitor"
       }
     };
 
@@ -19,21 +54,7 @@ const onConnection = io => {
     emit("ON_CONNECTIONS_UPDATE", { connectionsCount: sockets.length });
 
     socket.on("USER_INFO", token => {
-      console.log("SOCKET token", token);
-      if (token) {
-        tokenService
-          .verifyToken(token)
-          .then(result => {
-            socketItem.user = {
-              _id: result.user,
-              profile: result.profile
-            };
-          })
-          .catch(error => {
-            socket.disconnect();
-          });
-      }
-
+      updateUserInfo(socketItem, token);
       socketActions.attachDispatcher(socketItem, { emit, emitForUsers });
     });
 
@@ -46,7 +67,6 @@ const onConnection = io => {
 
 const emit = (event, payload, filter) => {
   const filteredSockets = filter ? sockets.filter(filter) : sockets;
-  console.log("EMIT", event, payload);
   filteredSockets.forEach(socketItem => socketItem.socket.emit(event, payload));
 };
 

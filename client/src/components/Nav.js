@@ -2,24 +2,21 @@ import React, { Component } from "react";
 import { get } from "../services/request.service";
 import { withRouter } from "react-router-dom";
 import SearchBar from "./SearchBar";
+import styled from "styled-components";
+
+const Navigation = styled.div`
+  border-bottom: 1px solid #ccc;
+`;
+
+const Links = styled.div`
+  display: flex;
+`;
+
+const Link = styled.a`
+  margin-left: 12px;
+`;
 
 class Nav extends Component {
-  state = {
-    navItems: [
-      {
-        name: "Profil",
-        href: "/profile/"
-      },
-      {
-        name: "Déconnexion",
-        href: "/login"
-      },
-      {
-        name: "Administration",
-        href: "/admin"
-      }
-    ]
-  };
   searchResults = query => {
     this.props.history.push("/search/" + query);
   };
@@ -28,45 +25,47 @@ class Nav extends Component {
     this.props.history.push("/profile/" + query);
   };
 
-  onClick = item => {
-    const navItem = this.state.navItems.find(navItem => {
-      return navItem.name === item;
-    });
+  renderNavLink = (href, name, onClick) => {
+    return (
+      <Link href={href} onClick={onClick}>
+        {name}
+      </Link>
+    );
+  };
 
-    if (navItem.name === "Déconnexion") {
-      localStorage.removeItem("token");
-      this.props.history.push(navItem.href);
-    }
-    if (navItem.name === "Profil") {
-      get("/users/findUserProfil")
-        .then(id => this.props.history.push(navItem.href + id.user))
-        .catch(error => console.log(error));
-    }
+  disconnect = () => {
+    localStorage.removeItem("token");
+  };
+
+  getProfile = e => {
+    e.preventDefault();
+    get("/users/findUserProfil")
+      .then(id => this.props.history.push("/profile/" + id.user))
+      .catch(error => console.log(error));
   };
 
   render() {
+    const { user } = this.props;
     return (
-      <div>
+      <Navigation>
         <h1>Unicorn's Corner</h1>
-        <SearchBar
-          onSubmit={this.searchResults}
-          onSelect={this.goTo}
-          requestPath="/users/search/"
-          placeholder="Chercher un utilisateur"
-        />
-        {this.state.navItems.map(item => {
-          return (
-            <button
-              type="button"
-              key={item.name}
-              href={item.href}
-              onClick={name => this.onClick(item.name)}
-            >
-              {item.name}
-            </button>
-          );
-        })}
-      </div>
+        {user && (
+          <div>
+            <SearchBar
+              onSubmit={this.searchResults}
+              onSelect={this.goTo}
+              requestPath="/users/search/"
+              placeholder="Chercher un utilisateur"
+            />
+            <Links>
+              {this.renderNavLink("/profile/", "Profil", this.getProfile)}
+              {this.renderNavLink("/login", "Déconnexion", this.disconnect)}
+              {user.profile === "admin" &&
+                this.renderNavLink("/admin", "Administration")}
+            </Links>
+          </div>
+        )}
+      </Navigation>
     );
   }
 }

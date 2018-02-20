@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { post } from "../services/request.service";
 import { withRouter } from "react-router-dom";
+import { login } from "../services/user.service";
 import "whatwg-fetch";
 
 class LogInForm extends Component {
@@ -21,9 +21,8 @@ class LogInForm extends Component {
     event.preventDefault();
     const userValues = this.state;
     delete userValues.alert;
-    post("/login", userValues)
+    login(userValues)
       .then(response => {
-        localStorage.setItem("token", response.token);
         this.props.history.push("/profile/" + response.id);
       })
       .catch(error => {

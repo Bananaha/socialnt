@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Route, Switch, Redirect, withRouter } from "react-router-dom";
-import { connect } from "./sockets";
+import { connect, subscribe } from "./sockets";
+import TYPES from "./sockets/types";
 
 import "./App.css";
 import Nav from "./components/Nav";
@@ -13,21 +14,24 @@ import Chat from "./components/Chat";
 
 export class App extends Component {
   state = {
-    links: [
-      { titre: "Profil", href: "www.google.com" },
-      { titre: "Deconnexion", href: "www.linkedin.com" }
-    ]
+    user: undefined
+  };
+
+  setUser = (user = {}) => {
+    this.setState({
+      user: !user.profile || user.profile === "visitor" ? undefined : user
+    });
   };
 
   componentDidMount() {
+    subscribe(TYPES.USER_INFO, this.setUser);
     connect();
   }
 
   render() {
     return (
       <div>
-        <Nav links={this.state.links} />
-
+        <Nav user={this.state.user} />
         <Switch>
           <Route exact path="/login" component={Login} />
           <Route exact path="/profile/:id" component={Profil} />
@@ -37,7 +41,7 @@ export class App extends Component {
           <Route exact path="/search/:query" component={UsersList} />
           <Redirect to="/login" />
         </Switch>
-        <Chat />
+        {this.state.user && <Chat />}
       </div>
     );
   }

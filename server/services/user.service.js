@@ -10,17 +10,8 @@ const ObjectId = require("mongodb").ObjectID;
 
 const COLLECTION_NAME = "users";
 
-const findById = (req, res) => {
-  const payload = req.params.targetUser;
-  return dbService
-    .getOne(COLLECTION_NAME, { _id: ObjectId(payload) })
-    .then(user => {
-      res.status(200).json(user);
-    })
-    .catch(error => {
-      console.log("ERROR => USER SERVICES FIND ONE", error);
-      res.status(403).json({ error });
-    });
+const findById = id => {
+  return dbService.getOne(COLLECTION_NAME, { _id: ObjectId(id) });
 };
 
 const findFriends = (targetUser, currentUser) => {

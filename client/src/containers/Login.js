@@ -3,6 +3,8 @@ import React, { Component } from "react";
 import SignInForm from "../components/SignInForm";
 import LogInForm from "../components/LogInForm";
 import IndicatorsBlock from "../components/IndicatorsBlock";
+import { emit } from "../sockets";
+import TYPES from "../sockets/types";
 
 // formulaire d'inscription
 // mail + mdp + nom + prenom
@@ -19,6 +21,13 @@ class Login extends Component {
 
   forgotPassword = () => {
     this.props.history.push("/resetPassword/");
+  };
+
+  componentDidMount = () => {
+    if (localStorage.getItem("token")) {
+      localStorage.removeItem("token");
+    }
+    emit(TYPES.USER_INFO);
   };
 
   render() {
