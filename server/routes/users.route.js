@@ -51,6 +51,10 @@ const deleteAllProfils = (req, res) => {
     });
 };
 
+const getFriends = () => {
+  console.log("getFriends");
+};
+
 // EDIT PROFIL
 router
   .route("/editProfil")

@@ -110,6 +110,10 @@ const update = (req, res) => {
     });
 };
 
+const getFriends = () => {
+  console.log("getFriends");
+};
+
 const deleteProfil = id => {
   return dbService
     .deleteOne(COLLECTION_NAME, id)
