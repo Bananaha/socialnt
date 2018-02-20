@@ -20,6 +20,7 @@ const canSearchFriends = currentUser => true;
 const canSearch = currentUser => true;
 const canFindUserProfil = currentUser => true;
 const canDeleteProfil = () => true;
+const canFindFriendRequests = () => true;
 const canDeleteAllProfils = () => false;
 
 module.exports = {
@@ -29,6 +30,7 @@ module.exports = {
   canSearch,
   canSearchFriends,
   canFriendRequest,
+  canFindFriendRequests,
   canFindUserProfil,
   canDeleteProfil,
   canDeleteAllProfils

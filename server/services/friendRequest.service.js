@@ -1,4 +1,5 @@
 const ObjectId = require("mongodb").ObjectID;
+const async = require("async");
 
 const socketService = require("./socket/socket.service");
 const dbService = require("./db.service");
@@ -75,4 +76,26 @@ const request = (targetUser, currentUser) => {
     });
 };
 
-module.exports = { request };
+const getAll = targetUser => {
+  const target = ObjectId(targetUser);
+  console.log("target", target);
+
+  return dbService
+    .getAll(
+      "friendRequests",
+      {
+        $or: [{ author: target }, { recipient: target }],
+        status: "pending"
+      },
+      0
+    )
+    .then(friendRequests => {
+      return friendRequests;
+    })
+    .catch(error => {
+      console.log(error);
+      return error;
+    });
+};
+
+const computeUserName = (module.exports = { request, getAll });

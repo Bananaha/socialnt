@@ -11,7 +11,7 @@ export default class ChatConversation extends Component {
     const { messages = [] } = this.props.conversation;
     return messages.map(message => (
       <div key={message.date}>
-        <p>{message.autor}</p>
+        <p>{message.author}</p>
         <p>{message.text}</p>
         <p>{message.date}</p>
       </div>

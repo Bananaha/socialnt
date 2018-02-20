@@ -44,11 +44,11 @@ class Chat extends Component {
           if (conversation._id === payload.conversationId) {
             conversation.messages.push(message);
           } else {
-            this.getConversation(payload.message.autor);
+            this.getConversation(payload.message.author);
           }
         });
       } else {
-        this.getConversation(payload.message.autor);
+        this.getConversation(payload.message.author);
       }
       this.setState({
         conversations: conversations

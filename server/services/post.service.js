@@ -15,7 +15,7 @@ const save = (body, currentUser) => {
   const postBody = {
     date: new Date(),
     content: body.post,
-    autor: currentUser
+    author: currentUser
   };
   if (body.targetUser !== currentUser) {
     postBody.dest = ObjectId(body.targetUser);
@@ -56,7 +56,7 @@ const find = (targetUser, targetPage, pseudo) => {
           .findAndCount(
             "posts",
             {
-              $or: [{ autor: user._id }, { dest: user._id }]
+              $or: [{ author: user._id }, { dest: user._id }]
             },
             { date: -1 },
             PER_PAGE * page - PER_PAGE,
@@ -71,16 +71,16 @@ const find = (targetUser, targetPage, pseudo) => {
             async.map(
               posts,
               (post, postcb) => {
-                if (targetUserId === post.autor.toString()) {
-                  post.autor = user.pseudo;
+                if (targetUserId === post.author.toString()) {
+                  post.author = user.pseudo;
                 } else {
                   dbService
-                    .getOne("users", { _id: ObjectId(post.autor.toString()) })
-                    .then(autor => {
-                      if (!autor) {
-                        post.autor = "membre cumulus";
+                    .getOne("users", { _id: ObjectId(post.author.toString()) })
+                    .then(author => {
+                      if (!author) {
+                        post.author = "membre cumulus";
                       } else {
-                        post.autor = result.pseudo;
+                        post.author = result.pseudo;
                       }
                     })
                     .catch(error => {

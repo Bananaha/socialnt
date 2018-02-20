@@ -5,7 +5,7 @@ const dbService = require("./db.service");
 const addMessage = (conversationId, message, user) => {
   const createdMessage = {
     text: message,
-    autor: user._id,
+    author: user._id,
     date: Date.now()
   };
 

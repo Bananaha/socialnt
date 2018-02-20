@@ -9,6 +9,7 @@ import Profil from "./containers/Profil";
 import SetProfil from "./containers/SetProfil";
 import ResetPassword from "./containers/ResetPassword";
 import UsersList from "./containers/UsersList";
+import RequestsList from "./containers/RequestsList";
 import Chat from "./components/Chat";
 
 export class App extends Component {
@@ -30,11 +31,12 @@ export class App extends Component {
 
         <Switch>
           <Route exact path="/login" component={Login} />
-          <Route exact path="/profile/:id" component={Profil} />
+          <Route exact path="/profil/:id" component={Profil} />
           <Route exact path="/setProfil/:id" component={SetProfil} />
           <Route exact path="/resetPassword/" component={ResetPassword} />
           <Route exact path="/resetPassword/:token" component={ResetPassword} />
           <Route exact path="/search/:query" component={UsersList} />
+          <Route exact path="/friendRequests" component={RequestsList} />
           <Redirect to="/login" />
         </Switch>
         <Chat />

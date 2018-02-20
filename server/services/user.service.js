@@ -23,7 +23,7 @@ const findById = (req, res) => {
     });
 };
 
-const findFriends = (targetUser, currentUser) => {
+const searchFriends = (targetUser, currentUser) => {
   console.log(targetUser, currentUser);
   if (!targetUser) {
     return Promise.reject();
@@ -35,10 +35,10 @@ const findFriends = (targetUser, currentUser) => {
     .getAll(
       COLLECTION_NAME,
       {
-        $or: [{ firstName: query }, { lastName: query }, { seudo: query }],
+        $or: [{ firstName: query }, { lastName: query }, { pseudo: query }],
         friends: { $in: [currentUser] }
       },
-      10
+      5
     )
     .then(friends => {
       console.log(friends);
@@ -141,7 +141,7 @@ module.exports = {
   findById,
   update,
   findMany,
-  findFriends,
+  searchFriends,
   getFriends,
   deleteProfil,
   deleteAllProfils

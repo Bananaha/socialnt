@@ -8,7 +8,7 @@ class Nav extends Component {
     navItems: [
       {
         name: "Profil",
-        href: "/profile/"
+        href: "/profil/"
       },
       {
         name: "Déconnexion",
@@ -17,6 +17,10 @@ class Nav extends Component {
       {
         name: "Administration",
         href: "/admin"
+      },
+      {
+        name: "Invitations",
+        href: "/friendRequests"
       }
     ]
   };
@@ -25,7 +29,7 @@ class Nav extends Component {
   };
 
   goTo = query => {
-    this.props.history.push("/profile/" + query);
+    this.props.history.push("/profil/" + query);
   };
 
   onClick = item => {
@@ -41,6 +45,9 @@ class Nav extends Component {
       get("/users/findUserProfil")
         .then(id => this.props.history.push(navItem.href + id.user))
         .catch(error => console.log(error));
+    }
+    if (navItem.name === "Invitations") {
+      this.props.history.push(navItem.href);
     }
   };
 

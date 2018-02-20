@@ -19,6 +19,7 @@ const PERMISSIONS_CALLBACKS = {
   search: "canSearch",
   searchFriends: "canSearchFriends",
   friendRequest: "canFriendRequest",
+  findFriendRequests: "canFindFriendRequests",
   findUserProfil: "canFindUserProfil",
   deleteProfil: "canDeleteProfil",
   deleteAllProfils: "canDeleteAllProfils"
@@ -26,7 +27,7 @@ const PERMISSIONS_CALLBACKS = {
 
 const permissionDispatcher = request => {
   return (req, res, next) => {
-    console.log(req.body, req.params);
+    console.log("req.body", req.body, "req.params", req.params);
     console.log(req.__profile, req.__user);
     // no profile => redirect + error
     if (!req.__profile) {
@@ -60,7 +61,7 @@ const permissionDispatcher = request => {
           return;
         }
         res.status(403).json({
-          alert: "Vous n'êtes pas autorisé à effectuer cette action"
+          alert: "Vous n'êtes pas authorisé à effectuer cette action"
         });
       });
   };

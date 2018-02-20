@@ -70,12 +70,12 @@ class PostsList extends Component {
                     <div>
                       {post.dest ? (
                         <div>
-                          <span>{post.autor}</span>
+                          <span>{post.author}</span>
                           <span> | </span>
                           <span>{post.dest}</span>
                         </div>
                       ) : (
-                        <span>{post.autor}</span>
+                        <span>{post.author}</span>
                       )}
                     </div>
 

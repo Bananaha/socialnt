@@ -1,7 +1,9 @@
 const dbService = require("../db.service");
 
-const isSameUser = (currentUser, targetUser) =>
-  targetUser.toString() === currentUser.toString();
+const isSameUser = (currentUser, targetUser) => {
+  console.log(currentUser, targetUser);
+  return targetUser.toString() === currentUser.toString();
+};
 
 const isFriend = (currentUser, targetUser) =>
   new Promise((resolve, reject) => {

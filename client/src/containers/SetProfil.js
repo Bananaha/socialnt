@@ -50,16 +50,17 @@ class SetProfil extends Component {
   }
 
   skipEditingProfil = () => {
-    this.props.history.push("/profile/" + this.props.match.params.id);
+    this.props.history.push("/profil/" + this.props.match.params.id);
   };
 
   updateProfil = event => {
     event.preventDefault();
     const userValues = this.state;
     userValues.targetUser = this.props.match.params.id;
+    console.log(userValues);
     post("/users/editProfil", userValues, userValues.file)
       .then(() => {
-        this.props.history.push("/profile/" + this.props.match.params.id);
+        this.props.history.push("/profil/" + this.props.match.params.id);
       })
       .catch(error => {
         console.log("ERROR", error);
@@ -71,7 +72,7 @@ class SetProfil extends Component {
       <div>
         <p>
           Bienvenue {this.props.match.params.pseudo}, Vous venez de rejoindre la
-          communauté Cumulus. Avant de commencer, renseignez votre profile afin
+          communauté Cumulus. Avant de commencer, renseignez votre profil afin
           que les autres membres puissent mieux vous connaître et vous trouver.
         </p>
         <form onSubmit={this.updateProfil}>

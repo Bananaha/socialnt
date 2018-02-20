@@ -24,7 +24,7 @@ class LogInForm extends Component {
     post("/login", userValues)
       .then(response => {
         localStorage.setItem("token", response.token);
-        this.props.history.push("/profile/" + response.id);
+        this.props.history.push("/profil/" + response.id);
       })
       .catch(error => {
         this.setState({ alert: error.alert });
