@@ -18,8 +18,21 @@ class Profil extends Component {
     loader: true
   };
 
+  componentWillReceiveProps(nextProps) {
+    if (this.props.match.params.id !== nextProps.match.params.id) {
+      this.fetchProfil(nextProps.match.params.id);
+    }
+  }
+
   componentDidMount() {
-    get(`/users/${this.props.match.params.id}`)
+    this.fetchProfil(this.props.match.params.id);
+  }
+
+  fetchProfil = profileId => {
+    this.setState({
+      loader: true
+    });
+    get(`/users/${profileId}`)
       .then(userInformations => {
         this.setState({
           sex: userInformations.sex,
@@ -33,10 +46,13 @@ class Profil extends Component {
         });
       })
       .catch(error => {
+        this.setState({
+          loader: false
+        });
         console.log("ERROR", error);
         this.props.history.goBack();
       });
-  }
+  };
 
   editProfil = () => {
     this.props.history.push("/setProfil/" + this.props.match.params.id);
@@ -55,6 +71,8 @@ class Profil extends Component {
   };
 
   render() {
+    const isCurrentUser =
+      this.props.user && this.props.match.params.id === this.props.user.id;
     return (
       <div className="Home">
         {this.state.loader ? (
@@ -74,11 +92,15 @@ class Profil extends Component {
               {this.state.birthDate} {this.state.sex}
             </p>
             <p>{this.state.city}</p>
-            <button onClick={this.editProfil}>Editer mon profile</button>
-            <DeleteButton
-              delete={this.deleteProfil}
-              text="Supprimer le profil"
-            />
+            {isCurrentUser && (
+              <div>
+                <button onClick={this.editProfil}>Editer mon profile</button>
+                <DeleteButton
+                  delete={this.deleteProfil}
+                  text="Supprimer le profil"
+                />
+              </div>
+            )}
             <PostsList />
           </div>
         )}

@@ -5,7 +5,7 @@ import "whatwg-fetch";
 
 class UsersList extends Component {
   state = {
-    searchResult: "",
+    users: [],
     loader: true,
     alert: ""
   };
@@ -16,27 +16,39 @@ class UsersList extends Component {
       .then(users => {
         if (users.length > 0) {
           this.setState({
-            searchResult: users,
-            loader: false
+            users: users,
+            loader: false,
+            alert: ""
           });
         } else {
           this.setState({
+            users: [],
             alert: "Aucun utilisateur ne correspond à votre recherche.",
             loader: false
           });
         }
       })
       .catch(error => {
+        this.setState({
+          users: [],
+          loader: false
+        });
         console.log("getMtchingUsers UserList", error);
       });
   };
 
-  clearAlert = () => {
-    return setTimeout(() => {
+  launchTimeout = () => {
+    this.timeout = setTimeout(() => {
       this.setState({
         alert: ""
       });
     }, 5000);
+  };
+
+  componentWillUnmount = () => {
+    if (this.timeout) {
+      clearTimeout(this.timeout);
+    }
   };
 
   componentDidMount() {
@@ -51,6 +63,7 @@ class UsersList extends Component {
       this.getMatchingUsers();
     }, 200);
   }
+
   sendFriendRequest = event => {
     event.preventDefault();
     post("/friendrequest", { targetUser: event.target.value })
@@ -58,13 +71,13 @@ class UsersList extends Component {
         this.setState({
           alert: result.alert
         });
-        this.clearAlert();
+        this.launchTimeout();
       })
       .catch(error => {
         this.setState({
           alert: error.alert
         });
-        this.clearAlert();
+        this.launchTimeout();
       });
   };
 
@@ -73,14 +86,14 @@ class UsersList extends Component {
       <div>
         {this.state.loader
           ? ""
-          : this.state.searchResult.map((result, index) => {
-              let avatar = result.avatar;
+          : this.state.users.map((user, index) => {
+              let avatar = user.avatar;
 
-              if (!result.avatar) {
+              if (!user.avatar) {
                 avatar = "default_avatar.png";
               }
               return (
-                <div key={result.pseudo}>
+                <div key={user.pseudo}>
                   <img
                     style={{
                       width: 50 + "px",
@@ -91,11 +104,11 @@ class UsersList extends Component {
                     src={process.env.REACT_APP_HOST + "/images/" + avatar}
                     alt="avatar"
                   />
-                  <p>{result.pseudo}</p>
-                  {result.isFriend ? (
-                    <span>Ami</span>
+                  <p>{user.pseudo}</p>
+                  {user.isFriend ? (
+                    <a href={`/profile/${user._id}`}>Voir le profil</a>
                   ) : (
-                    <button value={result._id} onClick={this.sendFriendRequest}>
+                    <button value={user._id} onClick={this.sendFriendRequest}>
                       Ajouter
                     </button>
                   )}

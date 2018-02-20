@@ -34,7 +34,11 @@ export class App extends Component {
         <Nav user={this.state.user} />
         <Switch>
           <Route exact path="/login" component={Login} />
-          <Route exact path="/profile/:id" component={Profil} />
+          <Route
+            exact
+            path="/profile/:id"
+            render={props => <Profil {...props} user={this.state.user} />}
+          />
           <Route exact path="/setProfil/:id" component={SetProfil} />
           <Route exact path="/resetPassword/" component={ResetPassword} />
           <Route exact path="/resetPassword/:token" component={ResetPassword} />

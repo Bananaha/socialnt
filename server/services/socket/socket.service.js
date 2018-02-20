@@ -5,6 +5,11 @@ const tokenService = require("../token.service");
 const userService = require("../user.service");
 let sockets = [];
 
+const cleanFriend = friend => ({
+  id: friend._id,
+  pseudo: friend.pseudo
+});
+
 const updateUserInfo = (socketItem, token) => {
   if (!token) {
     socketItem.socket.emit("USER_INFO", {
@@ -19,7 +24,7 @@ const updateUserInfo = (socketItem, token) => {
   tokenService
     .verifyToken(token)
     .then(result => {
-      return userService.findById(result.user);
+      return userService.findByIdWithFriends(result.user);
     })
     .then(user => {
       socketItem.user = {
@@ -32,7 +37,8 @@ const updateUserInfo = (socketItem, token) => {
         firstName: user.firstName,
         lastName: user.lastName,
         pseudo: user.pseudo,
-        email: user.email
+        email: user.email,
+        friends: user.friends.map(cleanFriend)
       });
     })
     .catch(error => {

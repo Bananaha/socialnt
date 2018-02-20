@@ -14,6 +14,20 @@ const findById = id => {
   return dbService.getOne(COLLECTION_NAME, { _id: ObjectId(id) });
 };
 
+const findByIdWithFriends = id => {
+  const othersCollections = [
+    {
+      collectionName: "users",
+      collectionField: "friends",
+      collectionAlias: "friends"
+    }
+  ];
+
+  return dbService
+    .aggregate(COLLECTION_NAME, "_id", { _id: id }, othersCollections)
+    .then(users => users[0]);
+};
+
 const findFriends = (targetUser, currentUser) => {
   console.log(targetUser, currentUser);
   if (!targetUser) {
@@ -44,10 +58,16 @@ const findMany = (req, res) => {
   const queries = req.params.values;
   return dbService
     .getAll(COLLECTION_NAME, { $text: { $search: queries } }, 5)
-    .then(results => {
-      if (results) {
-        console.log(results);
-        res.status(200).json(results);
+    .then(users => {
+      if (users) {
+        const currentUserId = req.__user.toString();
+        users.forEach(user => {
+          user.isFriend = user.friends.some(
+            userId => userId.toString() === currentUserId
+          );
+        });
+        console.log("FIND MANY", users);
+        res.status(200).json(users);
       } else {
         res.status(404);
       }
@@ -129,6 +149,7 @@ const create = newUser =>
 
 module.exports = {
   findById,
+  findByIdWithFriends,
   update,
   findMany,
   findFriends,

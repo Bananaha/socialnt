@@ -4,21 +4,33 @@ const isSameUser = (currentUser, targetUser) =>
   targetUser.toString() === currentUser.toString();
 
 const isFriend = (currentUser, targetUser) =>
+  dbService.getOne("users", { _id: currentUser }).then(user => {
+    const hasFriend =
+      user &&
+      user.friends &&
+      user.friends.some(friend => friend.toString() === targetUser.toString());
+    if (!hasFriend) {
+      return Promise.reject();
+    }
+    return Promise.resolve();
+  });
+
+const isSameOrFriend = req =>
   new Promise((resolve, reject) => {
-    dbService.getOne("users", { _id: currentUser }).then(user => {
-      const hasFriend =
-        user &&
-        user.friends &&
-        userFriends.some(friend => friend === targetUser);
-      if (!hasFriend) {
-        reject();
-        return;
-      }
-      resolve();
-    });
+    const currentUser = req.__user;
+    const targetUser = req.body.targetUser || req.params.targetUser;
+
+    if (isSameUser(currentUser, targetUser)) {
+      resolve(true);
+      return;
+    }
+    isFriend(currentUser, targetUser)
+      .then(resolve)
+      .catch(reject);
   });
 
 module.exports = {
   isSameUser,
-  isFriend
+  isFriend,
+  isSameOrFriend
 };

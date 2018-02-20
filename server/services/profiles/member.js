@@ -1,21 +1,14 @@
 const dbService = require("../db.service");
 const helper = require("./helper");
 
-const canViewProfil = (currentUser, targetUser) =>
-  helper.isSameUser(currentUser, targetUser) ||
-  helper.isFriend(currentUser, targetUser);
+const canViewProfil = helper.isSameOrFriend;
 
-const canSendPost = (currentUser, targetUser) =>
-  helper.isSameUser(currentUser, targetUser) ||
-  helper.isFriend(currentUser, targetUser);
+const canSendPost = helper.isSameOrFriend;
 
-const canEditProfil = (currentUser, targetUser) =>
-  helper.isSameUser(currentUser, targetUser) ||
-  helper.isFriend(currentUser, targetUser);
+const canEditProfil = helper.isSameOrFriend;
 
-const canFriendRequest = (currentUser, targetUser) =>
-  !helper.isSameUser(currentUser, targetUser) ||
-  !helper.isFriend(currentUser, targetUser);
+const canFriendRequest = helper.isSameOrFriend;
+
 const canSearchFriends = currentUser => true;
 const canSearch = currentUser => true;
 const canFindUserProfil = currentUser => true;
