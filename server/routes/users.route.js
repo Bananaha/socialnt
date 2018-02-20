@@ -11,6 +11,19 @@ const upload = require("../services/uploadFile.service");
 
 const router = new Router();
 
+const findById = (req, res) => {
+  console.log("_____ findById", req.params.targetUser);
+  userService
+    .findById(req.params.targetUser)
+    .then(user => {
+      res.status(200).json(user);
+    })
+    .catch(error => {
+      console.log("ERROR => USER SERVICES FIND ONE", error);
+      res.status(403).json({ error });
+    });
+};
+
 const findFriends = (req, res) => {
   userService.findFriends(req.params.values, req.__user).then(friends => {
     res.status(200).json(friends);
@@ -85,6 +98,4 @@ router
 
 router.route("/friends").get(permission("getFriends"), getFriends);
 
-router
-  .route("/:targetUser")
-  .get(permission("viewProfil"), userService.findById);
+router.route("/:targetUser").get(permission("viewProfil"), findById);

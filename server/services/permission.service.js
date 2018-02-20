@@ -25,10 +25,8 @@ const PERMISSIONS_CALLBACKS = {
   deleteAllProfils: "canDeleteAllProfils"
 };
 
-const permissionDispatcher = request => {
+const permissionDispatcher = requestedAction => {
   return (req, res, next) => {
-    console.log("req.body", req.body, "req.params", req.params);
-    console.log(req.__profile, req.__user);
     // no profile => redirect + error
     if (!req.__profile) {
       res.status(403).redirect(path.join("/"));
@@ -36,24 +34,22 @@ const permissionDispatcher = request => {
     }
 
     const currentUser = req.__user;
-    const targetUser = req.body.targetUser || req.params.targetUser;
-
     const matchingProfile = profiles[req.__profile];
-    const permissionCallback = PERMISSIONS_CALLBACKS[request];
+    const permissionCallback = PERMISSIONS_CALLBACKS[requestedAction];
 
-    console.log(request);
+    console.log("____ permissionDispatcher, requestedAction", requestedAction);
 
-    const canDoAction = matchingProfile[permissionCallback](
-      currentUser,
-      targetUser
-    );
+    const canDoAction = matchingProfile[permissionCallback](req);
     handleRequestAnswer(canDoAction)
       .then(() => {
-        console.log("approuved");
+        console.log(`[INFO] Requested action ${requestedAction} approved`);
         next();
       })
       .catch(error => {
-        console.log("reject", error, req.__profile);
+        console.log(
+          `[INFO] Requested action ${requestedAction} rejected`,
+          error
+        );
         if (req.__profile === "visitor") {
           res
             .status(403)

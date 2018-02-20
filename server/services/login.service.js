@@ -1,6 +1,7 @@
 const mailService = require("../services/mail.service");
 const dbService = require("./db.service");
 const tokenService = require("./token.service");
+const socketService = require("./socket/socket.service");
 
 const COLLECTION_NAME = "users";
 
@@ -24,6 +25,7 @@ const signIn = userInformations => {
         token: tokenService.signJwt({
           id: user._id.toString()
         }),
+        id: user._id.toString(),
         pseudo: user._id.toString(),
         alert: "Bravo, vous êtes maintenant inscrit sur Cumulus."
       };
@@ -35,6 +37,7 @@ const logIn = userInformations => {
     .getOne(COLLECTION_NAME, { pseudo: userInformations.pseudo })
     .then(user => {
       if (user && userInformations.password === user.password) {
+        console.log("___ login", user);
         const token = tokenService.signJwt({
           id: user._id.toString()
         });

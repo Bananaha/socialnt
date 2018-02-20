@@ -20,6 +20,9 @@ export const subscribe = (eventName, eventCb) => {
 };
 
 export const emit = (event, payload) => {
+  if (!socket) {
+    return;
+  }
   socket.emit(event, payload);
 };
 

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { post } from "../services/request.service";
 import { withRouter } from "react-router-dom";
+import { signing } from "../services/user.service";
 import "whatwg-fetch";
 
 class SignInForm extends Component {
@@ -24,29 +25,17 @@ class SignInForm extends Component {
     event.preventDefault();
     const userValues = this.state;
 
-    if (userValues.email === userValues.emailConfirmation) {
-      delete userValues.emailConfirmation;
-      post("/login/newUser", userValues)
-        .then(response => {
-          localStorage.setItem("token", response.token);
-          this.setState({
-            alert: response.alert
-          });
-          setTimeout(() => {
-            this.setState({
-              alert: ""
-            });
-            this.props.history.push("/login");
-            // this.props.history.push("/setProfil/" + response.pseudo);
-          }, 5000);
-        })
-        .catch(error => {
-          console.log("submitForm signin", error);
-        });
-    } else {
-      const email = event.target.email;
-      const emailConfirmation = event.target.emailConfirmation;
+    if (userValues.email !== userValues.emailConfirmation) {
+      return;
     }
+    delete userValues.emailConfirmation;
+    signing(userValues)
+      .then(response => {
+        this.props.history.push("/profile/" + response.id);
+      })
+      .catch(error => {
+        console.log("submitForm signin", error);
+      });
   };
 
   render() {
