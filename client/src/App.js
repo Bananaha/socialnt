@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Route, Switch, Redirect, withRouter } from "react-router-dom";
-import { connect, subscribe } from "./sockets";
+import { connect } from "./sockets";
 
 import "./App.css";
 import Nav from "./components/Nav";

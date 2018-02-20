@@ -14,7 +14,7 @@ class DeleteButton extends Component {
   getConfirmation = response => {
     this.setState({ showModal: false });
 
-    if (response == "true") {
+    if (response === "true") {
       this.props.delete();
     } else {
       return;

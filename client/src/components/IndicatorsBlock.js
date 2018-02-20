@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { subscribe, connect, emit } from "../sockets";
+import { subscribe } from "../sockets";
 import { ON_CONNECTIONS_UPDATE, ON_POST_PUBLISH } from "../sockets/types";
 import { get } from "../services/request.service";
 

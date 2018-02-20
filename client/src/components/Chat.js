@@ -40,7 +40,7 @@ class Chat extends Component {
       const message = payload.message;
       let conversations = this.state.conversations;
       if (conversations.length > 0) {
-        conversations.map(conversation => {
+        conversations.forEach(conversation => {
           if (conversation._id === payload.conversationId) {
             conversation.messages.push(message);
           } else {

@@ -50,7 +50,6 @@ const findFriends = (targetUser, currentUser) => {
 };
 
 const findMany = (req, res) => {
-  console.log(req.query);
   const queries = req.params.values;
   return dbService
     .getAll(COLLECTION_NAME, { $text: { $search: queries } }, 5)
