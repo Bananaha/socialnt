@@ -7,29 +7,47 @@ import DeleteButton from "../components/DeleteButton";
 import PostsList from "../components/PostsList";
 
 class FriendsList extends Component {
-  state = {};
+  state = {
+    loading: true
+  };
 
   componentDidMount() {
     get("/users/friends")
       .then(friends => {
         console.log(friends);
+        this.setState({
+          loading: false
+        });
       })
       .catch(error => {
         console.log(error);
       });
   }
 
-  deleteProfil = () => {
-    console.log("deleteProfil");
-    del("/users")
-      .then(() => {})
-      .catch(error => {
-        console.log(error);
-      });
+  removeFriend = id => {
+    console.log("remove friend from list");
+  };
+
+  goToFriendProfil = id => {
+    console.log("go to friend profil", id);
+  };
+
+  sendPrivateMessage = id => {
+    console.log("send private message to", id);
   };
 
   render() {
-    return <div>{}</div>;
+    return (
+      <div>
+        {this.state.loading ? (
+          "Loading"
+        ) : (
+          <div>
+            <p>Liste d'amis</p>
+          </div>
+        )}
+      </div>
+    );
   }
 }
 export default withRouter(props => <FriendsList {...props} />);
