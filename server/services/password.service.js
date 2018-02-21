@@ -17,7 +17,7 @@ const createResetUrl = (req, res) => {
         const expirationDate = moment().add(1, "days");
 
         dbService
-          .update(
+          .updateAndReturn(
             COLLECTION_NAME,
             { pseudo: result.pseudo },
             {
@@ -104,7 +104,7 @@ const checkResetUrl = (req, res) => {
 
 const setNewPassword = (req, res) => {
   dbService
-    .update(
+    .updateAndReturn(
       COLLECTION_NAME,
       { resetPasswordLink: decodeURIComponent(req.body.url) },
       {

@@ -60,19 +60,6 @@ const getOne = (collectionName, filters) => {
 // @params collectionName 'string' 'name of db collection'
 // @params query
 // @params update
-const update = (collectionName, filters, doc) => {
-  return new Promise((resolve, reject) => {
-    state.db
-      .collection(collectionName)
-      .updateOne(filters, doc, (error, result) => {
-        if (error) {
-          return reject(error);
-        }
-        return resolve(result);
-      });
-  });
-};
-
 const updateAndReturn = (collectionName, filters, doc) => {
   return new Promise((resolve, reject) => {
     state.db
@@ -228,7 +215,6 @@ module.exports = {
   findAndCount,
   count,
   getOne,
-  update,
   updateAndReturn,
   aggregate,
   state,

@@ -9,14 +9,15 @@ class RequestsList extends Component {
     this.state = {
       loading: true,
       requests: [],
-      user: {},
-      message: null
+      message: undefined,
+      alert: ""
     };
   }
 
-  componentDidMount() {
+  getFriendRequests = () => {
     get("/friendRequest")
       .then(({ requests }) => {
+        console.log(requests);
         if (requests.length > 0) {
           this.setState({
             loading: false,
@@ -33,22 +34,33 @@ class RequestsList extends Component {
       .catch(error => {
         console.log(error);
       });
+  };
+
+  componentDidMount() {
+    this.getFriendRequests();
   }
 
-  componentWillReceiveProps() {
-    this.setState({ user: this.props.user });
-  }
-
-  answerRequest = (id, status) => {
-    console.log(id, status);
-    // post(`/friendRequest/${status}`, id)
-    //   .then(() => {
-    //     console.log("request ignore");
-    //   })
-    //   .catch(error => {
-    //     console.log(error);
-    //   });
-    // console.log("remove friend from list", id);
+  answerRequest = (requestId, status, autor) => {
+    console.log(requestId, status);
+    post(`/friendRequest/${status}`, { requestId: requestId })
+      .then(() => {
+        this.getFriendRequests();
+        const confirmationMessage =
+          status === "accept"
+            ? `Vous êtes maintenant ami avec ${autor}`
+            : `Vous avez rejeté l'invitation de ${autor}`;
+        this.setState({
+          alert: confirmationMessage
+        });
+        setTimeout(() => {
+          this.setState({ alert: "" });
+        }, 5000);
+      })
+      .catch(error => {
+        this.setState({
+          message: error.alert
+        });
+      });
   };
 
   render() {
@@ -73,15 +85,15 @@ class RequestsList extends Component {
                       <div key={request._id}>
                         <p>{request.authorPseudo}</p>
                         <button
-                          onClick={(autor, status) =>
-                            this.answerRequest(request.author, "accept")
+                          onClick={(requestId, status, autor) =>
+                            this.answerRequest(request._id, "accept")
                           }
                         >
                           Accepter
                         </button>
                         <button
-                          onClick={(autor, status) =>
-                            this.answerRequest(request.author, "ignore")
+                          onClick={(requestId, status) =>
+                            this.answerRequest(request._id, "ignore")
                           }
                         >
                           Ignorer
@@ -96,6 +108,7 @@ class RequestsList extends Component {
             )}
           </div>
         )}
+        {this.state.alert}
       </div>
     );
   }

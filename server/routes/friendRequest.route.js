@@ -29,12 +29,35 @@ const findFriendRequests = (req, res) => {
     });
 };
 
-const ignoreRequest = (req, res) => {};
-const acceptRequest = (req, res) => {};
+const ignore = (req, res) => {
+  friendRequestService
+    .ignore(req.body.requestId)
+    .then(requestUpdated => {
+      res.status(200).end();
+    })
+    .catch(error => {
+      res
+        .status(503)
+        .json({ alert: "Votre requête n'a pu aboutir. Réessayer plus tard." });
+    });
+};
+
+const accept = (req, res) => {
+  friendRequestService
+    .accept(req.body.requestId)
+    .then(requestUpdated => {
+      res.status(200).end();
+    })
+    .catch(error => {
+      res
+        .status(503)
+        .json({ alert: "Votre requête n'a pu aboutir. Réessayer plus tard." });
+    });
+};
 
 router.route("/").post(permission("friendRequest"), requestFriendship);
-router.route("/ignore").post(permission("answerRequest"), ignoreRequest);
-router.route("/accept").post(permission("answerRequest"), acceptRequest);
+router.route("/ignore").post(permission("answerRequest"), ignore);
+router.route("/accept").post(permission("answerRequest"), accept);
 router.route("/").get(permission("findFriendRequests"), findFriendRequests);
 
 module.exports = router;

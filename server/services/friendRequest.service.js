@@ -1,3 +1,5 @@
+"use strict";
+
 const ObjectId = require("mongodb").ObjectID;
 const async = require("async");
 
@@ -151,4 +153,82 @@ const getAll = currentUser => {
     });
 };
 
-module.exports = { request, getAll };
+const ignore = requestId => {
+  dbService
+    .updateAndReturn(
+      "friendRequests",
+      { _id: ObjectId(requestId) },
+      {
+        $set: {
+          status: "ignored"
+        }
+      }
+    )
+    .then(requestIgnored => {
+      console.log(requestIgnored);
+      return;
+    })
+    .catch(error => {
+      return error;
+    });
+};
+
+const accept = requestId => {
+  return dbService
+    .updateAndReturn(
+      "friendRequests",
+      { _id: ObjectId(requestId) },
+      {
+        $set: {
+          status: "accepted"
+        }
+      }
+    )
+    .then(requestAccepted => {
+      const usersToUpdate = [
+        requestAccepted.value.author,
+        requestAccepted.value.recipient
+      ];
+      const updatePromises = [];
+      usersToUpdate.forEach(userToUpdate => {
+        const newFriend = usersToUpdate.find(
+          user => user.toString() !== userToUpdate.toString()
+        );
+        console.log(newFriend, typeof newFriend);
+        console.log(userToUpdate, typeof userToUpdate);
+
+        const promise = new Promise((resolve, reject) => {
+          return dbService
+            .updateAndReturn(
+              "users",
+              { _id: userToUpdate },
+              {
+                $push: {
+                  friends: newFriend
+                }
+              }
+            )
+            .then(result => {
+              resolve();
+            })
+            .catch(error => {
+              reject();
+            });
+        });
+        updatePromises.push(promise);
+      });
+
+      return Promise.all(updatePromises)
+        .then(() => {
+          return;
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    })
+    .catch(error => {
+      console.error(error);
+    });
+};
+
+module.exports = { request, getAll, ignore, accept };

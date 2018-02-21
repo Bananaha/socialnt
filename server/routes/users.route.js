@@ -25,7 +25,7 @@ const findById = (req, res) => {
 };
 
 const findFriends = (req, res) => {
-  userService.findFriends(req.params.values, req.__user).then(friends => {
+  userService.searchFriends(req.params.values, req.__user).then(friends => {
     res.status(200).json(friends);
   });
 };

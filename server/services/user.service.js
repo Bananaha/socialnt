@@ -96,7 +96,7 @@ const findProfil = (req, res) => {
 const update = (req, res) => {
   const avatar = req.file ? req.file.filename : "";
   return dbService
-    .update(
+    .updateAndReturn(
       COLLECTION_NAME,
       { pseudo: req.body.pseudo },
       {
