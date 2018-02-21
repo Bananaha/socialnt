@@ -15,15 +15,17 @@ const canFindUserProfil = currentUser => true;
 const canDeleteProfil = () => true;
 const canFindFriendRequests = () => true;
 const canDeleteAllProfils = () => false;
+const canAnswerRequest = () => true;
 
 module.exports = {
-  canViewProfil,
   canSendPost,
-  canEditProfil,
   canSearch,
   canSearchFriends,
   canFriendRequest,
   canFindFriendRequests,
+  canAnswerRequest,
+  canEditProfil,
+  canViewProfil,
   canFindUserProfil,
   canDeleteProfil,
   canDeleteAllProfils

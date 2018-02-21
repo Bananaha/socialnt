@@ -22,7 +22,8 @@ const PERMISSIONS_CALLBACKS = {
   findFriendRequests: "canFindFriendRequests",
   findUserProfil: "canFindUserProfil",
   deleteProfil: "canDeleteProfil",
-  deleteAllProfils: "canDeleteAllProfils"
+  deleteAllProfils: "canDeleteAllProfils",
+  answerRequest: "canAnswerRequest"
 };
 
 const permissionDispatcher = requestedAction => {
@@ -42,12 +43,18 @@ const permissionDispatcher = requestedAction => {
     const canDoAction = matchingProfile[permissionCallback](req);
     handleRequestAnswer(canDoAction)
       .then(() => {
-        console.log(`[INFO] Requested action ${requestedAction} approved`);
+        console.log(
+          `[INFO] Requested action ${requestedAction} with ${
+            req.__profile
+          } profile is approved`
+        );
         next();
       })
       .catch(error => {
         console.log(
-          `[INFO] Requested action ${requestedAction} rejected`,
+          `[INFO] Requested action ${requestedAction} with ${
+            req.__profile
+          } profile is rejected`,
           error
         );
         if (req.__profile === "visitor") {
