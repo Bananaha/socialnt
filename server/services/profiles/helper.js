@@ -7,10 +7,14 @@ const isSameUser = (currentUser, targetUser) => {
 
 const isFriend = (currentUser, targetUser) =>
   dbService.getOne("users", { _id: currentUser }).then(user => {
+    if (!user.friends) {
+      return Promise.resolve();
+    }
     const hasFriend =
       user &&
       user.friends &&
       user.friends.some(friend => friend.toString() === targetUser.toString());
+
     if (!hasFriend) {
       return Promise.reject();
     }
@@ -26,6 +30,7 @@ const isSameOrFriend = req =>
       resolve(true);
       return;
     }
+
     isFriend(currentUser, targetUser)
       .then(resolve)
       .catch(reject);
