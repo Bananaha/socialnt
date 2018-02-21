@@ -23,7 +23,9 @@ const PERMISSIONS_CALLBACKS = {
   findUserProfil: "canFindUserProfil",
   deleteProfil: "canDeleteProfil",
   deleteAllProfils: "canDeleteAllProfils",
-  answerRequest: "canAnswerRequest"
+  answerRequest: "canAnswerRequest",
+  canEditComment: "canEditComment",
+  canSeePost: "canSeePost"
 };
 
 const permissionDispatcher = requestedAction => {
@@ -37,9 +39,6 @@ const permissionDispatcher = requestedAction => {
     const currentUser = req.__user;
     const matchingProfile = profiles[req.__profile];
     const permissionCallback = PERMISSIONS_CALLBACKS[requestedAction];
-
-    console.log("____ permissionDispatcher, requestedAction", requestedAction);
-
     const canDoAction = matchingProfile[permissionCallback](req);
     handleRequestAnswer(canDoAction)
       .then(() => {

@@ -36,6 +36,7 @@ const countAll = (req, res) => {
 const suppressOne = (req, res) => {
   postService.suppress(req.postId);
 };
+
 const suppressAll = (req, res) => {
   postService.suppressAll(req.postId);
 };
@@ -44,16 +45,40 @@ const find = (req, res) => {
   postService
     .find(req.params.id, req.params.page, req.params.pseudo)
     .then(result => {
-      res.status(result.status).json(result.response);
+      res.status(200).json({ posts: result.posts, nbPosts: result.count });
     })
     .catch(error => {
-      res.status(result.status).json(result.response);
+      res
+        .status(error.status || 500)
+        .json(error.response || "Error while getting posts");
     });
 };
+
+const createComment = (req, res) => {
+  postService
+    .addComment(req.params.id, req.body.text, req.__user)
+    .then(post => {
+      console.log(post);
+      res.status(200).send(post);
+    })
+    .catch(error => {
+      console.error(error);
+      res.status(502).send(`Error while commenting post ${req.params.id}`);
+    });
+};
+
+const deleteComment = (req, res) => {};
+
+const getComments = (req, res) => {};
 
 router.route("/newPost").post(permission("sendPost"), send);
 router.route("/deletePost").delete(suppressOne);
 router.route("/deleteAllPosts").delete(suppressAll);
+router
+  .route("/:id/comment")
+  .post(permission("canSeePost"), createComment)
+  .delete(permission("canEditComment"), deleteComment)
+  .get(permission("canSeePost"), getComments);
 router.route("/:id/:page").get(find);
 router.route("/").get(countAll);
 

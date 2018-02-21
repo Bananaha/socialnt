@@ -12,7 +12,6 @@ const upload = require("../services/uploadFile.service");
 const router = new Router();
 
 const findById = (req, res) => {
-  console.log("_____ findById", req.params.targetUser);
   userService
     .findById(req.params.targetUser)
     .then(user => {
