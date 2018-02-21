@@ -40,8 +40,13 @@ class Nav extends Component {
   getProfile = e => {
     e.preventDefault();
     get("/users/findUserProfil")
-      .then(id => this.props.history.push("/profile/" + id.user))
+      .then(id => this.props.history.push("/profil/" + id.user))
       .catch(error => console.log(error));
+  };
+
+  getInvitations = e => {
+    e.preventDefault();
+    this.props.history.push("/friendRequests");
   };
 
   render() {
@@ -58,10 +63,15 @@ class Nav extends Component {
               placeholder="Chercher un utilisateur"
             />
             <Links>
-              {this.renderNavLink("/profile/", "Profil", this.getProfile)}
+              {this.renderNavLink("/profil/", "Profil", this.getProfile)}
               {this.renderNavLink("/login", "Déconnexion", this.disconnect)}
               {user.profile === "admin" &&
                 this.renderNavLink("/admin", "Administration")}
+              {this.renderNavLink(
+                "/friendRequests",
+                "Invitations",
+                this.getInvitations
+              )}
             </Links>
           </div>
         )}
