@@ -62,9 +62,11 @@ const findMany = (req, res) => {
       if (users) {
         const currentUserId = req.__user.toString();
         users.forEach(user => {
-          user.isFriend = user.friends.some(
-            userId => userId.toString() === currentUserId
-          );
+          if (user.friends) {
+            user.isFriend = user.friends.some(
+              userId => userId.toString() === currentUserId
+            );
+          }
         });
         console.log("FIND MANY", users);
         res.status(200).json(users);
