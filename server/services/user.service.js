@@ -68,7 +68,6 @@ const findMany = (req, res) => {
             );
           }
         });
-        console.log("FIND MANY", users);
         res.status(200).json(users);
       } else {
         res.status(404);
@@ -149,7 +148,10 @@ const create = newUser =>
     })
   );
 
+const find = filters => dbService.getAll(COLLECTION_NAME, filters || {});
+
 module.exports = {
+  find,
   findById,
   findByIdWithFriends,
   update,

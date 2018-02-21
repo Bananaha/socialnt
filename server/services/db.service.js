@@ -206,11 +206,11 @@ const deleteOne = (collectionName, id) => {
   });
 };
 
-const deleteMany = collectionName => {
+const deleteMany = (collectionName, filter) => {
   return new Promise((resolve, reject) => {
     state.db
       .collection(collectionName)
-      .deleteMany({})
+      .deleteMany(filter || {})
       .toArray((error, result) => {
         if (error) {
           return reject(error);

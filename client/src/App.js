@@ -12,6 +12,10 @@ import ResetPassword from "./containers/ResetPassword";
 import UsersList from "./containers/UsersList";
 import RequestsList from "./containers/RequestsList";
 import Chat from "./components/Chat";
+import moment from "moment";
+import "moment/locale/fr";
+
+moment.locale("fr");
 
 export class App extends Component {
   state = {

@@ -75,6 +75,11 @@ const request = (targetUser, currentUser) => {
     });
 };
 
+// get friendRequests
+// parscours friendRequests, lister les users (author + recipient)
+// -> tableau d'ids de users
+// getUsers $in tableau de users
+
 const getAll = currentUser => {
   return dbService
     .getAll(
