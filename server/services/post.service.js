@@ -74,7 +74,7 @@ const populatePostsWithUsers = (posts, users) => {
   return posts;
 };
 
-const find = (userId, page, pseudo) => {
+const find = (userId, page) => {
   return dbService
     .findAndCount(
       "posts",
