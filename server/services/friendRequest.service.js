@@ -90,7 +90,66 @@ const getAll = targetUser => {
       0
     )
     .then(friendRequests => {
-      return friendRequests;
+      return dbService.getOne("users", { _id: target }).then(targetData => {
+        console.log("---------friendRequests----------");
+        console.log(friendRequests);
+        console.log("-------------------");
+        console.log("---------targetData----------");
+        console.log(targetData);
+        console.log("-------------------");
+
+        async.each(
+          friendRequests,
+          // 2nd param is the function that each item is passed to
+          (friendRequest, next) => {
+            // Call an asynchronous function, often a save() to DB
+            const author = friendRequest.author.toString();
+            const recipient = friendRequest.recipient.toString();
+
+            console.log(recipient, author, targetUser);
+
+            if (author !== targetUser) {
+              dbService
+                .getOne("users", { _id: ObjectId(author) })
+                .then(user => {
+                  console.log(user);
+                  friendRequest.authorPseudo = user.pseudo;
+                  friendRequest.recipientPseudo = targetData.pseudo;
+                  console.log(friendRequest);
+
+                  next(null, friendRequest);
+                })
+                .catch(error => {
+                  console.log(error);
+                  next(error);
+                });
+            } else {
+              dbService
+                .getOne("users", { _id: ObjectId(recipient) })
+                .then(user => {
+                  console.log(user);
+                  friendRequest.recipientPseudo = user.pseudo;
+                  friendRequest.authorPseudo = targetData.pseudo;
+                  console.log(friendRequest);
+                  next(null, friendRequest);
+                })
+                .catch(error => {
+                  console.log(error);
+                  next(error);
+                });
+            }
+          },
+          (error, friendRequest) => {
+            // All tasks are done now
+
+            console.log("ERROR");
+            console.error(error);
+
+            console.log("COMPUTE");
+            console.log(friendRequest);
+          }
+        );
+      });
     })
     .catch(error => {
       console.log(error);

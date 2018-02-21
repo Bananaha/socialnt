@@ -54,12 +54,6 @@ class Chat extends Component {
         conversations: conversations
       });
     });
-    // get("/users/friends").then(friends => {
-    //   this.setState({ friends, loading: false });
-    // })
-    // .catch(error => {
-    //   console.log("chat get usersFriends", error)
-    // })
   }
 
   renderFriend = friend => {

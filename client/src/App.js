@@ -44,7 +44,11 @@ export class App extends Component {
           <Route exact path="/resetPassword/" component={ResetPassword} />
           <Route exact path="/resetPassword/:token" component={ResetPassword} />
           <Route exact path="/search/:query" component={UsersList} />
-          <Route exact path="/friendRequests" component={RequestsList} />
+          <Route
+            exact
+            path="/friendRequests"
+            render={props => <RequestsList {...props} user={this.state.user} />}
+          />
           <Redirect to="/login" />
         </Switch>
         {this.state.user && <Chat />}

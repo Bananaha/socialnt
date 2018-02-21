@@ -4,33 +4,47 @@ import { withRouter } from "react-router-dom";
 import "whatwg-fetch";
 
 class RequestsList extends Component {
-  state = {
-    loading: true,
-    requests: [],
-    message: null
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      loading: true,
+      requests: [],
+      message: null
+    };
+  }
 
   componentDidMount() {
-    console.log("invitation mount");
     get("/friendRequest")
-      .then(requests => {
-        console.log(requests);
-        if (requests.length > 0) {
+      .then(friendRequests => {
+        if (friendRequests.length > 0) {
           this.setState({
             loading: false,
-            requests: requests
+            requests: friendRequests
           });
+          console.log(this.state.requests);
         } else {
           this.setState({
             loading: false,
             message: "Vous n'avez aucune invitation en attente"
           });
         }
+        console.log(this.state);
       })
       .catch(error => {
         console.log(error);
       });
   }
+
+  renderFriendRequest = request => {
+    console.log(request);
+    return (
+      <div key={request._id}>
+        <p>{request.author}</p>
+        <button>Accepter</button>
+        <button>Ignorer</button>
+      </div>
+    );
+  };
 
   ignore = id => {
     console.log("remove friend from list");
@@ -41,43 +55,22 @@ class RequestsList extends Component {
   };
 
   render() {
+    console.log(this.state.loading);
     return (
       <div>
         {this.state.loading ? (
           "Loading"
         ) : (
           <div>
-            <p>Liste des invitations</p>
-
-            {this.state.requests.map((request, index) => {
-              console.log(this.props.match.params.id, request.author);
-              <div>
-                <p>{request.author}</p>
-                <p>{request.recipient}</p>
-                <p>{request.status}</p>
-              </div>;
-
-              {
-                /* {
-                request.author === this.props.match.params.id ? (
-                  <div>
-                    <h3>{request.recipient}</h3>
-                    <span>Invitation en attente</span>
-                  </div>
-                ) : (
-                  <div>
-                    <h3>{request.author}</h3>
-                    <button>Accepter</button>
-                    <button>Ignorer</button>
-                  </div>
-                );
-              } */
-              }
-            })}
+            {this.state.requests.length > 0 ? (
+              <div>{this.state.requests.map(this.renderFriendRequest)}</div>
+            ) : (
+              <p>{this.state.message}</p>
+            )}
           </div>
         )}
       </div>
     );
   }
 }
-export default RequestsList;
+export default withRouter(props => <RequestsList {...props} />);
