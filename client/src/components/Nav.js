@@ -63,7 +63,7 @@ class Nav extends Component {
               placeholder="Chercher un utilisateur"
             />
             <Links>
-              {this.renderNavLink("/profil/", "Profil", this.getProfile)}
+              {this.renderNavLink("/profil/", user.pseudo, this.getProfile)}
               {this.renderNavLink("/login", "Déconnexion", this.disconnect)}
               {user.profile === "admin" &&
                 this.renderNavLink("/admin", "Administration")}
