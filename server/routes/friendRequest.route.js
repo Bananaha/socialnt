@@ -22,7 +22,7 @@ const findFriendRequests = (req, res) => {
   friendRequestService
     .getAll(req.__user)
     .then(computedRequests => {
-      res.status(200).json({ requests: computedRequests });
+      res.status(200).json(computedRequests);
     })
     .catch(error => {
       res.status(409).json(error);

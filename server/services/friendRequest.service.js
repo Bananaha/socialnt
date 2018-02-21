@@ -6,6 +6,7 @@ const async = require("async");
 const socketService = require("./socket/socket.service");
 const dbService = require("./db.service");
 const mailService = require("./mail.service");
+const userService = require("../services/user.service");
 const COLLECTION_NAME = "users";
 
 const request = (targetUser, currentUser) => {
@@ -77,84 +78,74 @@ const request = (targetUser, currentUser) => {
     });
 };
 
-// get friendRequests
-// parscours friendRequests, lister les users (author + recipient)
-// -> tableau d'ids de users
-// getUsers $in tableau de users
+// get friendRequests and user invitations based on userId
 
-const getAll = currentUser => {
-  return dbService
-    .getAll(
-      "friendRequests",
-      {
-        $or: [
-          { author: ObjectId(currentUser) },
-          { recipient: ObjectId(currentUser) }
-        ],
-        status: "pending"
-      },
-      0
-    )
-    .then(friendRequests => {
-      if (!friendRequests || friendRequests.length === 0) {
-        return;
+const USER_KEYS = ["author", "recipient"];
+
+const extractUsersFromRequests = requests => {
+  return requests
+    .reduce((users, request) => {
+      USER_KEYS.forEach(key => {
+        if (!request[key]) return;
+
+        const id = request[key].toString();
+        if (users.indexOf(id) === -1) {
+          users.push(id);
+        }
+      });
+      return users;
+    }, [])
+    .map(id => ObjectId(id));
+};
+
+const populateRequestsWithUsers = (requests, users) => {
+  const usersDictionnary = users.reduce((acc, user) => {
+    acc[user._id] = {
+      _id: user._id,
+      pseudo: user.pseudo
+    };
+    console.log("========ACC=======");
+    console.log(acc);
+    console.log("===============");
+    return acc;
+  }, {});
+  requests.forEach(request => {
+    console.log("========REQUEST LOOP=======");
+    console.log(request);
+    console.log("===============");
+    USER_KEYS.forEach(key => {
+      console.log("=======USER_KEY_LOOP========");
+      console.log(
+        "REQUEST[key]",
+        request[key],
+        "usersDictionnary[request[key]]",
+        usersDictionnary[request[key]]
+      );
+      console.log("===============");
+      if (request[key] && usersDictionnary[request[key]]) {
+        request[key] = usersDictionnary[request[key]];
       }
-      return dbService
-        .getOne("users", { _id: ObjectId(currentUser) })
-        .then(currentUserData => {
-          const promisesRequests = [];
+    });
+  });
+  return requests;
+};
 
-          friendRequests.forEach((friendRequest, index) => {
-            const request = new Promise((resolve, reject) => {
-              const author = friendRequest.author.toString();
-              const recipient = friendRequest.recipient.toString();
-
-              if (author !== currentUserData._id.toString()) {
-                return dbService
-                  .getOne("users", { _id: ObjectId(author) })
-                  .then(user => {
-                    friendRequest.authorPseudo = user.pseudo;
-                    friendRequest.recipientPseudo = currentUserData.pseudo;
-
-                    resolve(friendRequest);
-                  })
-                  .catch(error => {
-                    reject(error);
-                  });
-              } else {
-                return dbService
-                  .getOne("users", { _id: ObjectId(recipient) })
-                  .then(user => {
-                    friendRequest.recipientPseudo = user.pseudo;
-                    friendRequest.authorPseudo = currentUserData.pseudo;
-
-                    resolve(friendRequest);
-                  })
-                  .catch(error => {
-                    reject(error);
-                  });
-              }
-            });
-
-            promisesRequests.push(request);
-          });
-
-          return Promise.all(promisesRequests)
-            .then(computedFriendRequests => {
-              return computedFriendRequests;
-            })
-            .catch(error => {
-              return error;
-            });
-        })
-
-        .catch(error => {
-          return error;
-        });
+const getAll = userId => {
+  return dbService
+    .getAll("friendRequests", {
+      $or: [{ author: ObjectId(userId) }, { recipient: ObjectId(userId) }],
+      status: "pending"
     })
-    .catch(error => {
-      console.log("[ERROR] getAll FriendRequest error", error);
-      return { alert: "Votre demande d'ajout n'a pu aboutir" };
+    .then(requests => {
+      const extractedUsers = extractUsersFromRequests(requests);
+
+      return userService
+        .find({
+          _id: { $in: extractedUsers }
+        })
+        .then(users => ({
+          requests: populateRequestsWithUsers(requests, users)
+        }));
     });
 };
 
@@ -170,7 +161,6 @@ const ignore = requestId => {
       }
     )
     .then(requestIgnored => {
-      console.log(requestIgnored);
       return;
     })
     .catch(error => {
@@ -199,8 +189,6 @@ const accept = requestId => {
         const newFriend = usersToUpdate.find(
           user => user.toString() !== userToUpdate.toString()
         );
-        console.log(newFriend, typeof newFriend);
-        console.log(userToUpdate, typeof userToUpdate);
 
         const promise = new Promise((resolve, reject) => {
           return dbService
