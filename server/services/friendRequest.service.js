@@ -61,7 +61,6 @@ const request = (targetUser, currentUser) => {
                 return { alert: "Votre demande d'ajout a bien été effectué" };
               })
               .catch(error => {
-                console.log("request firendRequestService", error);
                 return { alert: "Votre demande d'ajout n'a pu aboutir" };
               });
           }
@@ -76,85 +75,80 @@ const request = (targetUser, currentUser) => {
     });
 };
 
-const getAll = targetUser => {
-  const target = ObjectId(targetUser);
-  console.log("target", target);
-
+const getAll = currentUser => {
   return dbService
     .getAll(
       "friendRequests",
       {
-        $or: [{ author: target }, { recipient: target }],
+        $or: [
+          { author: ObjectId(currentUser) },
+          { recipient: ObjectId(currentUser) }
+        ],
         status: "pending"
       },
       0
     )
     .then(friendRequests => {
-      return dbService.getOne("users", { _id: target }).then(targetData => {
-        console.log("---------friendRequests----------");
-        console.log(friendRequests);
-        console.log("-------------------");
-        console.log("---------targetData----------");
-        console.log(targetData);
-        console.log("-------------------");
+      if (!friendRequests || friendRequests.length === 0) {
+        return;
+      }
+      return dbService
+        .getOne("users", { _id: ObjectId(currentUser) })
+        .then(currentUserData => {
+          const promisesRequests = [];
 
-        async.each(
-          friendRequests,
-          // 2nd param is the function that each item is passed to
-          (friendRequest, next) => {
-            // Call an asynchronous function, often a save() to DB
-            const author = friendRequest.author.toString();
-            const recipient = friendRequest.recipient.toString();
+          friendRequests.forEach((friendRequest, index) => {
+            const request = new Promise((resolve, reject) => {
+              const author = friendRequest.author.toString();
+              const recipient = friendRequest.recipient.toString();
 
-            console.log(recipient, author, targetUser);
+              if (author !== currentUserData._id.toString()) {
+                return dbService
+                  .getOne("users", { _id: ObjectId(author) })
+                  .then(user => {
+                    friendRequest.authorPseudo = user.pseudo;
+                    friendRequest.recipientPseudo = currentUserData.pseudo;
 
-            if (author !== targetUser) {
-              dbService
-                .getOne("users", { _id: ObjectId(author) })
-                .then(user => {
-                  console.log(user);
-                  friendRequest.authorPseudo = user.pseudo;
-                  friendRequest.recipientPseudo = targetData.pseudo;
-                  console.log(friendRequest);
+                    resolve(friendRequest);
+                  })
+                  .catch(error => {
+                    reject(error);
+                  });
+              } else {
+                return dbService
+                  .getOne("users", { _id: ObjectId(recipient) })
+                  .then(user => {
+                    friendRequest.recipientPseudo = user.pseudo;
+                    friendRequest.authorPseudo = currentUserData.pseudo;
 
-                  next(null, friendRequest);
-                })
-                .catch(error => {
-                  console.log(error);
-                  next(error);
-                });
-            } else {
-              dbService
-                .getOne("users", { _id: ObjectId(recipient) })
-                .then(user => {
-                  console.log(user);
-                  friendRequest.recipientPseudo = user.pseudo;
-                  friendRequest.authorPseudo = targetData.pseudo;
-                  console.log(friendRequest);
-                  next(null, friendRequest);
-                })
-                .catch(error => {
-                  console.log(error);
-                  next(error);
-                });
-            }
-          },
-          (error, friendRequest) => {
-            // All tasks are done now
+                    resolve(friendRequest);
+                  })
+                  .catch(error => {
+                    reject(error);
+                  });
+              }
+            });
 
-            console.log("ERROR");
-            console.error(error);
+            promisesRequests.push(request);
+          });
 
-            console.log("COMPUTE");
-            console.log(friendRequest);
-          }
-        );
-      });
+          return Promise.all(promisesRequests)
+            .then(computedFriendRequests => {
+              return computedFriendRequests;
+            })
+            .catch(error => {
+              return error;
+            });
+        })
+
+        .catch(error => {
+          return error;
+        });
     })
     .catch(error => {
-      console.log(error);
-      return error;
+      console.log("[ERROR] getAll FriendRequest error", error);
+      return { alert: "Votre demande d'ajout n'a pu aboutir" };
     });
 };
 
-const computeUserName = (module.exports = { request, getAll });
+module.exports = { request, getAll };

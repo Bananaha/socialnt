@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { get, del } from "../services/request.service";
+import { get, post } from "../services/request.service";
 import { withRouter } from "react-router-dom";
 import "whatwg-fetch";
 
@@ -9,19 +9,19 @@ class RequestsList extends Component {
     this.state = {
       loading: true,
       requests: [],
+      user: {},
       message: null
     };
   }
 
   componentDidMount() {
     get("/friendRequest")
-      .then(friendRequests => {
-        if (friendRequests.length > 0) {
+      .then(({ requests }) => {
+        if (requests.length > 0) {
           this.setState({
             loading: false,
-            requests: friendRequests
+            requests: requests
           });
-          console.log(this.state.requests);
         } else {
           this.setState({
             loading: false,
@@ -35,37 +35,64 @@ class RequestsList extends Component {
       });
   }
 
-  renderFriendRequest = request => {
-    console.log(request);
-    return (
-      <div key={request._id}>
-        <p>{request.author}</p>
-        <button>Accepter</button>
-        <button>Ignorer</button>
-      </div>
-    );
-  };
+  componentWillReceiveProps() {
+    this.setState({ user: this.props.user });
+  }
 
-  ignore = id => {
-    console.log("remove friend from list");
-  };
-
-  accept = id => {
-    console.log("go to friend profil", id);
+  answerRequest = (id, status) => {
+    console.log(id, status);
+    // post(`/friendRequest/${status}`, id)
+    //   .then(() => {
+    //     console.log("request ignore");
+    //   })
+    //   .catch(error => {
+    //     console.log(error);
+    //   });
+    // console.log("remove friend from list", id);
   };
 
   render() {
-    console.log(this.state.loading);
+    const { user } = this.props;
+
     return (
       <div>
-        {this.state.loading ? (
-          "Loading"
-        ) : (
+        {user && (
           <div>
-            {this.state.requests.length > 0 ? (
-              <div>{this.state.requests.map(this.renderFriendRequest)}</div>
+            {user ? (
+              <div>
+                {this.state.requests.map(request => {
+                  if (user.pseudo === request.authorPseudo) {
+                    return (
+                      <div key={request._id}>
+                        <p>{request.recipientPseudo}</p>
+                        <span>En attente de confirmation</span>
+                      </div>
+                    );
+                  } else {
+                    return (
+                      <div key={request._id}>
+                        <p>{request.authorPseudo}</p>
+                        <button
+                          onClick={(autor, status) =>
+                            this.answerRequest(request.author, "accept")
+                          }
+                        >
+                          Accepter
+                        </button>
+                        <button
+                          onClick={(autor, status) =>
+                            this.answerRequest(request.author, "ignore")
+                          }
+                        >
+                          Ignorer
+                        </button>
+                      </div>
+                    );
+                  }
+                })}
+              </div>
             ) : (
-              <p>{this.state.message}</p>
+              "Loading"
             )}
           </div>
         )}

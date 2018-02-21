@@ -21,15 +21,20 @@ const requestFriendship = (req, res) => {
 const findFriendRequests = (req, res) => {
   friendRequestService
     .getAll(req.__user)
-    .then(friendRequests => {
-      res.status(200).json(friendRequests);
+    .then(computedRequests => {
+      res.status(200).json({ requests: computedRequests });
     })
     .catch(error => {
       res.status(409).json(error);
     });
 };
 
+const ignoreRequest = (req, res) => {};
+const acceptRequest = (req, res) => {};
+
 router.route("/").post(permission("friendRequest"), requestFriendship);
+router.route("/ignore").post(permission("answerRequest"), ignoreRequest);
+router.route("/accept").post(permission("answerRequest"), acceptRequest);
 router.route("/").get(permission("findFriendRequests"), findFriendRequests);
 
 module.exports = router;
