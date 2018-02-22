@@ -12,6 +12,8 @@ import ResetPassword from "./containers/ResetPassword";
 import UsersList from "./containers/UsersList";
 import RequestsList from "./containers/RequestsList";
 import Chat from "./components/Chat";
+import Mail from "./containers/Mail";
+
 import moment from "moment";
 import "moment/locale/fr";
 
@@ -52,6 +54,11 @@ export class App extends Component {
             exact
             path="/friendRequests"
             render={props => <RequestsList {...props} user={this.state.user} />}
+          />
+          <Route
+            exact
+            path="/mail"
+            render={props => <Mail {...props} user={this.state.user} />}
           />
           <Redirect to="/login" />
         </Switch>
