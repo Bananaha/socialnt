@@ -6,20 +6,25 @@ import "whatwg-fetch";
 
 class Mail extends Component {
   state = {
-    loading: true,
+    loading: false,
     conversations: [
       {
         _id: 4567,
-        recipients: ["toto", "tata", "bibi"],
+        owner: 1245676878708976,
+        recipients: [
+          { _id: 132437, pseudo: "toto" },
+          { _id: 132437, pseudo: "tata" },
+          { _id: 132437, pseudo: "titi" }
+        ],
         messages: [
           {
-            _id: 123456,
+            _id: "message1",
             autor: "bibi",
             date: "01/01/2018",
             text: "Bonjour"
           },
           {
-            _id: 123456,
+            _id: "message2",
             autor: "toto",
             date: "01/01/2018",
             text: "Hello, ca va ?"
@@ -28,16 +33,21 @@ class Mail extends Component {
       },
       {
         _id: 23456,
-        recipients: ["toto", "tata", "bibi"],
+        owner: 253748595324,
+        recipients: [
+          { _id: 132437, pseudo: "toto" },
+          { _id: 132437, pseudo: "tata" },
+          { _id: 132437, pseudo: "titi" }
+        ],
         messages: [
           {
-            _id: 123456,
+            _id: "message1",
             autor: "bibi",
             date: "01/01/2018",
             text: "Bonjour"
           },
           {
-            _id: 123456,
+            _id: "message2",
             autor: "toto",
             date: "01/01/2018",
             text: "Hello, ca va ?"
@@ -46,12 +56,14 @@ class Mail extends Component {
       }
     ],
     newRecipients: [],
-    newMessage: false,
+    editorIsOpen: false,
     alert: undefined,
-    newReply: false,
+    newReply: undefined,
+    newMessage: undefined,
     displayedConversation: undefined
   };
 
+  // Display notification to user
   showInformation = text => {
     this.setState({
       alert: text
@@ -61,64 +73,132 @@ class Mail extends Component {
     }, 5000);
   };
 
+  // show a choosen conversation
+  showConversation = event => {
+    event.preventDefault();
+    const conversationId = event.target.value;
+    console.log("Messages show", event, event.target);
+
+    this.setState({ displayedConversation: conversationId });
+  };
+  // Open or close the message editor
   toogleMessageEditor = () => {
     console.log("messageEditor open");
     this.setState({
-      newMessage: !this.state.newMessage
+      editorIsOpen: !this.state.editorIsOpen
     });
   };
-
-  addRecipient = user => {
-    console.log("add Recipient");
+  // Add a new recipient to a message
+  addRecipient = (id, pseudo) => {
     const newRecipients = this.state.newRecipients;
-    newRecipients.push(user);
+    newRecipients.push({ _id: id, pseudo: pseudo });
     this.setState({
       newRecipients: newRecipients
     });
   };
-  removeRecipient = user => {
-    console.log("add Recipient");
-    const newRecipients = this.state.newRecipients;
-    newRecipients.filter(recipientToRemove => user !== recipientToRemove);
+  // remove a recipient from a message
+  removeRecipient = recipientId => {
     this.setState({
-      newRecipients: newRecipients
+      newRecipients: this.state.newRecipients.filter(
+        recipientToRemove => recipientId !== recipientToRemove._id
+      )
     });
   };
-
-  sendMessage = (text, autor, recipients) => {
-    console.log("sendMessage");
+  // Send the message
+  sendMessage = event => {
+    event.preventDefault();
+    const messageType = event.target.value;
+    const messagePayload = {
+      text: this.state.newMessage,
+      recipients: this.state.newRecipients
+    };
+    // post("//messageType", messagePayload);
+    console.log(messagePayload, event.target.value);
     this.showInformation("Message envoyé");
   };
-
+  // delete a conversation if the user is the creator
   deleteConversation = conversationId => {
     console.log("messageRemoved");
     this.showInformation("Message supprimé");
   };
-  showConversation = conversationId => {
-    console.log("messageRemoved");
-    this.setState({ displayedConversation: conversationId });
+  // delete a message if the user is the creator
+  deleteMessage = event => {
+    console.log("deleteMessage", event.target.value);
   };
-  renderDisplayedConversation = conversationId => {
-    const conversation = this.state.conversations.filter(
-      conversation => conversation._id === conversationId
+
+  renderRecipientsList = newRecipient => {
+    return (
+      <span key={newRecipient._id}>
+        {newRecipient.pseudo}
+        <button onClick={id => this.removeRecipient(newRecipient._id)}>
+          supprimer
+        </button>
+      </span>
     );
-    conversation.messages.map(message => {
+  };
+
+  renderConversationsList = conversation => {
+    return (
+      <div key={conversation._id}>
+        <div key={conversation.messages[0]._id}>
+          <span>{conversation.messages[0].autor}</span>
+          <span>{conversation.messages[0].text}</span>
+          <span>{conversation.messages[0].date}</span>
+          <button onClick={this.deleteConversation}>Supprimer</button>
+          <button value={conversation._id} onClick={this.showConversation}>
+            Voir
+          </button>
+        </div>
+      </div>
+    );
+  };
+
+  renderChoosenConversation = conversationId => {
+    const conversation = this.state.conversations.filter(
+      conversation => parseInt(conversation._id) === parseInt(conversationId)
+    )[0];
+    return conversation.messages.map(message => {
       return (
-        <div>
+        <div key={message._id}>
           <div>
             <p>from: {message.autor}</p>
-            <p>
+            <div>
               to:{" "}
-              {message.recipients.map(recipient => {
-                <span>recipient.pseudo</span>;
+              {conversation.recipients.map((recipient, index) => {
+                const key = `${recipient._id}_${index}`;
+                return <span key={key}>{recipient.pseudo}</span>;
               })}
-              <span>{message.date}</span>
-            </p>
+              <p>{message.date}</p>
+            </div>
             <div>{message.text}</div>
+            <button value={message._id} onClick={this.deleteMessage}>
+              Supprimer
+            </button>
           </div>
         </div>
       );
     });
+  };
+
+  renderEditor = messageType => {
+    return (
+      <form>
+        <textarea
+          cols="30"
+          rows="10"
+          placeholder="Un jour, une célèbre licorne a dit...."
+          onInput={this.handleMessageEditChange}
+        />
+        <button type="submit" value={messageType} onClick={this.sendMessage}>
+          Envoyer
+        </button>
+      </form>
+    );
+  };
+
+  handleMessageEditChange = event => {
+    const text = event.target.value;
+    this.setState({ newMessage: text });
   };
 
   render() {
@@ -127,41 +207,25 @@ class Mail extends Component {
         <h2>Messagerie</h2>
         <button onClick={this.toogleMessageEditor}>Rédiger un message</button>
         <div>
-          {this.state.newMessage ? (
+          {this.state.editorIsOpen ? (
             <div>
               <SearchBar
                 onSubmit={this.addRecipient}
                 onSelect={this.addRecipient}
-                requestPath={false}
+                requestPath="/users/search/friends/"
                 placeholder="Ajouter un destinataire"
               />
               <div>
                 {this.state.newRecipients.length > 0 ? (
                   <div>
-                    {this.state.newRecipients.map(newRecipient => {
-                      return (
-                        <span>
-                          newRecipient.pseudo
-                          <button onClick={this.removeRecipient}>
-                            supprimer
-                          </button>
-                        </span>
-                      );
-                    })}
+                    {this.state.newRecipients.map(this.renderRecipientsList)}
                   </div>
                 ) : (
-                  ""
+                  "Choisissez un ou plusieurs destinataires"
                 )}
               </div>
 
-              <form>
-                <textarea
-                  cols="30"
-                  rows="10"
-                  placeholder="Un jour, une célèbre licorne a dit...."
-                />
-                <button type="submit" onClick={this.sendMessage} />
-              </form>
+              {this.renderEditor("newMessage")}
             </div>
           ) : (
             ""
@@ -173,30 +237,19 @@ class Mail extends Component {
             <p>Chargement</p>
           ) : (
             <div>
-              {this.state.conversations.map(conversation => {
-                return (
-                  <div key={conversation._id} onClick={this.showConversation}>
-                    return (
-                    <div key={conversation[0].message._id}>
-                      <span>{conversation[0].message.autor}</span>
-                      <span>{conversation[0].message.text}</span>
-                      <span>{conversation[0].message.date}</span>
-                      <button onClick={this.deleteConversation} />
-                    </div>
-                    );
-                  </div>
-                );
-              })}
+              {this.state.conversations.map(this.renderConversationsList)}
             </div>
           )}
         </div>
-        {/* <div>
-        {this.state.displayedConversation ? (
-          <div>{this.renderDisplayedConversation}</div>
-        ) : (
-          ""
-        )}
-      </div> */}
+        <div>
+          {this.state.displayedConversation ? (
+            <div>
+              {this.renderChoosenConversation(this.state.displayedConversation)}
+            </div>
+          ) : (
+            "empty state"
+          )}
+        </div>
         <div>{this.state.alert}</div>
       </div>
     );

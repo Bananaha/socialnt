@@ -6,6 +6,7 @@ const users = require("./users.route");
 const post = require("./post.route");
 const friendRequest = require("./friendRequest.route");
 const chat = require("./chat.route");
+const mail = require("./mail.route");
 
 const routes = new Router();
 
@@ -14,5 +15,6 @@ routes.use("/login", login);
 routes.use("/post", post);
 routes.use("/friendRequest", friendRequest);
 routes.use("/chat", chat);
+routes.use("/mail", mail);
 
 module.exports = routes;
