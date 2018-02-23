@@ -25,7 +25,8 @@ const PERMISSIONS_CALLBACKS = {
   deleteAllProfils: "canDeleteAllProfils",
   answerRequest: "canAnswerRequest",
   canEditComment: "canEditComment",
-  canSeePost: "canSeePost"
+  canSeePost: "canSeePost",
+  getMails: "canGetMails"
 };
 
 const permissionDispatcher = requestedAction => {
