@@ -1,4 +1,4 @@
-const mailService = require("../services/mail.service");
+const emailService = require("../services/mail.service");
 const dbService = require("./db.service");
 const tokenService = require("./token.service");
 const socketService = require("./socket/socket.service");
@@ -19,7 +19,7 @@ const signIn = userInformations => {
     })
     .then(result => {
       const user = result.ops[0];
-      mailService.welcome(user);
+      emailService.welcome(user);
 
       return {
         token: tokenService.signJwt({

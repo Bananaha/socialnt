@@ -1,7 +1,7 @@
 const uuidv4 = require("uuid/v4");
 const moment = require("moment");
 const dbService = require("./db.service");
-const mailService = require("./mail.service");
+const emailService = require("./mail.service");
 
 const COLLECTION_NAME = "users";
 
@@ -33,7 +33,7 @@ const createResetUrl = (req, res) => {
               email: result.email,
               link: resetLink
             };
-            mailService.resetPassword(user, (error, mailSend) => {
+            emailService.resetPassword(user, (error, mailSend) => {
               if (error) {
                 res.status(500).json({
                   message:

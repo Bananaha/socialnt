@@ -5,7 +5,7 @@ const async = require("async");
 
 const socketService = require("./socket/socket.service");
 const dbService = require("./db.service");
-const mailService = require("./mail.service");
+const emailService = require("./mail.service");
 const userService = require("../services/user.service");
 const COLLECTION_NAME = "users";
 
@@ -59,7 +59,7 @@ const request = (targetUser, currentUser) => {
                   }
                 );
 
-                mailService.friendRequest(user[0]);
+                emailService.friendRequest(user[0]);
 
                 return { alert: "Votre demande d'ajout a bien été effectué" };
               })
