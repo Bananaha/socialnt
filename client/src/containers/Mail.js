@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { get, del, post } from "../services/request.service";
 import { withRouter } from "react-router-dom";
+import moment from "moment";
 import SearchBar from "../components/SearchBar";
 import "whatwg-fetch";
 
@@ -60,9 +61,45 @@ class Mail extends Component {
     alert: undefined,
     newReply: undefined,
     newMessage: undefined,
-    displayedConversation: undefined
+    displayedConversation: undefined,
+    pagination: [],
+    nbConversation: 0
   };
 
+  computeResult = result => {
+    console.log(result);
+    let pages = [];
+    for (
+      let i = result.nbConversations, nbPages = 1;
+      i > 0;
+      i -= 10, nbPages++
+    ) {
+      pages.push(nbPages);
+    }
+    result.conversations.forEach(conversation => {
+      conversation.formattedDate = moment(conversation.lastUpdate).fromNow();
+    });
+    this.setState({
+      pagination: pages,
+      conversations: result.conversations,
+      nbConversation: result.nbConversations,
+      loader: false
+    });
+  };
+
+  updateConversations = (page = 1) => {
+    get(`/mail/${page}`)
+      .then(this.computeResult)
+      .catch(error => {
+        console.error(error);
+        this.showInformation(error.alert);
+      });
+  };
+
+  loadNextPosts = page => event => {
+    event.preventDefault();
+    this.updateConversations(page);
+  };
   // Display notification to user
   showInformation = text => {
     this.setState({
@@ -72,6 +109,9 @@ class Mail extends Component {
       this.setState({ alert: "" });
     }, 5000);
   };
+  componentDidMount() {
+    this.updateConversations();
+  }
 
   // show a choosen conversation
   showConversation = event => {
@@ -106,15 +146,20 @@ class Mail extends Component {
   };
   // Send the message
   sendMessage = event => {
+    const newRecipients = this.state.newRecipients.map(
+      newRecipient => (newRecipient = newRecipient._id)
+    );
     event.preventDefault();
     const messageType = event.target.value;
     const messagePayload = {
       text: this.state.newMessage,
-      recipients: this.state.newRecipients
+      recipients: newRecipients
     };
-    // post("//messageType", messagePayload);
+    post(`/mail/${messageType}`, messagePayload).then(() => {
+      this.showInformation("Message envoyé");
+      this.updateConversations();
+    });
     console.log(messagePayload, event.target.value);
-    this.showInformation("Message envoyé");
   };
   // delete a conversation if the user is the creator
   deleteConversation = conversationId => {
@@ -143,7 +188,7 @@ class Mail extends Component {
         <div key={conversation.messages[0]._id}>
           <span>{conversation.messages[0].autor}</span>
           <span>{conversation.messages[0].text}</span>
-          <span>{conversation.messages[0].date}</span>
+          <span>{conversation.formattedDate}</span>
           <button onClick={this.deleteConversation}>Supprimer</button>
           <button value={conversation._id} onClick={this.showConversation}>
             Voir
@@ -161,14 +206,14 @@ class Mail extends Component {
       return (
         <div key={message._id}>
           <div>
-            <p>from: {message.autor}</p>
+            <p>from: {message.author}</p>
             <div>
               to:{" "}
               {conversation.recipients.map((recipient, index) => {
                 const key = `${recipient._id}_${index}`;
-                return <span key={key}>{recipient.pseudo}</span>;
+                return <span key={key}>{recipient}</span>;
               })}
-              <p>{message.date}</p>
+              <p>{conversation.formattedDate}</p>
             </div>
             <div>{message.text}</div>
             <button value={message._id} onClick={this.deleteMessage}>
@@ -202,6 +247,7 @@ class Mail extends Component {
   };
 
   render() {
+    console.log(this.state.conversations);
     return (
       <div>
         <h2>Messagerie</h2>
@@ -225,7 +271,7 @@ class Mail extends Component {
                 )}
               </div>
 
-              {this.renderEditor("newMessage")}
+              {this.renderEditor("newConversation")}
             </div>
           ) : (
             ""
@@ -238,6 +284,15 @@ class Mail extends Component {
           ) : (
             <div>
               {this.state.conversations.map(this.renderConversationsList)}
+              <div>
+                {this.state.pagination.map((page, index) => {
+                  return (
+                    <button onClick={this.loadNextPosts(page)} key={index}>
+                      {page}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           )}
         </div>

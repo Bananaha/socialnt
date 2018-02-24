@@ -1,16 +1,11 @@
 "use strict";
 
-const moment = require("moment");
-const async = require("async");
-const _ = require("lodash");
 const uuidv4 = require("uuid/v4");
 const dbService = require("./db.service");
 const socketService = require("./socket/socket.service");
 const userService = require("./user.service");
 
 const ObjectId = require("mongodb").ObjectID;
-
-moment.locale("fr");
 
 const POSTS_COUNT_PER_PAGE = 10;
 

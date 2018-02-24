@@ -26,7 +26,8 @@ const PERMISSIONS_CALLBACKS = {
   answerRequest: "canAnswerRequest",
   canEditComment: "canEditComment",
   canSeePost: "canSeePost",
-  getMails: "canGetMails"
+  getMails: "canGetMails",
+  createNewConversation: "canCreateNewConversation"
 };
 
 const permissionDispatcher = requestedAction => {

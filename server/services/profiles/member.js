@@ -37,7 +37,8 @@ const canSeePost = req =>
     });
   });
 
-const canGetMails = helper.isSameUser;
+const canGetMails = () => true;
+const canCreateNewConversation = () => true;
 
 module.exports = {
   canSendPost,
@@ -53,5 +54,6 @@ module.exports = {
   canDeleteAllProfils,
   canEditComment,
   canSeePost,
-  canGetMails
+  canGetMails,
+  canCreateNewConversation
 };

@@ -18,6 +18,7 @@ const canDeleteAllProfils = () => true;
 const canEditComment = () => true;
 const canSeePost = () => true;
 const canGetMails = () => true;
+const canCreateNewConversation = () => true;
 
 module.exports = {
   canSendPost,
@@ -33,5 +34,6 @@ module.exports = {
   canDeleteAllProfils,
   canEditComment,
   canSeePost,
-  canGetMails
+  canGetMails,
+  canCreateNewConversation
 };
