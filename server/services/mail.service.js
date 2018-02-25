@@ -4,6 +4,7 @@ const dbService = require("./db.service");
 const userService = require("./user.service");
 
 const CONVERSATIONS_COUNT_PER_PAGE = 10;
+const COLLECTION_NAME = "mails";
 
 const extractUsersFromConversations = conversations => {
   return conversations
@@ -65,7 +66,7 @@ const populateConversationsWithUsers = (conversations, users) => {
 const getAllUserMail = (currentUserId, page) => {
   return dbService
     .findAndCount(
-      "mails",
+      COLLECTION_NAME,
       {
         $or: [
           { owner: ObjectId(currentUserId) },
@@ -112,12 +113,11 @@ const createConversation = (currentUserId, recipients, text) => {
   };
 
   return dbService
-    .create("mails", mailModel)
+    .create(COLLECTION_NAME, mailModel)
     .then(newConversation => {
       return newConversation;
     })
     .catch(error => {
-      console.log(error);
       return error;
     });
 };
@@ -139,18 +139,15 @@ const computedRecipientsList = (currentUserId, recipients) => {
 };
 
 const deleteOneConversation = (conversationId, ownerId) => {
-  console.log(conversationId, typeof conversationId, ownerId, typeof ownerId);
   return dbService
-    .deleteOne("mails", {
+    .deleteOne(COLLECTION_NAME, {
       _id: ObjectId(conversationId),
       owner: ObjectId(ownerId)
     })
     .then(result => {
-      console.log(result);
       return result;
     })
     .catch(error => {
-      console.log("service", error);
       return error;
     });
 };
@@ -158,16 +155,14 @@ const deleteOneConversation = (conversationId, ownerId) => {
 const deleteOneMessage = (messageId, conversationId) => {
   return dbService
     .updateAndReturn(
-      "mail",
+      COLLECTION_NAME,
       { _id: ObjectId(conversationId) },
-      { $pull: { messages: { _id: { $in: [messageId] } } } }
+      { $pull: { messages: { _id: { $in: [ObjectId(messageId)] } } } }
     )
     .then(result => {
-      console.log(result);
       return result;
     })
     .catch(error => {
-      console.log(error);
       return error;
     });
 };
@@ -175,7 +170,7 @@ const deleteOneMessage = (messageId, conversationId) => {
 const addReply = (currentUserId, conversationId, text) => {
   return dbService
     .updateAndReturn(
-      "mails",
+      COLLECTION_NAME,
       { _id: ObjectId(conversationId) },
       {
         $push: {
@@ -192,11 +187,9 @@ const addReply = (currentUserId, conversationId, text) => {
       }
     )
     .then(conversation => {
-      console.log(conversation);
       return conversation;
     })
     .catch(error => {
-      console.log(error);
       return error;
     });
 };

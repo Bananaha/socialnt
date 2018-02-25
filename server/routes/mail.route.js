@@ -44,18 +44,17 @@ const deleteOneConversation = (req, res) => {
     .catch(error => {
       res.status(404).end();
     });
-  // mailService.deleteOneConversation()
 };
 
 const deleteOneMessage = (req, res) => {
   console.log(req.body);
   mailService
-    .deleteOneMessage(req.body.messageId, req.body.authorId)
+    .deleteOneMessage(req.body.messageId, req.body.conversationId)
     .then(() => {
       res.status(200).json({ alert: "success" });
     })
     .catch(error => {
-      res.status(404).end();
+      res.status(404).json({ alert: error });
     });
 };
 

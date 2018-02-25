@@ -32,7 +32,6 @@ class Mail extends Component {
   };
 
   computeResult = result => {
-    console.log("update", result);
     let pages = [];
     for (
       let i = result.nbConversations, nbPages = 1;
@@ -56,7 +55,6 @@ class Mail extends Component {
   };
 
   updateConversations = (page = 1) => {
-    console.log("in updateConversation");
     get(`/mail/${page}`)
       .then(this.computeResult)
       .catch(error => {
@@ -137,7 +135,7 @@ class Mail extends Component {
       .then(() => {
         this.updateConversations();
         this.showInformation("Message envoyé", "info");
-        this.setState({ newMessage: "" });
+        this.setState({ newMessage: "", newRecipients: [] });
       })
       .catch(error => {
         this.showInformation(
@@ -188,9 +186,8 @@ class Mail extends Component {
         this.updateConversations();
       })
       .catch(error => {
-        console.log(error);
         this.showInformation(
-          "Le message n'a pas pu être supprimé. Réessayer plus tard",
+          "Le message n'a pas pu être supprimé. Réessayez plus tard",
           "warning"
         );
       });
@@ -201,6 +198,9 @@ class Mail extends Component {
   // -----------------RENDER METHODES____________________
   //
   // ####################################################
+
+  // show the recipients choose by the user when he create a new conversation
+  // @newRecipient object {_id: string, pseudo: string}
   renderRecipientsList = newRecipient => {
     return (
       <span key={newRecipient._id}>
@@ -211,7 +211,8 @@ class Mail extends Component {
       </span>
     );
   };
-
+  // show the list of all the conversation from whom the user belong(creator or recipient)
+  // @conversation object {_id, }
   renderConversationsList = conversation => {
     const { user } = this.props;
     return (
@@ -219,9 +220,7 @@ class Mail extends Component {
         <div key={conversation.messages[0]._id}>
           <span>
             {conversation.recipients.map(recipient => (
-              <span key={recipient.pseudo}>
-                {recipient.pseudo || recipient}
-              </span>
+              <span key={recipient.pseudo}>{recipient.pseudo}</span>
             ))}
           </span>
           <p>{conversation.messages[0].text}</p>
@@ -240,12 +239,16 @@ class Mail extends Component {
       </ConversationList>
     );
   };
-
+  // show the conversation choose by the user
+  // @conversationId string
   renderChoosenConversation = conversationId => {
     const { user } = this.props;
     const conversation = this.state.conversations.filter(
       conversation => conversation._id === conversationId
     )[0];
+    if (!conversation) {
+      return;
+    }
     return conversation.messages.map(message => {
       return (
         <div key={message._id}>
@@ -254,13 +257,16 @@ class Mail extends Component {
             <div>
               to:{" "}
               {conversation.recipients.map((recipient, index) => {
-                const key = `${recipient._id}_${index}`;
-                return <span key={recipient._id}>{recipient.pseudo}</span>;
+                if (recipient._id !== message.author._id) {
+                  const key = `${recipient._id}_${index}`;
+
+                  return <span key={key}>{recipient.pseudo}</span>;
+                }
               })}
               <p>{message.formattedDate}</p>
             </div>
             <div>{message.text}</div>
-            {user && message.author === user.id ? (
+            {user && message.author._id === user.id ? (
               <DeleteButton
                 delete={(messageId, authorId, conversationId) =>
                   this.deleteMessage(
@@ -280,7 +286,11 @@ class Mail extends Component {
     });
   };
 
+  // render the text editor for new conversation or new reply
+  // @messageType string 'newConversation' or 'newReply'
+  // @conversationId string
   renderEditor = (messageType, conversationId) => {
+    // set the text area placeholder based on the message type
     let placeholderText;
     if (messageType === "newConversation") {
       placeholderText = "Un jour, une célèbre licorne a dit....";
@@ -289,6 +299,7 @@ class Mail extends Component {
     }
     return (
       <div>
+        {/* if the message is a new conversation, show the searchBar and and the recipient list */}
         {messageType === "newConversation" ? (
           <div>
             <SearchBar
@@ -316,6 +327,7 @@ class Mail extends Component {
             cols="30"
             rows="10"
             placeholder={placeholderText}
+            value={this.state.newMessage || ""}
             onInput={this.handleMessageEditChange}
           />
           <button
