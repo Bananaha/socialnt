@@ -72,6 +72,7 @@ class UsersList extends Component {
           alert: result.alert
         });
         this.launchTimeout();
+        this.getMatchingUsers();
       })
       .catch(error => {
         this.setState({
