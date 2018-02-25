@@ -71,7 +71,7 @@ class SearchBar extends Component {
             type="text"
             placeholder={this.props.placeholder}
           />
-          <button>Ok</button>
+          {this.props.showButton === "false" ? "" : <button>Ok</button>}
         </form>
         <div>
           {this.state.loader

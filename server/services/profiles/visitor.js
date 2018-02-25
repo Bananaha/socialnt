@@ -19,6 +19,9 @@ const canEditComment = () => false;
 const canSeePost = () => false;
 const canGetMails = () => false;
 const canCreateNewConversation = () => false;
+const canDeleteOneMessage = () => false;
+const canDeleteOneConversation = () => false;
+const canReplyToConversation = () => false;
 
 module.exports = {
   canSendPost,
@@ -35,5 +38,8 @@ module.exports = {
   canEditComment,
   canSeePost,
   canGetMails,
-  canCreateNewConversation
+  canCreateNewConversation,
+  canDeleteOneMessage,
+  canDeleteOneConversation,
+  canReplyToConversation
 };

@@ -1,65 +1,30 @@
 import React, { Component } from "react";
-import { get, del, post } from "../services/request.service";
+import { get, post } from "../services/request.service";
 import { withRouter } from "react-router-dom";
 import moment from "moment";
 import SearchBar from "../components/SearchBar";
+import DeleteButton from "../components/DeleteButton";
 import "whatwg-fetch";
+import styled from "styled-components";
+
+const ConversationList = styled.div`
+  border-bottom: 1px solid #ccc;
+  font-size: 12px;
+`;
+
+const ConversationListContainer = styled.div`
+  border: 1px solid black;
+  height: 100%;
+  width: 30%;
+`;
 
 class Mail extends Component {
   state = {
     loading: false,
-    conversations: [
-      {
-        _id: 4567,
-        owner: 1245676878708976,
-        recipients: [
-          { _id: 132437, pseudo: "toto" },
-          { _id: 132437, pseudo: "tata" },
-          { _id: 132437, pseudo: "titi" }
-        ],
-        messages: [
-          {
-            _id: "message1",
-            autor: "bibi",
-            date: "01/01/2018",
-            text: "Bonjour"
-          },
-          {
-            _id: "message2",
-            autor: "toto",
-            date: "01/01/2018",
-            text: "Hello, ca va ?"
-          }
-        ]
-      },
-      {
-        _id: 23456,
-        owner: 253748595324,
-        recipients: [
-          { _id: 132437, pseudo: "toto" },
-          { _id: 132437, pseudo: "tata" },
-          { _id: 132437, pseudo: "titi" }
-        ],
-        messages: [
-          {
-            _id: "message1",
-            autor: "bibi",
-            date: "01/01/2018",
-            text: "Bonjour"
-          },
-          {
-            _id: "message2",
-            autor: "toto",
-            date: "01/01/2018",
-            text: "Hello, ca va ?"
-          }
-        ]
-      }
-    ],
+    conversations: [],
     newRecipients: [],
     editorIsOpen: false,
     alert: undefined,
-    newReply: undefined,
     newMessage: undefined,
     displayedConversation: undefined,
     pagination: [],
@@ -67,7 +32,7 @@ class Mail extends Component {
   };
 
   computeResult = result => {
-    console.log(result);
+    console.log("update", result);
     let pages = [];
     for (
       let i = result.nbConversations, nbPages = 1;
@@ -78,6 +43,9 @@ class Mail extends Component {
     }
     result.conversations.forEach(conversation => {
       conversation.formattedDate = moment(conversation.lastUpdate).fromNow();
+      conversation.messages.forEach(message => {
+        message.formattedDate = moment(message.date).fromNow();
+      });
     });
     this.setState({
       pagination: pages,
@@ -88,10 +56,10 @@ class Mail extends Component {
   };
 
   updateConversations = (page = 1) => {
+    console.log("in updateConversation");
     get(`/mail/${page}`)
       .then(this.computeResult)
       .catch(error => {
-        console.error(error);
         this.showInformation(error.alert);
       });
   };
@@ -101,7 +69,9 @@ class Mail extends Component {
     this.updateConversations(page);
   };
   // Display notification to user
-  showInformation = text => {
+  showInformation = (text, type) => {
+    // TODO ==> use type argument for style settings
+    // info or warning
     this.setState({
       alert: text
     });
@@ -109,21 +79,17 @@ class Mail extends Component {
       this.setState({ alert: "" });
     }, 5000);
   };
-  componentDidMount() {
-    this.updateConversations();
-  }
 
   // show a choosen conversation
   showConversation = event => {
     event.preventDefault();
+
     const conversationId = event.target.value;
-    console.log("Messages show", event, event.target);
 
     this.setState({ displayedConversation: conversationId });
   };
   // Open or close the message editor
   toogleMessageEditor = () => {
-    console.log("messageEditor open");
     this.setState({
       editorIsOpen: !this.state.editorIsOpen
     });
@@ -145,32 +111,96 @@ class Mail extends Component {
     });
   };
   // Send the message
-  sendMessage = event => {
-    const newRecipients = this.state.newRecipients.map(
-      newRecipient => (newRecipient = newRecipient._id)
-    );
+  sendMessage = (event, messageType, conversationId) => {
     event.preventDefault();
-    const messageType = event.target.value;
+
+    // const messageType = event.target.value;
     const messagePayload = {
-      text: this.state.newMessage,
-      recipients: newRecipients
+      text: this.state.newMessage
     };
-    post(`/mail/${messageType}`, messagePayload).then(() => {
-      this.showInformation("Message envoyé");
-      this.updateConversations();
-    });
-    console.log(messagePayload, event.target.value);
-  };
-  // delete a conversation if the user is the creator
-  deleteConversation = conversationId => {
-    console.log("messageRemoved");
-    this.showInformation("Message supprimé");
-  };
-  // delete a message if the user is the creator
-  deleteMessage = event => {
-    console.log("deleteMessage", event.target.value);
+    if (messageType === "newConversation") {
+      const newRecipients = this.state.newRecipients.map(
+        newRecipient => (newRecipient = newRecipient._id)
+      );
+      messagePayload.recipients = newRecipients;
+    } else {
+      const currentConversation = this.state.conversations.filter(
+        conversation => {
+          return conversation._id === conversationId;
+        }
+      );
+      messagePayload.recipients = currentConversation[0].recipients;
+      messagePayload.conversationId = conversationId;
+    }
+
+    post(`/mail/${messageType}`, messagePayload)
+      .then(() => {
+        this.updateConversations();
+        this.showInformation("Message envoyé", "info");
+        this.setState({ newMessage: "" });
+      })
+      .catch(error => {
+        this.showInformation(
+          "Le message n'a pas pu être envoyé. Réessayez plus tard.",
+          "warning"
+        );
+      });
   };
 
+  handleMessageEditChange = event => {
+    const text = event.target.value;
+    this.setState({ newMessage: text });
+  };
+  // ####################################################
+  //
+  // -----------------DELETE METHODES____________________
+  //
+  // ####################################################
+
+  // delete a conversation if the user is the creator
+  deleteConversation = (conversationId, ownerId) => {
+    const conversationToDelete = {
+      conversationId: conversationId,
+      ownerId: ownerId
+    };
+    post("/mail/deleteOneConversation", conversationToDelete)
+      .then(() => {
+        this.showInformation("Conversation supprimée avec succès", "success");
+        this.updateConversations();
+      })
+      .catch(() => {
+        this.showInformation(
+          "La conversation n'a pas pu être supprimée. Réessayer plus tard",
+          "warning"
+        );
+      });
+  };
+  // delete a message if the user is the creator
+  deleteMessage = (messageId, autorId, conversationId) => {
+    const messageToDelete = {
+      messageId: messageId,
+      authorId: autorId,
+      conversationId: conversationId
+    };
+    post("/mail/deleteOneMessage", messageToDelete)
+      .then(() => {
+        this.showInformation("Message supprimé avec succès", "info");
+        this.updateConversations();
+      })
+      .catch(error => {
+        console.log(error);
+        this.showInformation(
+          "Le message n'a pas pu être supprimé. Réessayer plus tard",
+          "warning"
+        );
+      });
+  };
+
+  // ####################################################
+  //
+  // -----------------RENDER METHODES____________________
+  //
+  // ####################################################
   renderRecipientsList = newRecipient => {
     return (
       <span key={newRecipient._id}>
@@ -183,101 +213,145 @@ class Mail extends Component {
   };
 
   renderConversationsList = conversation => {
+    const { user } = this.props;
     return (
-      <div key={conversation._id}>
+      <ConversationList key={conversation._id}>
         <div key={conversation.messages[0]._id}>
-          <span>{conversation.messages[0].autor}</span>
-          <span>{conversation.messages[0].text}</span>
+          <span>
+            {conversation.recipients.map(recipient => (
+              <span key={recipient.pseudo}>
+                {recipient.pseudo || recipient}
+              </span>
+            ))}
+          </span>
+          <p>{conversation.messages[0].text}</p>
           <span>{conversation.formattedDate}</span>
-          <button onClick={this.deleteConversation}>Supprimer</button>
+          <DeleteButton
+            delete={(conversationId, ownerId) =>
+              this.deleteConversation(conversation._id, conversation.owner._id)
+            }
+            text="Supprimer la conversation"
+          />
+
           <button value={conversation._id} onClick={this.showConversation}>
             Voir
           </button>
         </div>
-      </div>
+      </ConversationList>
     );
   };
 
   renderChoosenConversation = conversationId => {
+    const { user } = this.props;
     const conversation = this.state.conversations.filter(
-      conversation => parseInt(conversation._id) === parseInt(conversationId)
+      conversation => conversation._id === conversationId
     )[0];
     return conversation.messages.map(message => {
       return (
         <div key={message._id}>
           <div>
-            <p>from: {message.author}</p>
+            <p>from: {message.author.pseudo}</p>
             <div>
               to:{" "}
               {conversation.recipients.map((recipient, index) => {
                 const key = `${recipient._id}_${index}`;
-                return <span key={key}>{recipient}</span>;
+                return <span key={recipient._id}>{recipient.pseudo}</span>;
               })}
-              <p>{conversation.formattedDate}</p>
+              <p>{message.formattedDate}</p>
             </div>
             <div>{message.text}</div>
-            <button value={message._id} onClick={this.deleteMessage}>
-              Supprimer
-            </button>
+            {user && message.author === user.id ? (
+              <DeleteButton
+                delete={(messageId, authorId, conversationId) =>
+                  this.deleteMessage(
+                    message._id,
+                    message.author._id,
+                    conversation._id
+                  )
+                }
+                text="Supprimer le message"
+              />
+            ) : (
+              ""
+            )}
           </div>
         </div>
       );
     });
   };
 
-  renderEditor = messageType => {
+  renderEditor = (messageType, conversationId) => {
+    let placeholderText;
+    if (messageType === "newConversation") {
+      placeholderText = "Un jour, une célèbre licorne a dit....";
+    } else {
+      placeholderText = "Répondre....";
+    }
     return (
-      <form>
-        <textarea
-          cols="30"
-          rows="10"
-          placeholder="Un jour, une célèbre licorne a dit...."
-          onInput={this.handleMessageEditChange}
-        />
-        <button type="submit" value={messageType} onClick={this.sendMessage}>
-          Envoyer
-        </button>
-      </form>
+      <div>
+        {messageType === "newConversation" ? (
+          <div>
+            <SearchBar
+              onSubmit={this.addRecipient}
+              onSelect={this.addRecipient}
+              requestPath="/users/search/friends/"
+              placeholder="Ajouter un destinataire"
+              showButton="false"
+            />
+            <div>
+              {this.state.newRecipients.length > 0 ? (
+                <div>
+                  {this.state.newRecipients.map(this.renderRecipientsList)}
+                </div>
+              ) : (
+                "Choisissez un ou plusieurs destinataires"
+              )}
+            </div>
+          </div>
+        ) : (
+          ""
+        )}
+        <form>
+          <textarea
+            cols="30"
+            rows="10"
+            placeholder={placeholderText}
+            onInput={this.handleMessageEditChange}
+          />
+          <button
+            type="submit"
+            value={messageType}
+            onClick={event =>
+              this.sendMessage(event, messageType, conversationId)
+            }
+          >
+            Envoyer
+          </button>
+        </form>
+      </div>
     );
   };
 
-  handleMessageEditChange = event => {
-    const text = event.target.value;
-    this.setState({ newMessage: text });
-  };
-
+  componentDidMount() {
+    this.updateConversations();
+  }
   render() {
-    console.log(this.state.conversations);
     return (
       <div>
         <h2>Messagerie</h2>
-        <button onClick={this.toogleMessageEditor}>Rédiger un message</button>
+        <button onClick={this.toogleMessageEditor}>
+          {this.state.editorIsOpen
+            ? "Fermer"
+            : "Ouvrir une nouvelle conversation"}
+        </button>
         <div>
           {this.state.editorIsOpen ? (
-            <div>
-              <SearchBar
-                onSubmit={this.addRecipient}
-                onSelect={this.addRecipient}
-                requestPath="/users/search/friends/"
-                placeholder="Ajouter un destinataire"
-              />
-              <div>
-                {this.state.newRecipients.length > 0 ? (
-                  <div>
-                    {this.state.newRecipients.map(this.renderRecipientsList)}
-                  </div>
-                ) : (
-                  "Choisissez un ou plusieurs destinataires"
-                )}
-              </div>
-
-              {this.renderEditor("newConversation")}
-            </div>
+            <div>{this.renderEditor("newConversation")}</div>
           ) : (
             ""
           )}
         </div>
-        <div>
+        <ConversationListContainer>
           <h3>Messages reçus</h3>
           {this.state.loading ? (
             <p>Chargement</p>
@@ -295,11 +369,12 @@ class Mail extends Component {
               </div>
             </div>
           )}
-        </div>
+        </ConversationListContainer>
         <div>
           {this.state.displayedConversation ? (
             <div>
               {this.renderChoosenConversation(this.state.displayedConversation)}
+              {this.renderEditor("newReply", this.state.displayedConversation)}
             </div>
           ) : (
             "empty state"

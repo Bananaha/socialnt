@@ -180,16 +180,14 @@ const close = done => {
   }
 };
 
-const deleteOne = (collectionName, id) => {
+const deleteOne = (collectionName, filter) => {
   return new Promise((resolve, reject) => {
-    state.db
-      .collection(collectionName)
-      .deleteOne({ _id: ObjectId(id) }, (error, result) => {
-        if (error) {
-          return reject(error);
-        }
-        return resolve([result, count]);
-      });
+    state.db.collection(collectionName).deleteOne(filter, (error, result) => {
+      if (error) {
+        return reject(error);
+      }
+      return resolve([result, count]);
+    });
   });
 };
 

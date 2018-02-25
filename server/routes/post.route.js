@@ -70,8 +70,8 @@ const createComment = (req, res) => {
 const deleteComment = (req, res) => {};
 
 const getComments = (req, res) => {};
-
-router.route("/newPost").post(permission("sendPost"), send);
+// TODO => manque des permissions
+router.route("/newPost").post(permission("canSendPost"), send);
 router.route("/deletePost").delete(suppressOne);
 router.route("/deleteAllPosts").delete(suppressAll);
 router

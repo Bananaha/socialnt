@@ -13,26 +13,30 @@ const handleRequestAnswer = canDoAction => {
 };
 
 const PERMISSIONS_CALLBACKS = {
-  viewProfil: "canViewProfil",
-  sendPost: "canSendPost",
-  editProfil: "canEditProfil",
-  search: "canSearch",
-  searchFriends: "canSearchFriends",
-  friendRequest: "canFriendRequest",
-  findFriendRequests: "canFindFriendRequests",
-  findUserProfil: "canFindUserProfil",
-  deleteProfil: "canDeleteProfil",
-  deleteAllProfils: "canDeleteAllProfils",
-  answerRequest: "canAnswerRequest",
+  canViewProfil: "canViewProfil",
+  canSendPost: "canSendPost",
+  canEditProfil: "canEditProfil",
+  canSearch: "canSearch",
+  canSearchFriends: "canSearchFriends",
+  canFriendRequest: "canFriendRequest",
+  canFindFriendRequests: "canFindFriendRequests",
+  canFindUserProfil: "canFindUserProfil",
+  canDeleteProfil: "canDeleteProfil",
+  canDeleteAllProfils: "canDeleteAllProfils",
+  canAnswerRequest: "canAnswerRequest",
   canEditComment: "canEditComment",
   canSeePost: "canSeePost",
-  getMails: "canGetMails",
-  createNewConversation: "canCreateNewConversation"
+  canGetMails: "canGetMails",
+  canCreateNewConversation: "canCreateNewConversation",
+  canDeleteOneConversation: "canDeleteOneConversation",
+  canDeleteOneMessage: "canDeleteOneMessage",
+  canReplyToConversation: "canReplyToConversation"
 };
 
 const permissionDispatcher = requestedAction => {
   return (req, res, next) => {
-    // no profile => redirect + error
+    console.log(req.body, req.params, req.query);
+    console.log(req.__user, req.__profile);
     if (!req.__profile) {
       res.status(403).redirect(path.join("/"));
       return;

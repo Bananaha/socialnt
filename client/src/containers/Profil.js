@@ -60,6 +60,8 @@ class Profil extends Component {
 
   deleteProfil = () => {
     console.log("deleteProfil");
+
+    // rejouter l'id pour checker un db si user identique et pour les actions admin
     del("/users")
       .then(() => {
         console.log("deleteProfil");

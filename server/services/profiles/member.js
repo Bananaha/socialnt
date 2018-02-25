@@ -11,18 +11,18 @@ const canEditProfil = helper.isSameOrFriend;
 
 const canFriendRequest = helper.isSameOrFriend;
 
-const canSearchFriends = currentUser => true;
-const canSearch = currentUser => true;
-const canFindUserProfil = currentUser => true;
+const canSearchFriends = () => true;
+const canSearch = () => true;
+const canFindUserProfil = () => true;
+// TODO ==> securiser la supression du profil
 const canDeleteProfil = () => true;
 const canFindFriendRequests = () => true;
 const canDeleteAllProfils = () => false;
 const canAnswerRequest = () => true;
-
+// TODO ==> canEditCOmment fini ?
 const canEditComment = req =>
   new Promise((resolve, reject) => {
     const currentUser = req.__user;
-    console.log(req.params);
     return false;
   });
 
@@ -39,6 +39,44 @@ const canSeePost = req =>
 
 const canGetMails = () => true;
 const canCreateNewConversation = () => true;
+const canDeleteOneMessage = req => {
+  console.log(
+    req.__user.toString() == req.body.authorId,
+    typeof req.__user.toString(),
+    typeof req.body.authorId,
+    req.body.authorId,
+    req.__user
+  );
+  return req.__user.toString() == req.body.authorId;
+};
+const canDeleteOneConversation = req => {
+  console.log(
+    req.__user.toString() == req.body.ownerId,
+    typeof req.__user.toString(),
+    typeof req.body.ownerId,
+    req.body.ownerId,
+    req.__user
+  );
+  return req.__user.toString() == req.body.ownerId;
+};
+
+const canReplyToConversation = req => {
+  console.log(
+    req.__user.toString() == req.body.ownerId,
+    typeof req.__user.toString(),
+    typeof req.body.ownerId,
+    req.body.ownerId,
+    req.__user
+  );
+  console.log(
+    req.body.recipients.some(
+      recipient => recipient._id === req.__user.toString()
+    )
+  );
+  return req.body.recipients.some(
+    recipient => recipient._id === req.__user.toString()
+  );
+};
 
 module.exports = {
   canSendPost,
@@ -55,5 +93,8 @@ module.exports = {
   canEditComment,
   canSeePost,
   canGetMails,
-  canCreateNewConversation
+  canCreateNewConversation,
+  canDeleteOneMessage,
+  canDeleteOneConversation,
+  canReplyToConversation
 };

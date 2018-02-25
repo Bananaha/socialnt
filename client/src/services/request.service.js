@@ -74,6 +74,7 @@ const toFormData = (data, files) => {
 };
 
 export const post = async (url, data, files) => {
+  console.log("post", url, data);
   const hasFile = Array.isArray(files) ? files.length > 0 : !!files;
   const req = !hasFile
     ? {

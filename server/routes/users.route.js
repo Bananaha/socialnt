@@ -70,14 +70,16 @@ const getFriends = () => {
 // EDIT PROFIL
 router
   .route("/editProfil")
-  .post(permission("editProfil"), upload.single("file"), userService.update);
+  .post(permission("canEditProfil"), upload.single("file"), userService.update);
 
 // SEARCH USERS OR FRIENDS
-router.route("/search/:values").get(permission("search"), userService.findMany);
+router
+  .route("/search/:values")
+  .get(permission("canSearch"), userService.findMany);
 
 router
   .route("/search/friends/:values")
-  .get(permission("searchFriends"), findFriends);
+  .get(permission("canSearchFriends"), findFriends);
 
 // LOST PASSWORD AND RECOVERY
 router.route("/reset/:token").get(passwordService.checkResetUrl);
@@ -86,15 +88,17 @@ router.route("/reset").post(passwordService.createResetUrl);
 router.route("/newPassword").post(passwordService.setNewPassword);
 
 // DELETE USERS
-router.route("/all").delete(permission("deleteAllProfils"), deleteAllProfils);
+router
+  .route("/all")
+  .delete(permission("canDeleteAllProfils"), deleteAllProfils);
 module.exports = router;
 
-router.route("/").delete(permission("deleteProfil"), deleteProfil);
+router.route("/").delete(permission("canDeleteProfil"), deleteProfil);
 
 router
   .route("/findUserProfil")
-  .get(permission("findUserProfil"), findUserProfil);
+  .get(permission("canFindUserProfil"), findUserProfil);
 
-router.route("/friends").get(permission("getFriends"), getFriends);
+router.route("/friends").get(permission("canGetFriends"), getFriends);
 
-router.route("/:targetUser").get(permission("viewProfil"), findById);
+router.route("/:targetUser").get(permission("canViewProfil"), findById);

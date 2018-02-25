@@ -55,9 +55,9 @@ const accept = (req, res) => {
     });
 };
 
-router.route("/").post(permission("friendRequest"), requestFriendship);
-router.route("/ignore").post(permission("answerRequest"), ignore);
-router.route("/accept").post(permission("answerRequest"), accept);
-router.route("/").get(permission("findFriendRequests"), findFriendRequests);
+router.route("/").post(permission("canFriendRequest"), requestFriendship);
+router.route("/ignore").post(permission("canAnswerRequest"), ignore);
+router.route("/accept").post(permission("canAnswerRequest"), accept);
+router.route("/").get(permission("canFindFriendRequests"), findFriendRequests);
 
 module.exports = router;

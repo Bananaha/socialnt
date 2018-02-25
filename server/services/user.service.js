@@ -127,7 +127,7 @@ const getFriends = () => {
 
 const deleteProfil = id => {
   return dbService
-    .deleteOne(COLLECTION_NAME, id)
+    .deleteOne(COLLECTION_NAME, { _id: ObjectId(id) })
     .then(result => console.log("delete profil___userService", result))
     .catch(error => console.log("delete profil error", error));
 };

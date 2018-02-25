@@ -96,7 +96,8 @@ const find = (userId, page) => {
     });
 };
 
-const suppressOne = postId => dbService.deleteOne("posts", postId);
+const suppressOne = postId =>
+  dbService.deleteOne("posts", { _id: ObjectId(postId) });
 
 const suppressAll = () => dbService.deleteMany("posts");
 

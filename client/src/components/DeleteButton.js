@@ -7,7 +7,8 @@ class DeleteButton extends Component {
     showModal: false,
     item: null
   };
-  requestConfirmation = item => {
+  requestConfirmation = event => {
+    console.log(event.target);
     this.setState({ showModal: true });
   };
 
