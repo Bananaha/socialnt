@@ -5,6 +5,8 @@ import "whatwg-fetch";
 
 import DeleteButton from "../components/DeleteButton";
 import PostsList from "../components/PostsList";
+import FriendsList from "../components/FriendsList";
+
 class Profil extends Component {
   state = {
     sex: "",
@@ -28,11 +30,11 @@ class Profil extends Component {
     this.fetchProfil(this.props.match.params.id);
   }
 
-  fetchProfil = profileId => {
+  fetchProfil = profilId => {
     this.setState({
       loader: true
     });
-    get(`/users/${profileId}`)
+    get(`/users/${profilId}`)
       .then(userInformations => {
         this.setState({
           sex: userInformations.sex,
@@ -59,9 +61,7 @@ class Profil extends Component {
   };
 
   deleteProfil = () => {
-    console.log("deleteProfil");
-
-    // rejouter l'id pour checker un db si user identique et pour les actions admin
+    // TODO rajouter l'id pour checker un db si user identique et pour les actions admin
     del("/users")
       .then(() => {
         console.log("deleteProfil");
@@ -82,6 +82,7 @@ class Profil extends Component {
           <p>Loading...</p>
         ) : (
           <div>
+            <FriendsList />
             <img
               style={{ width: 200 + "px", height: "auto" }}
               src={process.env.REACT_APP_HOST + "/images/" + this.state.avatar}
@@ -97,7 +98,7 @@ class Profil extends Component {
             <p>{this.state.city}</p>
             {isCurrentUser && (
               <div>
-                <button onClick={this.editProfil}>Editer mon profile</button>
+                <button onClick={this.editProfil}>Editer mon profil</button>
                 <DeleteButton
                   delete={this.deleteProfil}
                   text="Supprimer le profil"

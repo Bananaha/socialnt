@@ -33,8 +33,12 @@ const searchFriends = (targetUser, currentUser) => {
   if (!targetUser) {
     return Promise.reject();
   }
-
-  const query = new RegExp(targetUser, "i");
+  let query;
+  if (targetUser) {
+    query = new RegExp(targetUser, "i");
+  } else {
+    query = "";
+  }
 
   return dbService
     .getAll(
@@ -121,10 +125,6 @@ const update = (req, res) => {
     });
 };
 
-const getFriends = () => {
-  console.log("getFriends");
-};
-
 const deleteProfil = id => {
   return dbService
     .deleteOne(COLLECTION_NAME, { _id: ObjectId(id) })
@@ -157,7 +157,6 @@ module.exports = {
   update,
   findMany,
   searchFriends,
-  getFriends,
   deleteProfil,
   deleteAllProfils
 };

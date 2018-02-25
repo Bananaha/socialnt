@@ -63,8 +63,13 @@ const deleteAllProfils = (req, res) => {
     });
 };
 
-const getFriends = () => {
-  console.log("getFriends");
+const getFriends = (req, res) => {
+  userService
+    .findByIdWithFriends(req.__user)
+    .then(userWithFriends =>
+      res.status(200).json({ friends: userWithFriends.friends })
+    )
+    .catch(error => res.status(500).json({ alert: error }));
 };
 
 // EDIT PROFIL
