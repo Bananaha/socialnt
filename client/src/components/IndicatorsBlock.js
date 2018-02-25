@@ -2,6 +2,28 @@ import React, { Component } from "react";
 import { subscribe } from "../sockets";
 import { ON_CONNECTIONS_UPDATE, ON_POST_PUBLISH } from "../sockets/types";
 import { get } from "../services/request.service";
+import styled from "styled-components";
+
+const Indicators = styled.div`
+  margin-top: 40px;
+
+  > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 12px;
+  }
+
+  b {
+    font-size: 18px;
+    margin-right: 6px;
+  }
+
+  span {
+    font-weight: 100;
+    font-size: 13px;
+  }
+`;
 
 class IndicatorsBlock extends Component {
   state = {
@@ -38,17 +60,20 @@ class IndicatorsBlock extends Component {
   }
 
   render() {
+    const { nbPublishedPosts, nbConnectedUsers } = this.state;
     return (
-      <div>
+      <Indicators>
         <div>
-          <p>Nombre de posts publiés</p>
-          <span>{this.state.nbPublishedPosts}</span>
+          <b>{nbPublishedPosts}</b>
+          <span>{nbPublishedPosts > 1 ? "posts publiés" : "post publié"}</span>
         </div>
         <div>
-          <p>Nombre de membres connectés</p>
-          <span>{this.state.nbConnectedUsers}</span>
+          <b>{nbConnectedUsers}</b>
+          <span>
+            {nbConnectedUsers > 1 ? "membres connectés" : "membre connecté"}
+          </span>
         </div>
-      </div>
+      </Indicators>
     );
   }
 }
