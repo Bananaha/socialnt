@@ -2,6 +2,25 @@ import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import { login } from "../services/user.service";
 import "whatwg-fetch";
+import { Input, Button, Card } from "../styles/common";
+import { BORDER_COLOR } from "../styles/variables";
+import styled from "styled-components";
+
+const Form = Card.withComponent("form").extend`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 250px;
+
+  input {
+    text-align: center;
+    
+  }
+  
+  button {
+    align-self: flex-end;
+  }
+`;
 
 class LogInForm extends Component {
   state = {
@@ -33,23 +52,23 @@ class LogInForm extends Component {
   render() {
     return (
       <div>
-        <form onSubmit={this.submitForm}>
-          <input
+        <Form onSubmit={this.submitForm}>
+          <Input
             name="pseudo"
             onChange={this.handleChange("pseudo")}
             type="text"
             placeholder="Pseudonyme"
             required
           />
-          <input
+          <Input
             name="password"
             onChange={this.handleChange("password")}
             type="password"
             placeholder="Mot de Passe"
             required
           />
-          <button type="submit">Valider</button>
-        </form>
+          <Button type="submit">Valider</Button>
+        </Form>
         <p>{this.state.alert}</p>
       </div>
     );

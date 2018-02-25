@@ -13,7 +13,8 @@ import UsersList from "./containers/UsersList";
 import RequestsList from "./containers/RequestsList";
 import Chat from "./components/Chat";
 import Mail from "./containers/Mail";
-
+import "normalize.css";
+import "./index.css";
 import moment from "moment";
 import "moment/locale/fr";
 

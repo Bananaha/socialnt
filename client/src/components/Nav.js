@@ -3,9 +3,13 @@ import { get } from "../services/request.service";
 import { withRouter } from "react-router-dom";
 import SearchBar from "./SearchBar";
 import styled from "styled-components";
+import { BORDER_COLOR } from "../styles/variables";
 
-const Navigation = styled.div`
-  border-bottom: 1px solid #ccc;
+let Navigation = styled.div`
+  border-bottom: 1px solid ${BORDER_COLOR};
+  text-align: ${props => (props.login ? "center" : "left")};
+  border-bottom: ${props =>
+    props.login ? "none" : `1px solid ${BORDER_COLOR}`};
 `;
 
 const Links = styled.div`
@@ -55,7 +59,7 @@ class Nav extends Component {
   render() {
     const { user } = this.props;
     return (
-      <Navigation>
+      <Navigation login={!user}>
         <h1>Unicorn's Corner</h1>
         {user && (
           <div>

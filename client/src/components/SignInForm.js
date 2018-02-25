@@ -3,6 +3,24 @@ import { post } from "../services/request.service";
 import { withRouter } from "react-router-dom";
 import { signing } from "../services/user.service";
 import "whatwg-fetch";
+import { Input, Button, Card } from "../styles/common";
+import styled from "styled-components";
+
+const Form = Card.withComponent("form").extend`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 300px;
+
+  input {
+    text-align: center;
+    
+  }
+  
+  button {
+    align-self: flex-end;
+  }
+`;
 
 class SignInForm extends Component {
   state = {
@@ -41,51 +59,51 @@ class SignInForm extends Component {
   render() {
     return (
       <div>
-        <form onSubmit={this.submitForm}>
-          <input
+        <Form onSubmit={this.submitForm}>
+          <Input
             name="firstName"
             onChange={this.handleChange("firstName")}
             type="text"
             placeholder="Prénom"
             required
           />
-          <input
+          <Input
             name="lastName"
             onChange={this.handleChange("lastName")}
             type="text"
             placeholder="Nom"
             required
           />
-          <input
+          <Input
             name="pseudo"
             onChange={this.handleChange("pseudo")}
             type="text"
             placeholder="Pseudonyme"
             required
           />
-          <input
+          <Input
             name="email"
             onChange={this.handleChange("email")}
             type="email"
             placeholder="Adresse mail"
             required
           />
-          <input
+          <Input
             name="emailConfirmation"
             onChange={this.handleChange("emailConfirmation")}
             type="text"
             placeholder="Confirmer l'adresse mail'"
             required
           />
-          <input
+          <Input
             name="password"
             onChange={this.handleChange("password")}
             type="password"
             placeholder="Mot de Passe"
             required
           />
-          <button type="submit">Valider</button>
-        </form>
+          <Button type="submit">Valider</Button>
+        </Form>
         <p>{this.state.alert}</p>
       </div>
     );
