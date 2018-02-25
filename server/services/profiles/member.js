@@ -3,12 +3,13 @@ const helper = require("./helper");
 const ObjectId = require("mongodb").ObjectID;
 const postService = require("../post.service");
 
+// TODO => quand l'utilsiateur clique sur le lien vers son profil dans la nav, il est redirigé vers le login
 const canViewProfil = helper.isSameOrFriend;
 
 const canSendPost = helper.isSameOrFriend;
 
 const canEditProfil = helper.isSameOrFriend;
-
+// TODO completer la fonction pour prendre en compte les friendRequest si une invitation a déjà été envoyé, le bouton d'invitation ne doit pas apparaitre.
 const canFriendRequest = helper.isSameOrFriend;
 
 const canSearchFriends = () => true;
@@ -19,6 +20,7 @@ const canDeleteProfil = () => true;
 const canFindFriendRequests = () => true;
 const canDeleteAllProfils = () => false;
 const canAnswerRequest = () => true;
+const canGetFriends = () => true;
 // TODO ==> canEditCOmment fini ?
 const canEditComment = req =>
   new Promise((resolve, reject) => {
@@ -39,44 +41,15 @@ const canSeePost = req =>
 
 const canGetMails = () => true;
 const canCreateNewConversation = () => true;
-const canDeleteOneMessage = req => {
-  console.log(
-    req.__user.toString() == req.body.authorId,
-    typeof req.__user.toString(),
-    typeof req.body.authorId,
-    req.body.authorId,
-    req.__user
-  );
-  return req.__user.toString() == req.body.authorId;
-};
-const canDeleteOneConversation = req => {
-  console.log(
-    req.__user.toString() == req.body.ownerId,
-    typeof req.__user.toString(),
-    typeof req.body.ownerId,
-    req.body.ownerId,
-    req.__user
-  );
-  return req.__user.toString() == req.body.ownerId;
-};
+const canDeleteOneMessage = req => req.__user.toString() == req.body.authorId;
 
-const canReplyToConversation = req => {
-  console.log(
-    req.__user.toString() == req.body.ownerId,
-    typeof req.__user.toString(),
-    typeof req.body.ownerId,
-    req.body.ownerId,
-    req.__user
-  );
-  console.log(
-    req.body.recipients.some(
-      recipient => recipient._id === req.__user.toString()
-    )
-  );
-  return req.body.recipients.some(
+const canDeleteOneConversation = req =>
+  req.__user.toString() == req.body.ownerId;
+
+const canReplyToConversation = req =>
+  req.body.recipients.some(
     recipient => recipient._id === req.__user.toString()
   );
-};
 
 module.exports = {
   canSendPost,
@@ -96,5 +69,6 @@ module.exports = {
   canCreateNewConversation,
   canDeleteOneMessage,
   canDeleteOneConversation,
-  canReplyToConversation
+  canReplyToConversation,
+  canGetFriends
 };

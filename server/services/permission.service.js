@@ -30,13 +30,18 @@ const PERMISSIONS_CALLBACKS = {
   canCreateNewConversation: "canCreateNewConversation",
   canDeleteOneConversation: "canDeleteOneConversation",
   canDeleteOneMessage: "canDeleteOneMessage",
-  canReplyToConversation: "canReplyToConversation"
+  canReplyToConversation: "canReplyToConversation",
+  canGetFriends: "canGetFriends"
 };
 
 const permissionDispatcher = requestedAction => {
   return (req, res, next) => {
+    console.log("**************REQ_PAYLOAD***************");
     console.log(req.body, req.params, req.query);
+    console.log("**************USER && PROFILE***************");
     console.log(req.__user, req.__profile);
+    console.log("**************REQUEST_ACTION***************");
+    console.log(requestedAction);
     if (!req.__profile) {
       res.status(403).redirect(path.join("/"));
       return;
@@ -49,7 +54,7 @@ const permissionDispatcher = requestedAction => {
     handleRequestAnswer(canDoAction)
       .then(() => {
         console.log(
-          `[INFO] Requested action ${requestedAction} with ${
+          `[ACCEPT] Requested action ${requestedAction} with ${
             req.__profile
           } profile is approved`
         );
@@ -57,7 +62,7 @@ const permissionDispatcher = requestedAction => {
       })
       .catch(error => {
         console.log(
-          `[INFO] Requested action ${requestedAction} with ${
+          `[REJECT] Requested action ${requestedAction} with ${
             req.__profile
           } profile is rejected`,
           error

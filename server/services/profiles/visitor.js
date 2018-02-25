@@ -22,6 +22,7 @@ const canCreateNewConversation = () => false;
 const canDeleteOneMessage = () => false;
 const canDeleteOneConversation = () => false;
 const canReplyToConversation = () => false;
+const canGetFriends = () => false;
 
 module.exports = {
   canSendPost,
@@ -41,5 +42,6 @@ module.exports = {
   canCreateNewConversation,
   canDeleteOneMessage,
   canDeleteOneConversation,
-  canReplyToConversation
+  canReplyToConversation,
+  canGetFriends
 };
