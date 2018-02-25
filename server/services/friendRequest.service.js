@@ -7,9 +7,12 @@ const socketService = require("./socket/socket.service");
 const dbService = require("./db.service");
 const emailService = require("./mail.service");
 const userService = require("../services/user.service");
-const COLLECTION_NAME = "users";
 
-const request = (targetUser, currentUser) => {
+const request = (targetUser, currentUser, requestRecipient) => {
+  let requestAuthor = currentUser;
+  if (requestRecipient) {
+    requestAuthor = requestRecipient;
+  }
   const othersCollections = [
     {
       collectionName: "friendRequests",
@@ -19,21 +22,21 @@ const request = (targetUser, currentUser) => {
   ];
   const target = { _id: ObjectId(targetUser) };
   return dbService
-    .aggregate(COLLECTION_NAME, "_id", target, othersCollections)
+    .aggregate("users", "_id", target, othersCollections)
     .then(user => {
       // if user exists check if
 
       if (user) {
         if (user.friends) {
           const areAlreadyFriends = user.friends.some(friend => {
-            return friend === currentUser;
+            return friend === requestAuthor;
           });
           if (areAlreadyFriends) {
             return { alert: "Cet utilisateur fait déjà parti de vos amis." };
           }
         } else {
           const alreadyRequested = user[0].requests.some(request => {
-            return request.author == currentUser.toString();
+            return request.author == requestAuthor.toString();
           });
 
           if (alreadyRequested) {
@@ -42,17 +45,25 @@ const request = (targetUser, currentUser) => {
                 "Vous avez déjà envoyé une demande d'ajout à cet utilisateur."
             };
           } else {
+            const requestPayload = {
+              author: ObjectId(requestAuthor),
+              recipient: ObjectId(targetUser),
+              status: "pending",
+              recommendedBy: null
+            };
+            let succesMessage = "Un membre veut vous ajouter à ses amis";
+            if (requestRecipient) {
+              requestPayload.recommendedBy = ObjectId(currentUser);
+              succesMessage = "Un membre vous a recommandé un ami";
+            }
+
             return dbService
-              .create("friendRequests", {
-                author: ObjectId(currentUser),
-                recipient: ObjectId(targetUser),
-                status: "pending"
-              })
+              .create("friendRequests", requestPayload)
               .then(() => {
                 socketService.emit(
                   "ON_FRIEND_REQUEST",
                   {
-                    message: "Un membre veut vous ajouter à ses amis"
+                    message: succesMessage
                   },
                   socket => {
                     return socket.user._id === targetUser;
@@ -224,4 +235,42 @@ const accept = requestId => {
     });
 };
 
-module.exports = { request, getAll, ignore, accept };
+const remove = (targetUser, currentUser) => {
+  const usersToUpdate = [ObjectId(targetUser), currentUser];
+  const removePromises = [];
+  usersToUpdate.forEach(userToUpdate => {
+    const userToRemove = usersToUpdate.find(
+      user => user.toString() !== userToUpdate.toString()
+    );
+
+    const promise = new Promise((resolve, reject) => {
+      return dbService
+        .updateAndReturn(
+          "users",
+          { _id: userToUpdate },
+          {
+            $pull: {
+              friends: userToRemove
+            }
+          }
+        )
+        .then(result => {
+          resolve();
+        })
+        .catch(error => {
+          reject();
+        });
+    });
+    removePromises.push(promise);
+  });
+
+  return Promise.all(removePromises)
+    .then(() => {
+      return;
+    })
+    .catch(error => {
+      return error;
+    });
+};
+
+module.exports = { request, getAll, ignore, accept, remove };

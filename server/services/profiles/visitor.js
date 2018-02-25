@@ -1,47 +1,45 @@
-const canSendPost = () => false;
-
+const canAnswerRequest = () => false;
+const canCreateNewConversation = () => false;
+const canDeleteAllProfils = () => false;
+const canDeleteOneConversation = () => false;
+const canDeleteOneMessage = () => false;
+const canDeleteProfil = () => false;
+const canEditComment = () => false;
+const canEditProfil = () => false;
+const canFindFriendRequests = () => false;
+const canFindUserProfil = () => false;
+const canFriendRequest = () => false;
+const canGetFriends = () => false;
+const canGetMails = () => false;
+const canRecommendFriend = () => false;
+const canRemoveFriend = () => false;
+const canReplyToConversation = () => false;
 const canSearch = () => false;
 const canSearchFriends = () => false;
-
-const canFriendRequest = () => false;
-const canFindFriendRequests = () => false;
-const canAnswerRequest = () => false;
-
-const canEditProfil = () => false;
+const canSeePost = () => false;
+const canSendPost = () => false;
 const canViewProfil = () => false;
 
-const canFindUserProfil = () => false;
-
-const canDeleteProfil = () => false;
-const canDeleteAllProfils = () => false;
-
-const canEditComment = () => false;
-const canSeePost = () => false;
-const canGetMails = () => false;
-const canCreateNewConversation = () => false;
-const canDeleteOneMessage = () => false;
-const canDeleteOneConversation = () => false;
-const canReplyToConversation = () => false;
-const canGetFriends = () => false;
-
 module.exports = {
-  canSendPost,
+  canAnswerRequest,
+  canCreateNewConversation,
+  canDeleteAllProfils,
+  canDeleteOneConversation,
+  canDeleteOneMessage,
+  canDeleteProfil,
+  canEditComment,
+  canEditProfil,
+  canFindFriendRequests,
+  canFindUserProfil,
+  canFriendRequest,
+  canGetFriends,
+  canGetMails,
+  canRecommendFriend,
+  canRemoveFriend,
+  canReplyToConversation,
   canSearch,
   canSearchFriends,
-  canFriendRequest,
-  canFindFriendRequests,
-  canAnswerRequest,
-  canEditProfil,
-  canViewProfil,
-  canFindUserProfil,
-  canDeleteProfil,
-  canDeleteAllProfils,
-  canEditComment,
   canSeePost,
-  canGetMails,
-  canCreateNewConversation,
-  canDeleteOneMessage,
-  canDeleteOneConversation,
-  canReplyToConversation,
-  canGetFriends
+  canSendPost,
+  canViewProfil
 };

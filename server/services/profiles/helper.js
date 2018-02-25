@@ -1,3 +1,4 @@
+"use strict";
 const dbService = require("../db.service");
 
 const isSameUser = (currentUser, targetUser) => {
@@ -5,21 +6,33 @@ const isSameUser = (currentUser, targetUser) => {
   return targetUser.toString() === currentUser.toString();
 };
 
-const isFriend = (currentUser, targetUser) =>
-  dbService.getOne("users", { _id: currentUser }).then(user => {
+const isFriend = (currentUser, targetUser, requestRecipient) => {
+  console.log(typeof currentUser, currentUser);
+  return dbService.getOne("users", { _id: currentUser }).then(user => {
     if (!user.friends) {
       return Promise.resolve();
     }
-    const hasFriend =
+    let hasFriend =
       user &&
       user.friends &&
       user.friends.some(friend => friend.toString() === targetUser.toString());
-
+    if (requestRecipient) {
+      hasFriend =
+        user &&
+        user.friends &&
+        user.friends.some(
+          friend => friend.toString() === targetUser.toString()
+        ) &&
+        user.friends.some(
+          friend => friend.toString() === requestRecipient.toString()
+        );
+    }
     if (!hasFriend) {
       return Promise.reject();
     }
     return Promise.resolve();
   });
+};
 
 const isSameOrFriend = req =>
   new Promise((resolve, reject) => {

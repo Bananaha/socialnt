@@ -31,7 +31,9 @@ const PERMISSIONS_CALLBACKS = {
   canDeleteOneConversation: "canDeleteOneConversation",
   canDeleteOneMessage: "canDeleteOneMessage",
   canReplyToConversation: "canReplyToConversation",
-  canGetFriends: "canGetFriends"
+  canGetFriends: "canGetFriends",
+  canRecommendFriend: "canRecommendFriend",
+  canRemoveFriend: "canRemoveFriend"
 };
 
 const permissionDispatcher = requestedAction => {

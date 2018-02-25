@@ -104,6 +104,8 @@ router
   .route("/findUserProfil")
   .get(permission("canFindUserProfil"), findUserProfil);
 
-router.route("/friends").get(permission("canGetFriends"), getFriends);
+router
+  .route("/friends/:targetUser")
+  .get(permission("canGetFriends"), getFriends);
 
 router.route("/:targetUser").get(permission("canViewProfil"), findById);

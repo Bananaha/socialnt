@@ -50,25 +50,31 @@ const canReplyToConversation = req =>
   req.body.recipients.some(
     recipient => recipient._id === req.__user.toString()
   );
+const canRecommendFriend = req =>
+  helper.isFriend(req.__user, req.body.targetUser, req.body.requestRecipient);
+
+const canRemoveFriend = req => helper.isFriend(req.__user, req.body.targetUser);
 
 module.exports = {
-  canSendPost,
-  canSearch,
-  canSearchFriends,
-  canFriendRequest,
-  canFindFriendRequests,
   canAnswerRequest,
   canEditProfil,
-  canViewProfil,
+  canFindFriendRequests,
   canFindUserProfil,
-  canDeleteProfil,
-  canDeleteAllProfils,
-  canEditComment,
-  canSeePost,
-  canGetMails,
+  canFriendRequest,
   canCreateNewConversation,
-  canDeleteOneMessage,
   canDeleteOneConversation,
+  canDeleteOneMessage,
+  canDeleteAllProfils,
+  canDeleteProfil,
+  canEditComment,
+  canGetFriends,
+  canGetMails,
+  canRecommendFriend,
+  canRemoveFriend,
   canReplyToConversation,
-  canGetFriends
+  canSearch,
+  canSearchFriends,
+  canSeePost,
+  canSendPost,
+  canViewProfil
 };
