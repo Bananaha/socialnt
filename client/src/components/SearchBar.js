@@ -40,7 +40,7 @@ class SearchBar extends Component {
           } else {
             this.setState({
               loader: true,
-              alert: "Ce pseudo n'existe pas."
+              alert: "Pas de correspondance."
             });
           }
         })
@@ -53,13 +53,14 @@ class SearchBar extends Component {
   onSubmit = event => {
     event.preventDefault();
     this.props.onSubmit(this.state.searchQuery);
+    this.setState({ results: [], searchQuery: "" });
   };
   componentWillUnmount() {
     clearTimeout(this.timeOut);
   }
   onSelectItem = (id, pseudo) => {
     this.props.onSelect(id, pseudo);
-    this.setState({ results: [] });
+    this.setState({ results: [], searchQuery: "" });
   };
 
   render() {
@@ -69,6 +70,7 @@ class SearchBar extends Component {
           <input
             onInput={this.handleChange}
             type="text"
+            value={this.state.searchQuery || ""}
             placeholder={this.props.placeholder}
           />
           {this.props.showButton === "false" ? "" : <button>Ok</button>}
