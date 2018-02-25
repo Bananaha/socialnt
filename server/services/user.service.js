@@ -25,7 +25,12 @@ const findByIdWithFriends = id => {
 
   return dbService
     .aggregate(COLLECTION_NAME, "_id", { _id: id }, othersCollections)
-    .then(users => users[0]);
+    .then(users => {
+      if (users.length === 0) {
+        return;
+      }
+      return users[0];
+    });
 };
 
 const searchFriends = (targetUser, currentUser) => {
@@ -97,22 +102,17 @@ const findProfil = (req, res) => {
 };
 
 const update = (req, res) => {
-  const avatar = req.file ? req.file.filename : "";
+  const updatePayload = req.body;
+  const avatar = req.file
+    ? (updatePayload.avatar = req.file.filename)
+    : delete updatePayload.avatar;
+
   return dbService
     .updateAndReturn(
       COLLECTION_NAME,
       { pseudo: req.body.pseudo },
       {
-        $set: {
-          sex: req.body.sexe,
-          birthDate: req.body.birthDate,
-          city: req.body.city,
-          pseudo: req.body.pseudo,
-          firstName: req.body.firstName,
-          lastName: req.body.lastName,
-          email: req.body.email,
-          avatar
-        }
+        $set: updatePayload
       }
     )
     .then(() => {
