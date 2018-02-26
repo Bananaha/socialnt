@@ -8,6 +8,8 @@ import { BORDER_COLOR, COLOR_PINK, COLOR_GREY } from "../styles/variables";
 let Navigation = styled.div`
   display: flex;
   align-items: flex-end;
+  padding-left: 3px;
+  padding-right: 3px;
 
   ${props =>
     props.login
@@ -18,6 +20,7 @@ let Navigation = styled.div`
       `
       : `
         background: #F4F4F4;
+        justify-content: space-between;
       `};
 
   h1 {
@@ -40,10 +43,16 @@ let Navigation = styled.div`
 
 const Links = styled.div`
   display: flex;
+  border-left: 1px solid #eee;
+  margin-left: 24px;
+  max-width: 100%;
+  width: 400px;
 `;
 
 const Link = styled.a`
-  margin-left: 12px;
+  flex: 1;
+  text-align: center;
+  margin-left: 40px;
   transition: 0.3s ease-out;
   transition-property: border-color, background-color, color;
   text-decoration: none;

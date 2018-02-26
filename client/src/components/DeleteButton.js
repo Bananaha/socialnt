@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import AlertModal from "./AlertModal";
+import { SmallButton } from "../styles/common";
 
 class DeleteButton extends Component {
   state = {
@@ -25,15 +26,15 @@ class DeleteButton extends Component {
   render() {
     return (
       <div>
-        <button onClick={this.requestConfirmation}>{this.props.text}</button>
-        {this.state.showModal ? (
+        {this.state.showModal && (
           <AlertModal
             text="Etes vous de vouloir supprimer votre profil ?"
             getUserConfirmation={this.getConfirmation}
           />
-        ) : (
-          ""
         )}
+        <SmallButton onClick={this.requestConfirmation}>
+          {this.props.text}
+        </SmallButton>
       </div>
     );
   }
