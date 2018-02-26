@@ -63,7 +63,7 @@ const appendFormData = (formData, data, name = "") => {
     formData.append(name, data);
   }
 };
-
+// TODO quand un fichier est join la requete plante. L'objet envoyé dans la requete update du profil est vide
 const toFormData = (data, files) => {
   const formData = new FormData();
   appendFormData(formData, data);
@@ -74,7 +74,6 @@ const toFormData = (data, files) => {
 };
 
 export const post = async (url, data, files) => {
-  console.log("post", url, data);
   const hasFile = Array.isArray(files) ? files.length > 0 : !!files;
   const req = !hasFile
     ? {
@@ -88,7 +87,6 @@ export const post = async (url, data, files) => {
         headers: withTokenHeader({}),
         body: toFormData(data, files)
       };
-
   try {
     const response = await fetch(API_ROOT + url, {
       method: "POST",
