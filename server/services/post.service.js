@@ -65,6 +65,14 @@ const populatePostsWithUsers = (posts, users) => {
         post[key] = usersDictionnary[post[key]];
       }
     });
+    post.comments.forEach(comment => {
+      if (
+        comment.user.toString() ===
+        usersDictionnary[comment.user.toString()]._id.toString()
+      ) {
+        comment.user = usersDictionnary[comment.user.toString()];
+      }
+    });
   });
   return posts;
 };
@@ -102,16 +110,12 @@ const suppressOne = postId =>
 const suppressAll = () => dbService.deleteMany("posts");
 
 const countPosts = () => {
-  console.log("countPosts");
   return dbService
     .count("posts", {}, 0)
     .then(nbPosts => {
-      console.log("COUNTPOST OK", nbPosts);
       return { status: 200, response: nbPosts };
     })
-    .catch(error => {
-      console.log("COUNTPOST CATCH", error);
-    });
+    .catch(error => error);
 };
 
 const getUsersFromPost = postId =>
