@@ -17,8 +17,18 @@ import "normalize.css";
 import "./index.css";
 import moment from "moment";
 import "moment/locale/fr";
+import styled from "styled-components";
+import "typeface-lobster";
+import "typeface-roboto";
 
 moment.locale("fr");
+
+const AppContainer = styled.div`
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: ${props => (props.login ? "center" : "flex-start")};
+`;
 
 export class App extends Component {
   state = {
@@ -37,8 +47,9 @@ export class App extends Component {
   }
 
   render() {
+    const isLogin = this.props.location.pathname.indexOf("/login") === 0;
     return (
-      <div>
+      <AppContainer login={isLogin}>
         <Nav user={this.state.user} />
         <Switch>
           <Route exact path="/login" component={Login} />
@@ -64,7 +75,7 @@ export class App extends Component {
           <Redirect to="/login" />
         </Switch>
         {this.state.user && <Chat />}
-      </div>
+      </AppContainer>
     );
   }
 }

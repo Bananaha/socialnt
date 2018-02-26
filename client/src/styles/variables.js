@@ -1,3 +1,7 @@
+export const COLOR_PINK = "#a749e5";
+export const COLOR_PINK_LIGHT = "#d520db";
+export const COLOR_GREY = "#444";
+
 export const MAIN_COLOR = "#0033EE";
 export const BORDER_COLOR = "#EEE";
 

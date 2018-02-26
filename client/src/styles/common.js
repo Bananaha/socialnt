@@ -4,7 +4,6 @@ import { lighten } from "polished";
 
 export const Button = styled.button`
   cursor: pointer;
-  padding: 6px;
   transition: background-color 0.2s ease-out;
   background: none;
   border: none;
@@ -12,7 +11,12 @@ export const Button = styled.button`
   color: white;
   border-radius: 3px;
   font-weight: 100;
-  font-size: 14px;
+  font-size: 13px;
+  padding: 10px 3px;
+  font-family: "Roboto";
+  text-transform: uppercase;
+  font-weight: 300;
+  letter-spacing: 0.07em;
 
   &:hover {
     background-color: ${lighten(0.1, BUTTON_COLOR)};
@@ -25,7 +29,9 @@ export const Input = styled.input`
   background: white;
   display: block;
   width: 100%;
+  box-sizing: border-box;
   margin-bottom: 6px;
+  font-family: "Roboto";
 `;
 
 export const Card = styled.div`

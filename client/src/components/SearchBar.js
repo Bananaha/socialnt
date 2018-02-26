@@ -2,6 +2,25 @@ import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import { get } from "../services/request.service";
 import "whatwg-fetch";
+import { Input, Button } from "../styles/common";
+import styled from "styled-components";
+
+const Form = styled.form`
+  display: flex;
+
+  input {
+    font-size: 14px;
+    border: none;
+    height: 30px;
+  }
+
+  button {
+    font-size: 14px;
+    height: 30px;
+    border: none;
+    background: none;
+  }
+`;
 
 class SearchBar extends Component {
   state = {
@@ -66,15 +85,19 @@ class SearchBar extends Component {
   render() {
     return (
       <div>
-        <form onSubmit={this.onSubmit}>
-          <input
+        <Form onSubmit={this.onSubmit}>
+          <Input
             onInput={this.handleChange}
             type="text"
             value={this.state.searchQuery || ""}
             placeholder={this.props.placeholder}
           />
-          {this.props.showButton === "false" ? "" : <button>Ok</button>}
-        </form>
+          {this.props.showButton === "false" ? (
+            ""
+          ) : (
+            <button type="submit">Ok</button>
+          )}
+        </Form>
         <div>
           {this.state.loader
             ? ""
