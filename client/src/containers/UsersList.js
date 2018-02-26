@@ -83,6 +83,7 @@ class UsersList extends Component {
   };
 
   render() {
+    console.log(this.state.users);
     return (
       <div>
         {this.state.loader

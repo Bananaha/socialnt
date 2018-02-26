@@ -16,16 +16,23 @@ class RequestPasswordForm extends Component {
     });
   };
 
+  goBack = () => {
+    this.props.history.push("/login");
+  };
+
   submitForm = event => {
     event.preventDefault();
     post("/users/reset/", { email: this.state.email })
       .then(result => {
-        console.log("mdp envoyé");
         this.setState({
           alert:
             "Un lien de réinitialisation de mot de passe vient d'être envoyé à " +
             this.state.email
         });
+        this.timeout = setTimeout(() => {
+          this.setState({ alert: "" });
+          this.props.history.push("/login");
+        }, 5000);
       })
       .catch(error => {
         this.setState({ alert: error.alert });
@@ -33,9 +40,11 @@ class RequestPasswordForm extends Component {
   };
 
   render() {
-    console.log(this.props);
     return (
       <div>
+        <button type="button" onClick={this.goBack}>
+          Retour
+        </button>
         <form onSubmit={this.submitForm}>
           <input
             name="email"

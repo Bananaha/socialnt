@@ -53,7 +53,7 @@ const createResetUrl = (req, res) => {
             });
           });
       } else {
-        res.status(500).json({ message: "Adresse mail introuvable" });
+        res.status(500).json({ message: "Adresse mail inconnue" });
       }
     })
     .catch(error => {

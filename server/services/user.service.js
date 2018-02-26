@@ -31,20 +31,40 @@ const findMany = (req, res) => {
     )
     .then(users => {
       if (users) {
-        const currentUserId = req.__user.toString();
-        users.forEach(user => {
-          if (user.friends) {
-            user.isFriend = user.friends.some(
-              userId => userId.toString() === currentUserId
-            );
-          }
-        });
-        res.status(200).json(users);
+        return dbService
+          .getAll("friendRequest", {
+            $or: [{ author: req.__user }]
+          })
+          .then(friendRequests => {
+            const currentUserId = req.__user.toString();
+
+            users.forEach(user => {
+              if (friendRequests && friendRequests.length > 0) {
+                user.isInvited = friendRequests.some(
+                  request => request.author.toString() === currentUserId
+                );
+              } else {
+                user.isInvited = false;
+              }
+              if (user.friends) {
+                user.isFriend = user.friends.some(
+                  userId => userId.toString() === currentUserId
+                );
+              } else {
+                user.isFriend = false;
+              }
+            });
+            res.status(200).json(users);
+          })
+          .catch(error => {
+            console.log(error);
+          });
       } else {
         res.status(404);
       }
     })
     .catch(error => {
+      console.log(error);
       res.status(500).json({ alert: error });
     });
 };
