@@ -6,8 +6,7 @@ import "whatwg-fetch";
 class BlockPost extends Component {
   state = {
     userPost: "",
-    alert: "",
-    attachment: ""
+    alert: ""
   };
 
   handleChange = key => event => {
@@ -48,7 +47,9 @@ class BlockPost extends Component {
             name="userPost"
             cols="30"
             rows="10"
+            value={this.state.userPost || ""}
             onChange={this.handleChange("userPost")}
+            placeholder="Quoi de neuf ?"
           />
           <button type="submit">Publier</button>
         </form>

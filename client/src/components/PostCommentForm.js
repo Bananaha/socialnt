@@ -25,7 +25,7 @@ export default class PostCommentForm extends Component {
       text: this.state.text
     })
       .then(result => {
-        console.log("Update comments");
+        console.log("Update comments", this.props.reload);
       })
       .catch(error => {
         console.error("Error while commenting post", error);

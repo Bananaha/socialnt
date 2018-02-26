@@ -35,7 +35,7 @@ export default class Post extends Component {
       content,
       formattedDate
     } = this.props.post;
-
+    // TODO ==> reload post when a comment is made
     return (
       <PostContainer key={_id}>
         <PostHeader>

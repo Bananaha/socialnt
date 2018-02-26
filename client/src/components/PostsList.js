@@ -23,6 +23,9 @@ class PostsList extends Component {
     }
     result.posts.forEach(post => {
       post.formattedDate = moment(post.date).fromNow();
+      post.comments.forEach(comment => {
+        comment.formattedDate = moment(comment.date).fromNow();
+      });
     });
     this.setState({
       pagination: pages,
@@ -34,6 +37,7 @@ class PostsList extends Component {
 
   // request all posts where the author or recipient is the profile owner
   updatePosts = (page = 1) => {
+    console.log("update");
     const id = this.props.match.params.id;
     get(`/post/${id}/${page}`)
       .then(this.computeResult)
