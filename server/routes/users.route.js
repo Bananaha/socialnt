@@ -68,7 +68,6 @@ const deleteAllProfils = (req, res) => {
 };
 
 const getFriends = (req, res) => {
-  console.log("===================", req.params);
   userService
     .findByIdWithFriends(req.params.targetUser)
     .then(userWithFriends => {
