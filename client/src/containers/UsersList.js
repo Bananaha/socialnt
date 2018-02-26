@@ -107,7 +107,7 @@ class UsersList extends Component {
                   />
                   <p>{user.pseudo}</p>
                   {user.isFriend ? (
-                    <a href={`/profile/${user._id}`}>Voir le profil</a>
+                    <a href={`/profil/${user._id}`}>Voir le profil</a>
                   ) : (
                     <button value={user._id} onClick={this.sendFriendRequest}>
                       Ajouter

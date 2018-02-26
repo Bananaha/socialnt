@@ -42,7 +42,7 @@ class LogInForm extends Component {
     delete userValues.alert;
     login(userValues)
       .then(response => {
-        this.props.history.push("/profile/" + response.id);
+        this.props.history.push("/profil/" + response.id);
       })
       .catch(error => {
         this.setState({ alert: error.alert });

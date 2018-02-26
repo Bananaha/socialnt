@@ -44,7 +44,7 @@ export class App extends Component {
           <Route exact path="/login" component={Login} />
           <Route
             exact
-            path="/profile/:id"
+            path="/profil/:id"
             render={props => <Profil {...props} user={this.state.user} />}
           />
           <Route exact path="/setProfil/:id" component={SetProfil} />

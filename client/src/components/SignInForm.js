@@ -49,7 +49,7 @@ class SignInForm extends Component {
     delete userValues.emailConfirmation;
     signing(userValues)
       .then(response => {
-        this.props.history.push("/profile/" + response.id);
+        this.props.history.push("/profil/" + response.id);
       })
       .catch(error => {
         console.log("submitForm signin", error);
