@@ -20,8 +20,9 @@ class RequestPasswordForm extends Component {
     event.preventDefault();
     post("/users/reset/", { email: this.state.email })
       .then(result => {
+        console.log("mdp envoyé");
         this.setState({
-          message:
+          alert:
             "Un lien de réinitialisation de mot de passe vient d'être envoyé à " +
             this.state.email
         });

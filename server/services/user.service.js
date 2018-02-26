@@ -5,7 +5,7 @@ const moment = require("moment");
 const async = require("async");
 
 const dbService = require("./db.service");
-const emailService = require("../services/mail.service");
+const emailService = require("./email.service");
 const ObjectId = require("mongodb").ObjectID;
 
 const COLLECTION_NAME = "users";

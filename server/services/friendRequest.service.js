@@ -5,7 +5,7 @@ const async = require("async");
 
 const socketService = require("./socket/socket.service");
 const dbService = require("./db.service");
-const emailService = require("./mail.service");
+const emailService = require("./email.service");
 const userService = require("../services/user.service");
 
 const request = (targetUser, currentUser, requestRecipient) => {

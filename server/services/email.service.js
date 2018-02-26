@@ -39,6 +39,8 @@ const resetPassword = user => {
       console.log("TRANSPORTER MAIL ERROR RESET PASSWORD", error);
       return error;
     }
+    console.log("Message sent: " + info.response);
+    return info;
   });
 };
 
@@ -61,6 +63,7 @@ const welcome = user => {
       return error;
     }
     console.log("Message sent: " + info.response);
+    return info;
   });
 };
 
@@ -83,6 +86,7 @@ const friendRequest = user => {
       return error;
     }
     console.log("Message sent: " + info.response);
+    return info;
   });
 };
 
