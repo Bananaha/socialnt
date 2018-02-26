@@ -46,10 +46,14 @@ const deleteProfil = (req, res) => {
   userService
     .deleteProfil(req.__user)
     .then(result => {
-      res.status(result.status).json(result.response);
+      res.status(200).json({ alert: "utilisateur supprimé" });
     })
     .catch(error => {
-      res.status(result.status).json(result.response);
+      res.status(500).json({
+        alert:
+          "La suppression de l'utilisateur ne s'est pas déroulé comme prévu",
+        error: error
+      });
     });
 };
 const deleteAllProfils = (req, res) => {
@@ -64,11 +68,15 @@ const deleteAllProfils = (req, res) => {
 };
 
 const getFriends = (req, res) => {
+  console.log("===================", req.params);
   userService
-    .findByIdWithFriends(req.__user)
-    .then(userWithFriends =>
-      res.status(200).json({ friends: userWithFriends.friends })
-    )
+    .findByIdWithFriends(req.params.targetUser)
+    .then(userWithFriends => {
+      if (userWithFriends) {
+        res.status(200).json({ friends: userWithFriends.friends });
+      }
+      res.status(200).json({ friends: [] });
+    })
     .catch(error => res.status(500).json({ alert: error }));
 };
 

@@ -10,6 +10,120 @@ const ObjectId = require("mongodb").ObjectID;
 
 const COLLECTION_NAME = "users";
 
+const findMany = (req, res) => {
+  if (!req.params.values) {
+    return Promise.reject();
+  }
+  let query;
+  if (req.params.values) {
+    query = new RegExp(req.params.values, "i");
+  } else {
+    query = "";
+  }
+
+  return dbService
+    .getAll(
+      COLLECTION_NAME,
+      {
+        $or: [{ firstName: query }, { lastName: query }, { pseudo: query }]
+      },
+      5
+    )
+    .then(users => {
+      if (users) {
+        const currentUserId = req.__user.toString();
+        users.forEach(user => {
+          if (user.friends) {
+            user.isFriend = user.friends.some(
+              userId => userId.toString() === currentUserId
+            );
+          }
+        });
+        res.status(200).json(users);
+      } else {
+        res.status(404);
+      }
+    })
+    .catch(error => {
+      res.status(500).json({ alert: error });
+    });
+};
+
+const findProfil = (req, res) => {
+  const payload = req.params;
+  return dbService
+    .getOne(COLLECTION_NAME, { _id: ObjectId(req.__user) })
+    .then(user => {
+      res.status(200).json(user);
+    })
+    .catch(error => {
+      res.status(403).json({ error });
+    });
+};
+
+const update = (req, res) => {
+  const updatePayload = req.body;
+  const avatar = req.file
+    ? (updatePayload.avatar = req.file.filename)
+    : delete updatePayload.avatar;
+
+  return dbService
+    .updateAndReturn(
+      COLLECTION_NAME,
+      { pseudo: req.body.pseudo },
+      {
+        $set: updatePayload
+      }
+    )
+    .then(() => {
+      res.status(200).json({ message: "Votre profil a été mis à jour" });
+    })
+    .catch(error => {
+      res.status(500).json({ error });
+    });
+};
+
+const deleteProfil = id => {
+  return dbService
+    .deleteOne(COLLECTION_NAME, { _id: ObjectId(id) })
+    .then(result => {
+      return dbService
+        .deleteMany("friendRequests", {
+          $or: [{ author: ObjectId(id) }, { recipient: ObjectId(id) }]
+        })
+        .then(result => {
+          return dbService
+            .updateMany("users", {}, { $pull: { friends: ObjectId(id) } })
+            .then(() => {
+              return "ok";
+            })
+            .catch(error => error);
+        })
+        .catch(error => error);
+    })
+    .catch(error => error);
+};
+
+const deleteAllProfils = id => {
+  return dbService
+    .deleteMany(COLLECTION_NAME, { profile: { $ne: "admin" } })
+    .then(() => {
+      return;
+    })
+    .catch(error => error);
+};
+
+const create = newUser =>
+  dbService.create(
+    COLLECTION_NAME,
+    Object.assign(newUser, {
+      profile: "member",
+      avatar: "default_avatar.png"
+    })
+  );
+
+const find = filters => dbService.getAll(COLLECTION_NAME, filters || {});
+
 const findById = id => {
   return dbService.getOne(COLLECTION_NAME, { _id: ObjectId(id) });
 };
@@ -34,7 +148,6 @@ const findByIdWithFriends = id => {
 };
 
 const searchFriends = (targetUser, currentUser) => {
-  console.log(targetUser, currentUser);
   if (!targetUser) {
     return Promise.reject();
   }
@@ -55,100 +168,10 @@ const searchFriends = (targetUser, currentUser) => {
       5
     )
     .then(friends => {
-      console.log(friends);
       return friends;
     })
-    .catch(error => {
-      console.error("findFriends userService", error);
-    });
+    .catch(error => error);
 };
-
-const findMany = (req, res) => {
-  const queries = req.params.values;
-  return dbService
-    .getAll(COLLECTION_NAME, { $text: { $search: queries } }, 5)
-    .then(users => {
-      if (users) {
-        const currentUserId = req.__user.toString();
-        users.forEach(user => {
-          if (user.friends) {
-            user.isFriend = user.friends.some(
-              userId => userId.toString() === currentUserId
-            );
-          }
-        });
-        res.status(200).json(users);
-      } else {
-        res.status(404);
-      }
-    })
-    .catch(error => {
-      console.log("SEARCH ERROR", error);
-      res.status(500).json({ alert: error });
-    });
-};
-
-const findProfil = (req, res) => {
-  const payload = req.params;
-  return dbService
-    .getOne(COLLECTION_NAME, { _id: ObjectId(req.__user) })
-    .then(user => {
-      res.status(200).json(user);
-    })
-    .catch(error => {
-      console.log("ERROR => USER SERVICES FIND ONE", error);
-      res.status(403).json({ error });
-    });
-};
-
-const update = (req, res) => {
-  const updatePayload = req.body;
-  const avatar = req.file
-    ? (updatePayload.avatar = req.file.filename)
-    : delete updatePayload.avatar;
-
-  return dbService
-    .updateAndReturn(
-      COLLECTION_NAME,
-      { pseudo: req.body.pseudo },
-      {
-        $set: updatePayload
-      }
-    )
-    .then(() => {
-      console.log("success");
-      res.status(200).json({ message: "Votre profil a été mis à jour" });
-    })
-    .catch(error => {
-      console.log("USERS.ROUTE => update user profile ERROR", error);
-      res.status(500).json({ error });
-    });
-};
-
-const deleteProfil = id => {
-  return dbService
-    .deleteOne(COLLECTION_NAME, { _id: ObjectId(id) })
-    .then(result => console.log("delete profil___userService", result))
-    .catch(error => console.log("delete profil error", error));
-};
-
-const deleteAllProfils = id => {
-  return dbService
-    .deleteMany(COLLECTION_NAME)
-    .then(result => console.log("delete all profils", result))
-    .catch(error => console.log("delete all profils", error));
-};
-
-const create = newUser =>
-  dbService.create(
-    COLLECTION_NAME,
-    Object.assign(newUser, {
-      profile: "member",
-      avatar: "default_avatar.png"
-    })
-  );
-
-const find = filters => dbService.getAll(COLLECTION_NAME, filters || {});
 
 module.exports = {
   find,
