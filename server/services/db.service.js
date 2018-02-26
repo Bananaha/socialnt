@@ -73,6 +73,23 @@ const updateAndReturn = (collectionName, filters, doc) => {
   });
 };
 
+// UPDATE ONE DOCUMENT FROM DB
+// @params collectionName 'string' 'name of db collection'
+// @params query
+// @params update
+const updateMany = (collectionName, filters, doc) => {
+  return new Promise((resolve, reject) => {
+    state.db
+      .collection(collectionName)
+      .updateMany(filters, doc, (error, result) => {
+        if (error) {
+          return reject(error);
+        }
+        return resolve(result);
+      });
+  });
+};
+
 // getAll documents from a collection
 // @params 'string' collectionName
 // @params 'object' filter
@@ -195,8 +212,7 @@ const deleteMany = (collectionName, filter) => {
   return new Promise((resolve, reject) => {
     state.db
       .collection(collectionName)
-      .deleteMany(filter || {})
-      .toArray((error, result) => {
+      .deleteMany(filter || {}, (error, result) => {
         if (error) {
           return reject(error);
         }
@@ -214,6 +230,7 @@ module.exports = {
   count,
   getOne,
   updateAndReturn,
+  updateMany,
   aggregate,
   state,
   deleteMany,
