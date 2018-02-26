@@ -77,12 +77,13 @@ class FriendsList extends Component {
   };
   removeFriends = (friendId, friendPseudo) => {
     post("/friendrequest/remove", { targetUser: friendId })
-      .then(() =>
+      .then(() => {
         this.showInformation(
           `${friendPseudo} ne fait plus partie de vos amis.`,
           "info"
-        )
-      )
+        );
+        this.getFriends();
+      })
       .catch(error => {
         this.showInformation(
           `Votre demande de suppression n'a pu aboutir. Réessayer plus tard.`,

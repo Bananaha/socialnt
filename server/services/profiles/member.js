@@ -20,7 +20,7 @@ const canDeleteProfil = () => true;
 const canFindFriendRequests = () => true;
 const canDeleteAllProfils = () => false;
 const canAnswerRequest = () => true;
-const canGetFriends = () => true;
+const canGetFriends = helper.isSameOrFriend;
 // TODO ==> canEditCOmment fini ?
 const canEditComment = req =>
   new Promise((resolve, reject) => {
