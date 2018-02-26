@@ -6,6 +6,56 @@ import "whatwg-fetch";
 import DeleteButton from "../components/DeleteButton";
 import PostsList from "../components/PostsList";
 import FriendsList from "../components/FriendsList";
+import { SmallButton, PageBody, FlexExtend } from "../styles/common";
+import styled from "styled-components";
+
+const Pseudo = styled.div`
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+
+  b {
+    font-weight: 600;
+    font-size: 24px;
+  }
+
+  span {
+    font-weight: 300;
+    margin-left: 12px;
+  }
+`;
+
+const DetailsUser = styled.div`
+  display: flex;
+  align-items: center;
+  margin-top: 12px;
+  font-size: 13px;
+  > span {
+    display: inline-block;
+  }
+  > span + span {
+    border-left: 1px solid #ccc;
+    margin-left: 6px;
+    padding-left: 6px;
+  }
+`;
+
+const Header = FlexExtend.extend`
+  display: flex;
+  flex: 0;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+`;
+
+const Actions = styled.div`
+  display: flex;
+  align-items: flex-start;
+
+  button {
+    margin-left: 12px;
+  }
+`;
 
 class Profil extends Component {
   state = {
@@ -36,6 +86,7 @@ class Profil extends Component {
     });
     get(`/users/${profilId}`)
       .then(userInformations => {
+        console.warn("userInformations", userInformations);
         this.setState({
           sex: userInformations.sex,
           birthDate: userInformations.birthDate,
@@ -77,38 +128,47 @@ class Profil extends Component {
     const isCurrentUser =
       this.props.user && this.props.match.params.id === this.props.user.id;
     return (
-      <div className="Home">
+      <PageBody className="Home">
         {this.state.loader ? (
           <p>Loading...</p>
         ) : (
-          <div>
-            <FriendsList />
+          <FlexExtend>
             <img
               style={{ width: 200 + "px", height: "auto" }}
               src={process.env.REACT_APP_HOST + "/images/" + this.state.avatar}
               alt="avatar"
             />
-            <p>{this.state.pseudo}</p>
-            <p>
-              {this.state.firstName} {this.state.lastName}
-            </p>
-            <p>
-              {this.state.birthDate} {this.state.sex}
-            </p>
-            <p>{this.state.city}</p>
-            {isCurrentUser && (
+            <Header>
               <div>
-                <button onClick={this.editProfil}>Editer mon profil</button>
-                <DeleteButton
-                  delete={this.deleteProfil}
-                  text="Supprimer le profil"
-                />
+                <Pseudo>
+                  <b>{this.state.pseudo}</b>
+                  <span>
+                    ({this.state.firstName} {this.state.lastName})
+                  </span>
+                </Pseudo>
+                <DetailsUser>
+                  {this.state.birthDate && <span>{this.state.birthDate}</span>}
+                  {this.state.sex && <span>{this.state.sex}</span>}
+                  {this.state.city && <span>{this.state.city}</span>}
+                </DetailsUser>
               </div>
-            )}
+              {isCurrentUser && (
+                <Actions>
+                  <DeleteButton
+                    delete={this.deleteProfil}
+                    text="Supprimer le profil"
+                  />
+                  <SmallButton onClick={this.editProfil}>
+                    Editer mon profil
+                  </SmallButton>
+                </Actions>
+              )}
+            </Header>
+            <FriendsList />
             <PostsList />
-          </div>
+          </FlexExtend>
         )}
-      </div>
+      </PageBody>
     );
   }
 }

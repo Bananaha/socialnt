@@ -2,6 +2,24 @@ import React, { Component } from "react";
 import { post } from "../services/request.service";
 import { withRouter } from "react-router-dom";
 import "whatwg-fetch";
+import { Textarea, SmallButton } from "../styles/common";
+import { COLOR_RED } from "../styles/variables";
+import { transparentize } from "polished";
+import styled from "styled-components";
+
+const Form = styled.form`
+  /* display: flex;
+  flex-direction: column;
+  align-items: flex-end; */
+`;
+
+const Alert = styled.p`
+  text-align: center;
+  color: ${COLOR_RED};
+  background: ${transparentize(0.95, COLOR_RED)};
+  margin: 12px -20px;
+  padding: 12px;
+`;
 
 class BlockPost extends Component {
   state = {
@@ -41,20 +59,17 @@ class BlockPost extends Component {
 
   render() {
     return (
-      <div>
-        <form onSubmit={this.submitPost}>
-          <textarea
-            name="userPost"
-            cols="30"
-            rows="10"
-            value={this.state.userPost || ""}
-            onChange={this.handleChange("userPost")}
-            placeholder="Quoi de neuf ?"
-          />
-          <button type="submit">Publier</button>
-        </form>
-        <p>{this.state.alert}</p>
-      </div>
+      <Form onSubmit={this.submitPost}>
+        <Textarea
+          name="userPost"
+          value={this.state.userPost || ""}
+          onChange={this.handleChange("userPost")}
+          placeholder="Quoi de neuf ?"
+        />
+        <SmallButton type="submit">Publier</SmallButton>
+        {this.state.alert &&
+          this.state.alert.length && <Alert>{this.state.alert}</Alert>}
+      </Form>
     );
   }
 }

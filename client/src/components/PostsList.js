@@ -5,6 +5,15 @@ import "whatwg-fetch";
 import moment from "moment";
 import BlockPost from "./BlockPost";
 import Post from "./Post";
+import styled from "styled-components";
+import { FlexExtend } from "../styles/common";
+
+const PostsContainer = FlexExtend.extend`
+  margin-top: 12px;
+  flex: 1;
+`;
+
+const Pagination = styled.div``;
 
 class PostsList extends Component {
   state = {
@@ -69,8 +78,8 @@ class PostsList extends Component {
   };
   renderPosts = () => {
     return (
-      <div>
-        <div>
+      <PostsContainer>
+        <FlexExtend>
           {this.state.posts.map(post => (
             <Post
               handleCommentSubmit={this.updatePosts}
@@ -78,8 +87,8 @@ class PostsList extends Component {
               post={post}
             />
           ))}
-        </div>
-        <div>
+        </FlexExtend>
+        <Pagination>
           {this.state.pagination.map((page, index) => {
             return (
               <button onClick={this.loadNextPosts(page)} key={index}>
@@ -87,17 +96,17 @@ class PostsList extends Component {
               </button>
             );
           })}
-        </div>
-      </div>
+        </Pagination>
+      </PostsContainer>
     );
   };
 
   render() {
     return (
-      <div>
+      <FlexExtend>
         <BlockPost onSubmit={this.updatePosts} />
         {this.state.loader ? <p>Loading..</p> : this.renderPosts()}
-      </div>
+      </FlexExtend>
     );
   }
 }

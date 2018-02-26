@@ -11,22 +11,81 @@ import { Link } from "react-router-dom";
 // formulaire d'inscription
 // mail + mdp + nom + prenom
 
-const ButtonContainer = styled.div`
+const LoginContainer = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 
-  button {
-    margin-left: 12px;
+  input {
+    border: none;
+    font-family: "Roboto";
+    padding: 8px;
+    font-weight: 300;
+  }
+`;
+
+const LoginBox = styled.div`
+  margin: 100px 0;
+  position: relative;
+  z-index: 1;
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+
+  button,
+  a {
+    margin-left: 14px;
+  }
+`;
+
+const BottomLinks = `
+  transition: opacity .2s ease-out;
+  font-size: 13px;
+  color: #FFF;
+  opacity: 0.8;
+  text-decoration: none;
+
+  &:hover,
+  &:focus {
+    // text-decoration: underline;
+    opacity: 1;
   }
 `;
 
 const CustomLink = A.withComponent(Link).extend`
-  font-size: 12px;
+  ${BottomLinks}
 `;
 
 const CustomButton = A.withComponent("button").extend`
-  font-size: 12px;
+  ${BottomLinks}
+`;
+
+const BackgroundImage = styled.div`
+  background-image: linear-gradient(45deg, #a749e5 0%, #d520db 100%);
+  position: fixed;
+  top: -20px;
+  right: -20px;
+  left: -20px;
+  bottom: -20px;
+
+  &::before {
+    content: "";
+    background-image: url("https://cdn.pixabay.com/photo/2016/10/16/14/49/unicorn-1745330__340.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+    filter: blur(20px);
+    opacity: 0.3;
+    top: -20px;
+    right: -20px;
+    left: -20px;
+    bottom: -20px;
+    position: fixed;
+  }
 `;
 
 class Login extends Component {
@@ -49,22 +108,23 @@ class Login extends Component {
 
   render() {
     return (
-      <div>
-        <div className="Login">
+      <LoginContainer>
+        <LoginBox className="Login">
           {this.state.showRegisterForm ? <SignInForm /> : <LogInForm />}
           <ButtonContainer>
-            {!this.state.showRegisterForm && (
-              <CustomLink to="/resetPassword">Mot de passe oublié ?</CustomLink>
-            )}
             <CustomButton onClick={this.toggleRegisterForm}>
               {this.state.showRegisterForm
                 ? "J'ai déja un compte"
                 : "S'inscrire"}
             </CustomButton>
+            {!this.state.showRegisterForm && (
+              <CustomLink to="/resetPassword">Mot de passe oublié ?</CustomLink>
+            )}
           </ButtonContainer>
-        </div>
+        </LoginBox>
         <IndicatorsBlock />
-      </div>
+        <BackgroundImage />
+      </LoginContainer>
     );
   }
 }

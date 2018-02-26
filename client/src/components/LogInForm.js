@@ -3,22 +3,61 @@ import { withRouter } from "react-router-dom";
 import { login } from "../services/user.service";
 import "whatwg-fetch";
 import { Input, Button, Card } from "../styles/common";
-import { BORDER_COLOR } from "../styles/variables";
 import styled from "styled-components";
+import { COLOR_PINK_LIGHT } from "../styles/variables";
 
-const Form = Card.withComponent("form").extend`
+const Form = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 250px;
+  width: 300px;
+  max-width: 100%;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 40px;
+  border-radius: 3px;
+  box-shadow: 1px 1px 6px rgba(50, 50, 0, 0.1);
 
   input {
     text-align: center;
-    
+
+    &:-webkit-autofill {
+      background-color: white !important;
+    }
+    /* margin-bottom: 12px; */
+
+    &::placeholder {
+      font-size: 12px;
+    }
+
+    &:first-child {
+      border-top-left-radius: 6px;
+      border-top-right-radius: 6px;
+      margin-bottom: 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    &:not(:first-child) {
+      border-bottom-left-radius: 6px;
+      border-bottom-right-radius: 6px;
+    }
   }
-  
+
   button {
-    align-self: flex-end;
+    margin-top: 20px;
+    /* width: 100%; */
+    padding-left: 30px;
+    padding-right: 30px;
+    border-radius: 3px;
+    background-color: transparent;
+    color: #eee;
+    font-weight: 500;
+
+    &:hover,
+    &:focus {
+      color: #fff;
+      background-color: rgba(0, 0, 0, 0.05);
+    }
   }
 `;
 
@@ -55,6 +94,7 @@ class LogInForm extends Component {
       <div>
         <Form onSubmit={this.submitForm}>
           <Input
+            autocomplete="off"
             name="pseudo"
             onChange={this.handleChange("pseudo")}
             type="text"
@@ -62,6 +102,7 @@ class LogInForm extends Component {
             required
           />
           <Input
+            autocomplete="off"
             name="password"
             onChange={this.handleChange("password")}
             type="password"
