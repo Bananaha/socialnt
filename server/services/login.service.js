@@ -1,4 +1,4 @@
-const emailService = require("../services/mail.service");
+const emailService = require("./email.service");
 const dbService = require("./db.service");
 const tokenService = require("./token.service");
 const socketService = require("./socket/socket.service");
