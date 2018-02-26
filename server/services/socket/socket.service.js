@@ -56,8 +56,12 @@ const onConnection = io => {
     };
 
     sockets.push(socketItem);
-
-    emit("ON_CONNECTIONS_UPDATE", { connectionsCount: sockets.length });
+    const nbConnectedUsers = sockets.filter(
+      socket => socket.user.profile !== "visitor"
+    );
+    emit("ON_CONNECTIONS_UPDATE", {
+      connectionsCount: nbConnectedUsers.length
+    });
 
     socket.on("USER_INFO", token => {
       updateUserInfo(socketItem, token);
