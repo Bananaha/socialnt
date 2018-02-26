@@ -32,20 +32,20 @@ const findMany = (req, res) => {
     .then(users => {
       if (users) {
         return dbService
-          .getAll("friendRequest", {
-            $or: [{ author: req.__user }]
-          })
+          .getAll("friendRequests", { author: req.__user })
           .then(friendRequests => {
             const currentUserId = req.__user.toString();
 
             users.forEach(user => {
               if (friendRequests && friendRequests.length > 0) {
                 user.isInvited = friendRequests.some(
-                  request => request.author.toString() === currentUserId
+                  request =>
+                    request.recipient.toString() === user._id.toString()
                 );
               } else {
                 user.isInvited = false;
               }
+
               if (user.friends) {
                 user.isFriend = user.friends.some(
                   userId => userId.toString() === currentUserId
@@ -54,17 +54,15 @@ const findMany = (req, res) => {
                 user.isFriend = false;
               }
             });
+
             res.status(200).json(users);
           })
-          .catch(error => {
-            console.log(error);
-          });
+          .catch(error => {});
       } else {
         res.status(404);
       }
     })
     .catch(error => {
-      console.log(error);
       res.status(500).json({ alert: error });
     });
 };

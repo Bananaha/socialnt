@@ -3,7 +3,6 @@ const helper = require("./helper");
 const ObjectId = require("mongodb").ObjectID;
 const postService = require("../post.service");
 
-// TODO => quand l'utilsiateur clique sur le lien vers son profil dans la nav, il est redirigé vers le login
 const canViewProfil = helper.isSameOrFriend;
 
 const canSendPost = helper.isSameOrFriend;

@@ -126,20 +126,27 @@ const getUsersFromPost = postId =>
   });
 
 const addComment = (postId, text, user) =>
-  dbService.updateAndReturn(
-    "posts",
-    { _id: ObjectId(postId) },
-    {
-      $push: {
-        comments: {
-          id: uuidv4(),
-          date: new Date(),
-          text,
-          user
+  dbService
+    .updateAndReturn(
+      "posts",
+      { _id: ObjectId(postId) },
+      {
+        $push: {
+          comments: {
+            id: uuidv4(),
+            date: new Date(),
+            text,
+            user
+          }
         }
       }
-    }
-  );
+    )
+    .then(() => {
+      return;
+    })
+    .catch(error => {
+      return error;
+    });
 
 module.exports = {
   getUsersFromPost,

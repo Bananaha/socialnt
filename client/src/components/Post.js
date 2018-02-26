@@ -26,6 +26,29 @@ const PostDate = styled.div`
 `;
 
 export default class Post extends Component {
+  state = {
+    showComments: false,
+    toogleButtonText: "Voir plus"
+  };
+
+  handleCommentSubmit = () => {
+    this.props.handleCommentSubmit();
+    console.log("submit");
+  };
+  toogleCommentsVisibility = () => {
+    this.setState({
+      showComments: !this.state.showComments
+    });
+    if (this.state.showComments) {
+      this.setState({
+        toogleButtonText: "Voir plus"
+      });
+    } else {
+      this.setState({
+        toogleButtonText: "Masquer"
+      });
+    }
+  };
   render() {
     const {
       comments,
@@ -35,7 +58,7 @@ export default class Post extends Component {
       content,
       formattedDate
     } = this.props.post;
-    // TODO ==> reload post when a comment is made
+
     return (
       <PostContainer key={_id}>
         <PostHeader>
@@ -49,16 +72,28 @@ export default class Post extends Component {
                 </span>
               )}
           </div>
+          <button onClick={this.toogleCommentsVisibility}>
+            {this.state.toogleButtonText}
+          </button>
           <PostDate>{formattedDate}</PostDate>
         </PostHeader>
 
         <p>{content}</p>
         <div>
-          {comments.map(comment => (
-            <Comment key={comment.id} comment={comment} />
-          ))}
+          {this.state.showComments ? (
+            <div>
+              {comments.map(comment => (
+                <Comment key={comment.id} comment={comment} />
+              ))}
+            </div>
+          ) : (
+            ""
+          )}
         </div>
-        <PostCommentForm postId={_id} />
+        <PostCommentForm
+          postId={_id}
+          handleCommentSubmit={this.handleCommentSubmit}
+        />
       </PostContainer>
     );
   }

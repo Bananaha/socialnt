@@ -4,7 +4,8 @@ import { post } from "../services/request.service";
 export default class PostCommentForm extends Component {
   state = {
     text: "",
-    loading: false
+    loading: false,
+    alert: ""
   };
 
   onChange = e => {
@@ -25,7 +26,7 @@ export default class PostCommentForm extends Component {
       text: this.state.text
     })
       .then(result => {
-        console.log("Update comments", this.props.reload);
+        this.props.handleCommentSubmit();
       })
       .catch(error => {
         console.error("Error while commenting post", error);
@@ -36,7 +37,7 @@ export default class PostCommentForm extends Component {
     return (
       <form onSubmit={this.onSubmit}>
         <input
-          placeholder="Commentez ce post"
+          placeholder="Commenter ce post"
           type="text"
           value={this.state.text}
           onChange={this.onChange}

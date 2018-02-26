@@ -15,7 +15,6 @@ class Chat extends Component {
   };
 
   getConversation = id => {
-    // TODO: afficher une boite de chat, vide
     const matchingConversation = this.state.conversations.find(({ users }) =>
       users.some(user => user._id === id)
     );
@@ -37,11 +36,15 @@ class Chat extends Component {
 
   componentDidMount() {
     subscribe(TYPES.ON_CHAT_MESSAGE, payload => {
+      console.log(payload);
       const message = payload.message;
       let conversations = this.state.conversations;
       if (conversations.length > 0) {
         conversations.forEach(conversation => {
           if (conversation._id === payload.conversationId) {
+            if (!conversation.messages) {
+              conversation.messages = [];
+            }
             conversation.messages.push(message);
           } else {
             this.getConversation(payload.message.author);
@@ -95,6 +98,6 @@ class Chat extends Component {
 // on commence à chatter
 
 // si je reçois un message chat
-// la conversation s
+// la conversation s'affiche
 
 export default withRouter(props => <Chat {...props} />);

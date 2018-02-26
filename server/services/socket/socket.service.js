@@ -88,7 +88,9 @@ const emitForUsers = (event, payload, users) => {
   emit(
     event,
     payload,
-    socketItems => users.indexOf(socketItems.user._id.toString()) !== -1
+    socketItem =>
+      socketItem.user.profile !== "visitor" &&
+      users.indexOf(socketItem.user._id.toString()) !== -1
   );
 };
 

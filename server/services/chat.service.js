@@ -39,8 +39,8 @@ const createConversation = (friendId, userId) => {
     });
 };
 
-const getOrCreateByUsers = (friendId, userId) =>
-  dbService
+const getOrCreateByUsers = (friendId, userId) => {
+  return dbService
     .getOne("chatConversations", {
       users: { $all: [userId, ObjectId(friendId)] }
     })
@@ -48,6 +48,7 @@ const getOrCreateByUsers = (friendId, userId) =>
       return conversation || createConversation(friendId, userId);
     })
     .then(conversation => getWithAggregatedUsers(conversation._id));
+};
 
 const getWithAggregatedUsers = conversationId => {
   const othersCollections = [

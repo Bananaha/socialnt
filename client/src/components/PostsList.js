@@ -71,7 +71,13 @@ class PostsList extends Component {
     return (
       <div>
         <div>
-          {this.state.posts.map(post => <Post key={post._id} post={post} />)}
+          {this.state.posts.map(post => (
+            <Post
+              handleCommentSubmit={this.updatePosts}
+              key={post._id}
+              post={post}
+            />
+          ))}
         </div>
         <div>
           {this.state.pagination.map((page, index) => {

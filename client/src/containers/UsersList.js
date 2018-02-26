@@ -110,9 +110,18 @@ class UsersList extends Component {
                   {user.isFriend ? (
                     <a href={`/profil/${user._id}`}>Voir le profil</a>
                   ) : (
-                    <button value={user._id} onClick={this.sendFriendRequest}>
-                      Ajouter
-                    </button>
+                    <div>
+                      {user.isInvited ? (
+                        <span>Invitation envoyée</span>
+                      ) : (
+                        <button
+                          value={user._id}
+                          onClick={this.sendFriendRequest}
+                        >
+                          Ajouter
+                        </button>
+                      )}
+                    </div>
                   )}
                 </div>
               );

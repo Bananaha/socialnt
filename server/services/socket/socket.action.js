@@ -28,11 +28,7 @@ const dispatchSocketEvent = (
             message: result.message,
             conversationId: payload.conversationId
           };
-          socketCallbacks.emitForUsers(
-            "ON_CHAT_MESSAGE",
-            response,
-            result.users.map(id => id.toString())
-          );
+          socketCallbacks.emitForUsers("ON_CHAT_MESSAGE", response, users);
         })
         .catch(error => {
           console.log("dispatchSocketEvent socket action", error);

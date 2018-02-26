@@ -38,12 +38,6 @@ const PERMISSIONS_CALLBACKS = {
 
 const permissionDispatcher = requestedAction => {
   return (req, res, next) => {
-    console.log("**************REQ_PAYLOAD***************");
-    console.log(req.body, req.params, req.query);
-    console.log("**************USER && PROFILE***************");
-    console.log(req.__user, req.__profile);
-    console.log("**************REQUEST_ACTION***************");
-    console.log(requestedAction);
     if (!req.__profile) {
       res.status(403).redirect(path.join("/"));
       return;

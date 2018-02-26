@@ -27,7 +27,8 @@ class RequestsList extends Component {
         } else {
           this.setState({
             loading: false,
-            message: "Vous n'avez aucune invitation en attente"
+            message: "Vous n'avez aucune invitation en attente",
+            requests: requests
           });
         }
         console.log(this.state);
