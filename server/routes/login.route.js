@@ -28,7 +28,7 @@ const signUser = (req, res) => {
       res.status(200).json(result);
     })
     .catch(error => {
-      res.status(400).json({
+      res.status(401).json({
         alert:
           error && error.alert
             ? error.alert

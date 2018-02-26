@@ -10,7 +10,7 @@ const isFriend = (currentUser, targetUser, requestRecipient) => {
   console.log(typeof currentUser, currentUser);
   return dbService.getOne("users", { _id: currentUser }).then(user => {
     if (!user.friends) {
-      return Promise.resolve();
+      return Promise.reject();
     }
     let hasFriend =
       user &&

@@ -44,16 +44,24 @@ class SignInForm extends Component {
     const userValues = this.state;
 
     if (userValues.email !== userValues.emailConfirmation) {
-      return;
-    }
-    delete userValues.emailConfirmation;
-    signing(userValues)
-      .then(response => {
-        this.props.history.push("/profil/" + response.id);
-      })
-      .catch(error => {
-        console.log("submitForm signin", error);
+      this.setState({
+        alert: "Les adresses mail saisies ne sont pas identiques"
       });
+      this.timeout = setTimeout(() => {
+        this.setState({ alert: "" });
+      }, 5000);
+    } else {
+      signing(userValues)
+        .then(response => {
+          this.props.history.push("/profil/" + response.id);
+        })
+        .catch(error => {
+          this.setState({ alert: error.alert });
+          this.timeout = setTimeout(() => {
+            this.setState({ alert: "" });
+          }, 5000);
+        });
+    }
   };
 
   render() {

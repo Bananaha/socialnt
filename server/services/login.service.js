@@ -7,6 +7,8 @@ const COLLECTION_NAME = "users";
 
 const signIn = userInformations => {
   userInformations.profile = "member";
+  userInformations.avatar = "der_oma.png";
+  delete userInformations.emailConfirmation;
   return dbService
     .getOne(COLLECTION_NAME, { pseudo: userInformations.pseudo })
     .then(user => {
@@ -37,7 +39,6 @@ const logIn = userInformations => {
     .getOne(COLLECTION_NAME, { pseudo: userInformations.pseudo })
     .then(user => {
       if (user && userInformations.password === user.password) {
-        console.log("___ login", user);
         const token = tokenService.signJwt({
           id: user._id.toString()
         });
@@ -49,11 +50,11 @@ const logIn = userInformations => {
       }
       if (user && userInformations.password !== user.password) {
         return Promise.reject({
-          alert: "mauvais pseudo ou mot de passe/utilisateur introuvable"
+          alert: "Mauvais pseudo ou mot de passe/utilisateur introuvable"
         });
       }
       if (!user) {
-        return Promise.reject({ alert: "l'utilisateur n'existe pas." });
+        return Promise.reject({ alert: "L'utilisateur n'existe pas." });
       }
     });
 };
