@@ -52,7 +52,8 @@ const onConnection = io => {
       socket,
       user: {
         profile: "visitor"
-      }
+      },
+      attachedDispatcher: false
     };
 
     sockets.push(socketItem);
@@ -65,6 +66,10 @@ const onConnection = io => {
 
     socket.on("USER_INFO", token => {
       updateUserInfo(socketItem, token);
+      if (socketItem.attachedDispatcher) {
+        return;
+      }
+      socketItem.attachedDispatcher = true;
       socketActions.attachDispatcher(socketItem, { emit, emitForUsers });
     });
 

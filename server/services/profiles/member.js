@@ -49,7 +49,6 @@ const canReplyToConversation = req =>
     recipient => recipient._id === req.__user.toString()
   );
 const canRecommendFriend = req => {
-  console.log(req.body, req.params, req.query);
   return helper.isFriend(
     req.__user,
     req.query.targetUser,
