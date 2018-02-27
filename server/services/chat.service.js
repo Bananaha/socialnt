@@ -2,6 +2,27 @@ const ObjectId = require("mongodb").ObjectID;
 
 const dbService = require("./db.service");
 
+const populateChatMessagesWithUsers = (users, messages) => {
+  const usersDictionnary = users.reduce((acc, user) => {
+    const userIdStringify = user._id.toString();
+    acc[userIdStringify] = {
+      _id: userIdStringify,
+      pseudo: user.pseudo
+    };
+    return acc;
+  }, {});
+
+  messages.forEach(message => {
+    if (
+      message.author.toString() &&
+      usersDictionnary[message.author.toString()]
+    ) {
+      message.author = usersDictionnary[message.author.toString()];
+    }
+  });
+  return messages;
+};
+
 const addMessage = (conversationId, message, user) => {
   const createdMessage = {
     text: message,
@@ -67,7 +88,17 @@ const getWithAggregatedUsers = conversationId => {
       },
       othersCollections
     )
-    .then(conversations => conversations[0]);
+    .then(conversations => {
+      if (conversations[0].messages && conversations[0].messages.length > 0) {
+        conversations[0].messages = populateChatMessagesWithUsers(
+          conversations[0].users,
+          conversations[0].messages
+        );
+      }
+
+      return conversations[0];
+    })
+    .catch(error => console.log(error));
 };
 
 module.exports = {

@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import moment from "moment";
 import { emit } from "../sockets/index";
 import TYPES from "../sockets/types";
 import styled from "styled-components";
@@ -45,9 +46,11 @@ const Header = styled.div`
 
 const Messages = styled.form`
   min-height: 300px;
+  height: 300px;
+  overflow-y: auto;
 `;
 
-const Footer = styled.div`
+const Footer = styled.form`
   border-top: 1px solid ${BORDER_COLOR};
   display: flex;
 
@@ -66,16 +69,35 @@ export default class ChatConversation extends Component {
     message: "",
     visible: true
   };
+  populateMessageWithPseudo = message => {
+    const authorId = message.author;
+    const currentUser = this.props.conversation.users.filter(user => {
+      return user._id === authorId;
+    });
+    return {
+      _id: currentUser[0]._id,
+      pseudo: currentUser[0].pseudo
+    };
+  };
 
   renderMessages = () => {
     const { messages = [] } = this.props.conversation;
-    return messages.map(message => (
-      <div key={message.date}>
-        <p>{message.author}</p>
-        <p>{message.text}</p>
-        <p>{message.date}</p>
-      </div>
-    ));
+
+    return messages.map(message => {
+      if (message.author && typeof message.author === "string") {
+        message.author = this.populateMessageWithPseudo(message);
+      }
+      const formattedDate = moment(message.date).fromNow();
+
+      return (
+        <div key={message.date}>
+          <p>
+            {message.author.pseudo} | {formattedDate}
+          </p>
+          <p>{message.text}</p>
+        </div>
+      );
+    });
   };
 
   handleChange = event => {
