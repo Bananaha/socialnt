@@ -28,7 +28,7 @@ const findFriends = (req, res) => {
     userService
       .findMany(req.params.values, req.__user)
       .then(users => res.status(200).json(users))
-      .catch(error => res.status(409).json(error));
+      .catch(error => res.status(500).json(error));
   } else {
     userService.searchFriends(req.params.values, req.__user).then(friends => {
       res.status(200).json(friends);
@@ -40,7 +40,7 @@ const findManyUsers = (req, res) => {
   userService
     .findMany(req.params.values, req.__user)
     .then(users => res.status(200).json(users))
-    .catch(error => res.status(409).json(error));
+    .catch(error => res.status(500).json(error));
 };
 
 const findUserProfil = (req, res) => {
@@ -52,7 +52,7 @@ const findUserProfil = (req, res) => {
       res.status(200).json(user);
     })
     .catch(error => {
-      res.status(504).json(error);
+      res.status(500).json(error);
     });
 };
 
@@ -74,10 +74,10 @@ const deleteAllProfils = (req, res) => {
   userService
     .deleteAllProfils()
     .then(result => {
-      res.status(result.status).json(result.response);
+      res.status(200).json(result.response);
     })
     .catch(error => {
-      res.status(result.status).json(result.response);
+      res.status(500).json(result.response);
     });
 };
 

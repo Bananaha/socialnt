@@ -80,7 +80,17 @@ const findProfil = (req, res) => {
 };
 
 const update = (req, res) => {
-  const updatePayload = req.body;
+  const targetUser = req.body.targetUser;
+  delete req.body.targetUser;
+
+  const updatePayload = {};
+  for (let key in req.body) {
+    if (req.body[key] === "undefined") {
+      delete req.body[key];
+    } else {
+      updatePayload[key] = req.body[key];
+    }
+  }
   const avatar = req.file
     ? (updatePayload.avatar = req.file.filename)
     : delete updatePayload.avatar;
@@ -88,7 +98,7 @@ const update = (req, res) => {
   return dbService
     .updateAndReturn(
       COLLECTION_NAME,
-      { pseudo: req.body.pseudo },
+      { _id: ObjectId(targetUser) },
       {
         $set: updatePayload
       }
