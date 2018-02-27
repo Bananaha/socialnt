@@ -3,7 +3,8 @@ npm run build --prefix ./client
 rm -rf ./server/static
 mkdir ./server/static
 
-cp -R ./client/build ./server/static
+rm -rf ./client/build/service-worker.js
+cp -R ./client/build/ ./server/static
 
 echo "building server"
 rm -rf ./build

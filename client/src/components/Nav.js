@@ -4,6 +4,7 @@ import { withRouter } from "react-router-dom";
 import SearchBar from "./SearchBar";
 import styled from "styled-components";
 import { BORDER_COLOR, COLOR_PINK, COLOR_GREY } from "../styles/variables";
+import { Link } from "react-router-dom";
 
 let Navigation = styled.div`
   display: flex;
@@ -49,7 +50,7 @@ const Links = styled.div`
   width: 400px;
 `;
 
-const Link = styled.a`
+const CustomLink = styled.a`
   flex: 1;
   text-align: center;
   margin-left: 40px;
@@ -70,6 +71,8 @@ const Link = styled.a`
   }
 `;
 
+const NavLink = CustomLink.withComponent(Link);
+
 class Nav extends Component {
   searchResults = query => {
     this.props.history.push("/search/" + query);
@@ -81,29 +84,14 @@ class Nav extends Component {
 
   renderNavLink = (href, name, onClick) => {
     return (
-      <Link href={href} onClick={onClick}>
+      <NavLink to={href} onClick={onClick}>
         {name}
-      </Link>
+      </NavLink>
     );
   };
 
   disconnect = () => {
     localStorage.removeItem("token");
-  };
-
-  getProfile = e => {
-    e.preventDefault();
-
-    get("/users/findUserProfil")
-      .then(id => {
-        return this.props.history.push(`/profil/${id.user}`);
-      })
-      .catch(error => console.log(error));
-  };
-
-  getInvitations = e => {
-    e.preventDefault();
-    this.props.history.push("/friendRequests");
   };
 
   render() {
@@ -113,12 +101,8 @@ class Nav extends Component {
         <h1>Unicorn's Corner</h1>
         {user && (
           <Links>
-            {this.renderNavLink("/profil/", user.pseudo, this.getProfile)}
-            {this.renderNavLink(
-              "/friendRequests",
-              "Invitations",
-              this.getInvitations
-            )}
+            {this.renderNavLink(`/profil/${user.id}`, user.pseudo)}
+            {this.renderNavLink("/friendRequests", "Invitations")}
             {this.renderNavLink("/mail/", "Messagerie")}
             {user.profile === "admin" &&
               this.renderNavLink("/admin", "Administration")}

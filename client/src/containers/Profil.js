@@ -99,7 +99,6 @@ class Profil extends Component {
     });
     get(`/users/${profilId}`)
       .then(userInformations => {
-        console.warn("userInformations", userInformations);
         this.setState({
           sex: userInformations.sex,
           birthDate: userInformations.birthDate,

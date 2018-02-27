@@ -11,11 +11,16 @@ const upload = require("../services/uploadFile.service");
 
 const router = new Router();
 
+const withoutPassword = user => {
+  delete user.password;
+  return user;
+};
+
 const findById = (req, res) => {
   userService
     .findById(req.params.targetUser)
     .then(user => {
-      res.status(200).json(user);
+      res.status(200).json(withoutPassword(user));
     })
     .catch(error => {
       console.log("ERROR => USER SERVICES FIND ONE", error);
@@ -27,7 +32,7 @@ const findFriends = (req, res) => {
   if (req.__profile === "admin") {
     userService
       .findMany(req.params.values, req.__user)
-      .then(users => res.status(200).json(users))
+      .then(users => res.status(200).json(users.map(withoutPassword)))
       .catch(error => res.status(409).json(error));
   } else {
     userService.searchFriends(req.params.values, req.__user).then(friends => {
@@ -39,7 +44,7 @@ const findFriends = (req, res) => {
 const findManyUsers = (req, res) => {
   userService
     .findMany(req.params.values, req.__user)
-    .then(users => res.status(200).json(users))
+    .then(users => res.status(200).json(users.map(withoutPassword)))
     .catch(error => res.status(409).json(error));
 };
 
@@ -49,9 +54,10 @@ const findUserProfil = (req, res) => {
   tokenService
     .verifyToken(clientToken)
     .then(user => {
-      res.status(200).json(user);
+      res.status(200).json(user.map(withoutPassword));
     })
     .catch(error => {
+      console.error("Error while finding profil", error);
       res.status(504).json(error);
     });
 };
@@ -87,6 +93,7 @@ const getFriends = (req, res) => {
     .then(userWithFriends => {
       if (userWithFriends) {
         res.status(200).json({ friends: userWithFriends.friends });
+        return;
       }
       res.status(200).json({ friends: [] });
     })

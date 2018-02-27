@@ -8,7 +8,7 @@ class ChangePasswordForm extends Component {
     password: "",
     confirmedPassword: "",
     alert: "",
-    url: encodeURIComponent("http://localhost:3000" + this.props.match.url)
+    url: encodeURIComponent(process.env.REACT_CLIENT_URL + this.props.match.url)
   };
 
   handleChange = key => event => {

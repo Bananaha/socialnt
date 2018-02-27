@@ -1,4 +1,4 @@
-const API_ROOT = process.env.REACT_APP_HOST;
+const API_ROOT = process.env.REACT_APP_HOST + "/api";
 const VISITOR_ROUTES = ["login"];
 const cache = {};
 

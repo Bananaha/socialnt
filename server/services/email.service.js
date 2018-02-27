@@ -2,7 +2,7 @@ const nodemailer = require("nodemailer");
 const dbService = require("./db.service");
 
 const ObjectId = require("mongodb").ObjectID;
-const LINK = "http://localhost:3000/";
+const LINK = `${process.env.SERVER_URL}/`;
 
 const mailConfig = {
   host: "smtp.ethereal.email",

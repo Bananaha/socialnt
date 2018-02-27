@@ -13,7 +13,7 @@ const createResetUrl = (req, res) => {
     .then(result => {
       if (result) {
         const uuid = uuidv4();
-        const resetLink = "http://localhost:3000/resetPassword/" + uuid;
+        const resetLink = `${process.env.SERVER_URL}/resetPassword/${uuid}`;
         const expirationDate = moment().add(1, "days");
 
         dbService
