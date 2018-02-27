@@ -20,6 +20,8 @@ export const subscribe = (eventName, eventCb) => {
 };
 
 export const emit = (event, payload) => {
+  console.log("=======EMIT==========");
+  console.log(event, payload);
   if (!socket) {
     return;
   }
@@ -32,6 +34,8 @@ export const connect = () => {
 
   Object.values(TYPES).forEach(eventType => {
     socket.on(eventType, payload => {
+      console.log("=======RECEIVE==========");
+      console.log(eventType, payload);
       if (!subscribers[eventType]) {
         return;
       }

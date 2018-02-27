@@ -10,13 +10,13 @@ const ObjectId = require("mongodb").ObjectID;
 
 const COLLECTION_NAME = "users";
 
-const findMany = (req, res) => {
-  if (!req.params.values) {
+const findMany = (values, currentUser) => {
+  if (!values) {
     return Promise.reject();
   }
   let query;
-  if (req.params.values) {
-    query = new RegExp(req.params.values, "i");
+  if (values) {
+    query = new RegExp(values, "i");
   } else {
     query = "";
   }
@@ -32,9 +32,9 @@ const findMany = (req, res) => {
     .then(users => {
       if (users) {
         return dbService
-          .getAll("friendRequests", { author: req.__user })
+          .getAll("friendRequests", { author: currentUser })
           .then(friendRequests => {
-            const currentUserId = req.__user.toString();
+            const currentUserId = currentUser.toString();
 
             users.forEach(user => {
               if (friendRequests && friendRequests.length > 0) {
@@ -55,15 +55,15 @@ const findMany = (req, res) => {
               }
             });
 
-            res.status(200).json(users);
+            return users;
           })
-          .catch(error => {});
+          .catch(error => error);
       } else {
-        res.status(404);
+        return;
       }
     })
     .catch(error => {
-      res.status(500).json({ alert: error });
+      return { alert: error };
     });
 };
 
@@ -156,7 +156,7 @@ const findByIdWithFriends = id => {
   ];
 
   return dbService
-    .aggregate(COLLECTION_NAME, "_id", { _id: id }, othersCollections)
+    .aggregate(COLLECTION_NAME, "_id", { _id: ObjectId(id) }, othersCollections)
     .then(users => {
       if (users.length === 0) {
         return;

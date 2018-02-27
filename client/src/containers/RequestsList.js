@@ -4,21 +4,31 @@ import { withRouter } from "react-router-dom";
 import "whatwg-fetch";
 
 class RequestsList extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      loading: true,
-      requests: [],
-      message: undefined,
-      alert: ""
-    };
-  }
+  state = {
+    loading: true,
+    requests: [],
+    message: undefined,
+    alert: ""
+  };
+  // Display notification to user
+  showInformation = (text, type, action) => {
+    // TODO ==> use type argument for style settings
+    // info or warning
+    this.setState({
+      alert: text
+    });
+    setTimeout(() => {
+      this.setState({ alert: "" });
+      if (action) {
+        action();
+      }
+    }, 5000);
+  };
   // TODO ==> gérer le probleme du reload de page
   getFriendRequests = () => {
     get("/friendRequest")
       .then(({ requests }) => {
         console.log(requests);
-
         if (requests.length > 0) {
           this.setState({
             loading: false,
@@ -27,14 +37,22 @@ class RequestsList extends Component {
         } else {
           this.setState({
             loading: false,
-            message: "Vous n'avez aucune invitation en attente",
+            message: "Vous n'avez aucune invitation en attente.",
             requests: requests
           });
         }
-        console.log(this.state);
       })
-      .catch(error => {
-        console.log(error);
+      .catch(() => {
+        this.setState({
+          loading: false,
+
+          requests: []
+        });
+        this.showInformation(
+          "Oh Oh! Houston nous avons un problème, votre requête n'a pu aboutir",
+          "warning",
+          () => this.props.history.push(`/profil/${this.props.user.id}`)
+        );
       });
   };
 
@@ -43,7 +61,7 @@ class RequestsList extends Component {
   }
 
   answerRequest = (requestId, status, autor) => {
-    console.log(requestId, status);
+    console.log(requestId, status, autor);
     this.setState({
       loading: true
     });
@@ -53,26 +71,21 @@ class RequestsList extends Component {
         this.setState({
           loading: false
         });
-        console.log("reload");
-        return this.getFriendRequests();
         const confirmationMessage =
           status === "accept"
             ? `Vous êtes maintenant ami avec ${autor}`
             : `Vous avez rejeté l'invitation de ${autor}`;
-
-        this.setState({
-          alert: confirmationMessage
-        });
-
-        setTimeout(() => {
-          this.setState({ alert: "" });
-        }, 5000);
+        // TODO => je veux passer une fonction en argument pour qu'elle s'execute à la fin du timeout mais elle n'est pas reconnue comme fonction
+        this.showInformation(confirmationMessage, "info", () =>
+          this.getFriendRequests()
+        );
       })
 
-      .catch(error => {
-        this.setState({
-          message: error.alert
-        });
+      .catch(() => {
+        this.showInformation(
+          "Oh Oh! Houston nous avons un problème, votre requête n'a pu aboutir",
+          "warning"
+        );
       });
   };
 
@@ -105,15 +118,23 @@ class RequestsList extends Component {
                           <div key={request._id}>
                             <p>{request.author.pseudo || request.author}</p>
                             <button
-                              onClick={(requestId, status, autor) =>
-                                this.answerRequest(request._id, "accept")
+                              onClick={(requestId, status, author) =>
+                                this.answerRequest(
+                                  request._id,
+                                  "accept",
+                                  request.author.pseudo
+                                )
                               }
                             >
                               Accepter
                             </button>
                             <button
-                              onClick={(requestId, status) =>
-                                this.answerRequest(request._id, "ignore")
+                              onClick={(requestId, status, author) =>
+                                this.answerRequest(
+                                  request._id,
+                                  "ignore",
+                                  request.author.pseudo
+                                )
                               }
                             >
                               Ignorer

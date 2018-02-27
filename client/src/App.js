@@ -10,9 +10,11 @@ import Profil from "./containers/Profil";
 import SetProfil from "./containers/SetProfil";
 import ResetPassword from "./containers/ResetPassword";
 import UsersList from "./containers/UsersList";
+import Admin from "./containers/Admin";
 import RequestsList from "./containers/RequestsList";
 import Chat from "./components/Chat";
 import Mail from "./containers/Mail";
+import About from "./containers/About";
 import "normalize.css";
 import "./index.css";
 import moment from "moment";
@@ -62,6 +64,8 @@ export class App extends Component {
           <Route exact path="/resetPassword/" component={ResetPassword} />
           <Route exact path="/resetPassword/:token" component={ResetPassword} />
           <Route exact path="/search/:query" component={UsersList} />
+          <Route exact path="/admin" component={Admin} />
+          <Route exact path="/about" component={About} />
           <Route
             exact
             path="/friendRequests"
@@ -75,6 +79,7 @@ export class App extends Component {
           <Redirect to="/login" />
         </Switch>
         {this.state.user && <Chat />}
+        <a href="/about">A propos</a>
       </AppContainer>
     );
   }

@@ -4,10 +4,11 @@ const uuidv4 = require("uuid/v4");
 const dbService = require("./db.service");
 const socketService = require("./socket/socket.service");
 const userService = require("./user.service");
+const emailService = require("./email.service");
 
 const ObjectId = require("mongodb").ObjectID;
 
-const POSTS_COUNT_PER_PAGE = 10;
+const POSTS_COUNT_PER_PAGE = 5;
 
 const save = (body, currentUser) => {
   const postBody = {
@@ -23,7 +24,12 @@ const save = (body, currentUser) => {
     countPosts()
       .then(postsCounts => {
         socketService.emit("ON_POST_PUBLISH", { postsCounts });
+        if (body.targetUser !== currentUser.toString()) {
+          emailService.postNotification(body.targetUser);
+        }
+        return;
       })
+
       .catch(error => {
         return {
           status: 502,
@@ -33,17 +39,30 @@ const save = (body, currentUser) => {
   });
 };
 
-const USER_KEYS = ["author", "dest"];
+const USER_KEYS = ["author", "dest", "user"];
 
 const extractUsersFromPosts = posts => {
   return posts
     .reduce((users, post) => {
       USER_KEYS.forEach(key => {
-        if (!post[key]) return;
-
-        const id = post[key].toString();
-        if (users.indexOf(id) === -1) {
-          users.push(id);
+        if (!post[key]) {
+          if (post.comments) {
+            post.comments.forEach(comment => {
+              if (!comment[key]) {
+                return;
+              } else {
+                const id = comment[key].toString();
+                if (users.indexOf(id) === -1) {
+                  users.push(id);
+                }
+              }
+            });
+          }
+        } else {
+          const id = post[key].toString();
+          if (users.indexOf(id) === -1) {
+            users.push(id);
+          }
         }
       });
       return users;
@@ -63,14 +82,18 @@ const populatePostsWithUsers = (posts, users) => {
     USER_KEYS.forEach(key => {
       if (post[key] && usersDictionnary[post[key]]) {
         post[key] = usersDictionnary[post[key]];
+      } else {
+        post[key] = { _id: ObjectId(), pseudo: "Un ancien membre" };
       }
     });
     post.comments.forEach(comment => {
       if (
-        comment.user.toString() ===
-        usersDictionnary[comment.user.toString()]._id.toString()
+        comment.user.toString() &&
+        usersDictionnary[comment.user.toString()]
       ) {
         comment.user = usersDictionnary[comment.user.toString()];
+      } else {
+        comment.user = { _id: ObjectId(), pseudo: "Un ancien membre" };
       }
     });
   });

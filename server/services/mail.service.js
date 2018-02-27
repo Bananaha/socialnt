@@ -153,6 +153,7 @@ const deleteOneConversation = (conversationId, ownerId) => {
 };
 
 const deleteOneMessage = (messageId, conversationId) => {
+  console.log("in delete on message", messageId, conversationId);
   return dbService
     .updateAndReturn(
       COLLECTION_NAME,
@@ -160,6 +161,7 @@ const deleteOneMessage = (messageId, conversationId) => {
       { $pull: { messages: { _id: { $in: [ObjectId(messageId)] } } } }
     )
     .then(result => {
+      console.log("result of delete message", result);
       return result;
     })
     .catch(error => {
@@ -175,7 +177,7 @@ const addReply = (currentUserId, conversationId, text) => {
       {
         $push: {
           messages: {
-            id: ObjectId(),
+            _id: ObjectId(),
             date: Date.now(),
             text,
             author: currentUserId

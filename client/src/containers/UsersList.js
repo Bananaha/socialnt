@@ -6,7 +6,7 @@ import "whatwg-fetch";
 class UsersList extends Component {
   state = {
     users: [],
-    loader: true,
+    loading: true,
     alert: ""
   };
 
@@ -17,31 +17,40 @@ class UsersList extends Component {
         if (users.length > 0) {
           this.setState({
             users: users,
-            loader: false,
+            loading: false,
             alert: ""
           });
         } else {
           this.setState({
             users: [],
             alert: "Aucun utilisateur ne correspond à votre recherche.",
-            loader: false
+            loading: false
           });
         }
       })
       .catch(error => {
         this.setState({
           users: [],
-          loader: false
+          alert:
+            "Oh Oh! Houston nous avons un problème, votre requête n'a pu aboutir",
+          loading: false
         });
         console.log("getMtchingUsers UserList", error);
       });
   };
 
-  launchTimeout = () => {
-    this.timeout = setTimeout(() => {
-      this.setState({
-        alert: ""
-      });
+  // Display notification to user
+  showInformation = (text, type, action) => {
+    // TODO ==> use type argument for style settings
+    // info or warning
+    this.setState({
+      alert: text
+    });
+    setTimeout(() => {
+      this.setState({ alert: "" });
+      if (action) {
+        action();
+      }
     }, 5000);
   };
 
@@ -57,7 +66,7 @@ class UsersList extends Component {
 
   componentWillReceiveProps() {
     this.setState({
-      loader: true
+      loading: true
     });
     setTimeout(() => {
       this.getMatchingUsers();
@@ -68,25 +77,24 @@ class UsersList extends Component {
     event.preventDefault();
     post("/friendrequest", { targetUser: event.target.value })
       .then(result => {
-        this.setState({
-          alert: result.alert
-        });
-        this.launchTimeout();
-        this.getMatchingUsers();
+        // TODO => je veux passer une fonction en argument pour qu'elle s'execute à la fin du timeout mais elle n'est pas reconnue comme fonction
+        this.showInformation(result.friends.alert, "info", () =>
+          this.getMatchingUsers()
+        );
       })
       .catch(error => {
-        this.setState({
-          alert: error.alert
-        });
-        this.launchTimeout();
+        console.log(error);
+        this.showInformation(
+          "Oh Oh! Houston nous avons un problème, votre requête n'a pu aboutir",
+          "warning"
+        );
       });
   };
 
   render() {
-    console.log(this.state.users);
     return (
       <div>
-        {this.state.loader
+        {this.state.loading
           ? ""
           : this.state.users.map((user, index) => {
               let avatar = user.avatar;

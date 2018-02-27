@@ -136,6 +136,11 @@ class Mail extends Component {
         this.updateConversations();
         this.showInformation("Message envoyé", "info");
         this.setState({ newMessage: "", newRecipients: [] });
+        if (messageType === "newConversation") {
+          this.setState({
+            editorIsOpen: !this.state.editorIsOpen
+          });
+        }
       })
       .catch(error => {
         this.showInformation(
@@ -215,6 +220,10 @@ class Mail extends Component {
   // @conversation object {_id, }
   renderConversationsList = conversation => {
     const { user } = this.props;
+
+    if (!conversation.messages[0] || conversation.messages[0].length === 0) {
+      return;
+    }
     return (
       <ConversationList key={conversation._id}>
         <div key={conversation.messages[0]._id}>
@@ -225,12 +234,21 @@ class Mail extends Component {
           </span>
           <p>{conversation.messages[0].text}</p>
           <span>{conversation.formattedDate}</span>
-          <DeleteButton
-            delete={(conversationId, ownerId) =>
-              this.deleteConversation(conversation._id, conversation.owner._id)
-            }
-            text="Supprimer la conversation"
-          />
+          <div>
+            {user && conversation.owner._id === user.id ? (
+              <DeleteButton
+                delete={(conversationId, ownerId) =>
+                  this.deleteConversation(
+                    conversation._id,
+                    conversation.owner._id
+                  )
+                }
+                buttonText="Supprimer la conversation"
+              />
+            ) : (
+              ""
+            )}
+          </div>
 
           <button value={conversation._id} onClick={this.showConversation}>
             Voir
@@ -250,6 +268,7 @@ class Mail extends Component {
       return;
     }
     return conversation.messages.map(message => {
+      console.log("message", message);
       return (
         <div key={message._id}>
           <div>
@@ -275,7 +294,7 @@ class Mail extends Component {
                     conversation._id
                   )
                 }
-                text="Supprimer le message"
+                buttonText="Supprimer le message"
               />
             ) : (
               ""

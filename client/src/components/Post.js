@@ -49,6 +49,8 @@ export default class Post extends Component {
       });
     }
   };
+
+  hasComments = () => {};
   render() {
     const {
       comments,
@@ -58,7 +60,7 @@ export default class Post extends Component {
       content,
       formattedDate
     } = this.props.post;
-
+    console.log(comments);
     return (
       <PostContainer key={_id}>
         <PostHeader>
@@ -72,9 +74,7 @@ export default class Post extends Component {
                 </span>
               )}
           </div>
-          <button onClick={this.toogleCommentsVisibility}>
-            {this.state.toogleButtonText}
-          </button>
+
           <PostDate>{formattedDate}</PostDate>
         </PostHeader>
 
@@ -94,6 +94,15 @@ export default class Post extends Component {
           postId={_id}
           handleCommentSubmit={this.handleCommentSubmit}
         />
+        <div>
+          {comments.length > 0 ? (
+            <button onClick={this.toogleCommentsVisibility}>
+              {this.state.toogleButtonText}
+            </button>
+          ) : (
+            ""
+          )}
+        </div>
       </PostContainer>
     );
   }

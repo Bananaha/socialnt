@@ -16,9 +16,10 @@ class FriendsList extends Component {
 
   getFriends = () => {
     get(`/users/friends/${this.props.match.params.id}`)
-      .then(result =>
-        this.setState({ loading: false, friends: result.friends })
-      )
+      .then(result => {
+        console.log(result.friends);
+        return this.setState({ loading: false, friends: result.friends });
+      })
       .catch(error => console.log(error));
   };
 
@@ -26,7 +27,7 @@ class FriendsList extends Component {
     this.getFriends();
   }
   // Display notification to user
-  showInformation = (text, type) => {
+  showInformation = (text, type, action) => {
     // TODO ==> use type argument for style settings
     // info or warning
     this.setState({
@@ -34,6 +35,9 @@ class FriendsList extends Component {
     });
     setTimeout(() => {
       this.setState({ alert: "" });
+      if (action) {
+        action();
+      }
     }, 5000);
   };
 
@@ -52,6 +56,7 @@ class FriendsList extends Component {
 
   sendRecommendation = event => {
     event.preventDefault();
+
     post("/friendrequest/recommendation", {
       targetUser: this.state.recommendationDest._id,
       requestRecipient: this.state.recommendationDest._id
@@ -64,6 +69,7 @@ class FriendsList extends Component {
         );
       })
       .catch(error => {
+        console.log(error);
         this.showInformation(
           `La recommandation de ${this.state.wantToRecommend.pseudo} à ${
             this.state.recommendationDest.pseudo
@@ -80,9 +86,9 @@ class FriendsList extends Component {
       .then(() => {
         this.showInformation(
           `${friendPseudo} ne fait plus partie de vos amis.`,
-          "info"
+          "info",
+          () => this.getFriends()
         );
-        this.getFriends();
       })
       .catch(error => {
         this.showInformation(
@@ -103,41 +109,47 @@ class FriendsList extends Component {
               return (
                 <div key={friend._id}>
                   <a href={href}>{friend.pseudo}</a>
-                  <button
-                    onClick={(friendId, friendPseudo) =>
-                      this.handleRecommendation(friend._id, friend.pseudo)
-                    }
-                  >
-                    Recommander {friend.pseudo} à un ami
-                  </button>
-                  {this.state.recommendationDest._id &&
-                  this.state.wantToRecommend._id === friend._id ? (
+                  {this.state.friends.length <= 1 ? (
+                    ""
+                  ) : (
                     <div>
-                      <span>
-                        Recommander {friend.pseudo} à{" "}
-                        {this.state.recommendationDest.pseudo} ?
-                      </span>
-                      <button onClick={this.sendRecommendation}>Ok</button>
-                      <button onClick={this.cancelRecommendation}>
-                        Annuler
-                      </button>
+                      {this.state.recommendationDest._id &&
+                      this.state.wantToRecommend._id === friend._id ? (
+                        <div>
+                          <span>
+                            Recommander {friend.pseudo} à{" "}
+                            {this.state.recommendationDest.pseudo} ?
+                          </span>
+                          <button onClick={this.sendRecommendation}>Ok</button>
+                          <button onClick={this.cancelRecommendation}>
+                            Annuler
+                          </button>
+                        </div>
+                      ) : (
+                        <button
+                          onClick={(friendId, friendPseudo) =>
+                            this.handleRecommendation(friend._id, friend.pseudo)
+                          }
+                        >
+                          Recommander {friend.pseudo} à un ami
+                        </button>
+                      )}
+                      {this.state.wantToRecommend &&
+                      this.state.wantToRecommend._id === friend._id &&
+                      !this.state.recommendationDest._id ? (
+                        <SearchBar
+                          onSubmit={this.chooseFriend}
+                          onSelect={this.chooseFriend}
+                          requestPath="/users/search/friends/"
+                          placeholder="Choisissez un ami"
+                          showButton="false"
+                        />
+                      ) : (
+                        ""
+                      )}
                     </div>
-                  ) : (
-                    ""
                   )}
-                  {this.state.wantToRecommend &&
-                  this.state.wantToRecommend._id === friend._id &&
-                  !this.state.recommendationDest._id ? (
-                    <SearchBar
-                      onSubmit={this.chooseFriend}
-                      onSelect={this.chooseFriend}
-                      requestPath="/users/search/friends/"
-                      placeholder="Choisissez un ami"
-                      showButton="false"
-                    />
-                  ) : (
-                    ""
-                  )}
+
                   <button
                     onClick={(friendId, friendPseudo) =>
                       this.removeFriends(friend._id, friend.pseudo)

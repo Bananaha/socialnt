@@ -140,6 +140,7 @@ class SearchBar extends Component {
           type="text"
           value={this.state.searchQuery || ""}
           placeholder={this.props.placeholder}
+          disabled={this.props.disabled}
         />
         {this.props.showButton === "false" ? (
           ""

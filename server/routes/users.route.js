@@ -24,9 +24,23 @@ const findById = (req, res) => {
 };
 
 const findFriends = (req, res) => {
-  userService.searchFriends(req.params.values, req.__user).then(friends => {
-    res.status(200).json(friends);
-  });
+  if (req.__profile === "admin") {
+    userService
+      .findMany(req.params.values, req.__user)
+      .then(users => res.status(200).json(users))
+      .catch(error => res.status(409).json(error));
+  } else {
+    userService.searchFriends(req.params.values, req.__user).then(friends => {
+      res.status(200).json(friends);
+    });
+  }
+};
+
+const findManyUsers = (req, res) => {
+  userService
+    .findMany(req.params.values, req.__user)
+    .then(users => res.status(200).json(users))
+    .catch(error => res.status(409).json(error));
 };
 
 const findUserProfil = (req, res) => {
@@ -44,7 +58,7 @@ const findUserProfil = (req, res) => {
 
 const deleteProfil = (req, res) => {
   userService
-    .deleteProfil(req.__user)
+    .deleteProfil(req.body._id)
     .then(result => {
       res.status(200).json({ alert: "utilisateur supprimé" });
     })
@@ -85,9 +99,7 @@ router
   .post(permission("canEditProfil"), upload.single("file"), userService.update);
 
 // SEARCH USERS OR FRIENDS
-router
-  .route("/search/:values")
-  .get(permission("canSearch"), userService.findMany);
+router.route("/search/:values").get(permission("canSearch"), findManyUsers);
 
 router
   .route("/search/friends/:values")
@@ -105,7 +117,7 @@ router
   .delete(permission("canDeleteAllProfils"), deleteAllProfils);
 module.exports = router;
 
-router.route("/").delete(permission("canDeleteProfil"), deleteProfil);
+router.route("/deleteOne").post(permission("canDeleteProfil"), deleteProfil);
 
 router
   .route("/findUserProfil")

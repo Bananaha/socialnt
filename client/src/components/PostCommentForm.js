@@ -27,6 +27,7 @@ export default class PostCommentForm extends Component {
     })
       .then(result => {
         this.props.handleCommentSubmit();
+        this.setState({ text: "" });
       })
       .catch(error => {
         console.error("Error while commenting post", error);

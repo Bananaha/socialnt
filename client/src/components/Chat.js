@@ -133,12 +133,5 @@ class Chat extends Component {
     );
   }
 }
-// icone chat
-// qd on clique dessus un input apparait
-// on entre le nom de l'ami avec lequel on veut chatter
-// on commence à chatter
-
-// si je reçois un message chat
-// la conversation s'affiche
 
 export default withRouter(props => <Chat {...props} />);

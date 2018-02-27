@@ -24,7 +24,17 @@ const request = (targetUser, currentUser, requestRecipient) => {
   return dbService
     .aggregate("users", "_id", target, othersCollections)
     .then(user => {
-      // if user exists check if
+      console.log(
+        targetUser,
+        currentUser,
+        requestRecipient,
+        targetUser === requestRecipient
+      );
+      if (targetUser === requestRecipient) {
+        Promise.reject({
+          alert: "Vous ne pouvez pas recommander un utilisateur à lui même."
+        });
+      }
 
       if (user) {
         if (user.friends) {
@@ -161,7 +171,8 @@ const getAll = userId => {
 };
 
 const ignore = requestId => {
-  dbService
+  console.log(requestId, typeof requestId);
+  return dbService
     .updateAndReturn(
       "friendRequests",
       { _id: ObjectId(requestId) },
@@ -172,6 +183,7 @@ const ignore = requestId => {
       }
     )
     .then(requestIgnored => {
+      console.log(requestIgnored);
       return;
     })
     .catch(error => {

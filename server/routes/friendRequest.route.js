@@ -34,7 +34,7 @@ const findFriendRequests = (req, res) => {
 const ignore = (req, res) => {
   friendRequestService
     .ignore(req.body.requestId)
-    .then(requestUpdated => res.status(200).json({ alert: "succes" }))
+    .then(requestUpdated => res.status(200).json({ alert: "success" }))
     .catch(error => res.status(503).json(error));
 };
 

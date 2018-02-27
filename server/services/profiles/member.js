@@ -8,8 +8,7 @@ const canViewProfil = helper.isSameOrFriend;
 const canSendPost = helper.isSameOrFriend;
 
 const canEditProfil = helper.isSameOrFriend;
-// TODO completer la fonction pour prendre en compte les friendRequest si une invitation a déjà été envoyé, le bouton d'invitation ne doit pas apparaitre.
-const canFriendRequest = helper.isSameOrFriend;
+const canFriendRequest = helper.isNotSameAndNotFriend;
 
 const canSearchFriends = () => true;
 const canSearch = () => true;
@@ -20,7 +19,7 @@ const canFindFriendRequests = () => true;
 const canDeleteAllProfils = () => false;
 const canAnswerRequest = () => true;
 const canGetFriends = helper.isSameOrFriend;
-// TODO ==> canEditCOmment fini ?
+
 const canEditComment = req =>
   new Promise((resolve, reject) => {
     const currentUser = req.__user;
@@ -49,8 +48,14 @@ const canReplyToConversation = req =>
   req.body.recipients.some(
     recipient => recipient._id === req.__user.toString()
   );
-const canRecommendFriend = req =>
-  helper.isFriend(req.__user, req.body.targetUser, req.body.requestRecipient);
+const canRecommendFriend = req => {
+  console.log(req.body, req.params, req.query);
+  return helper.isFriend(
+    req.__user,
+    req.query.targetUser,
+    req.query.requestRecipient
+  );
+};
 
 const canRemoveFriend = req => helper.isFriend(req.__user, req.body.targetUser);
 

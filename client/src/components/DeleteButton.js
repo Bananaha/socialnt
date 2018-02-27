@@ -28,12 +28,12 @@ class DeleteButton extends Component {
       <div>
         {this.state.showModal && (
           <AlertModal
-            text="Etes vous de vouloir supprimer votre profil ?"
+            text={this.props.alertText}
             getUserConfirmation={this.getConfirmation}
           />
         )}
         <SmallButton onClick={this.requestConfirmation}>
-          {this.props.text}
+          {this.props.buttonText}
         </SmallButton>
       </div>
     );

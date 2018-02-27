@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { get, del } from "../services/request.service";
+import { get, post } from "../services/request.service";
 import { withRouter } from "react-router-dom";
 import "whatwg-fetch";
 
@@ -67,7 +67,7 @@ class Profil extends Component {
     lastName: "",
     email: "",
     avatar: "",
-    loader: true
+    loading: true
   };
 
   componentWillReceiveProps(nextProps) {
@@ -80,9 +80,22 @@ class Profil extends Component {
     this.fetchProfil(this.props.match.params.id);
   }
 
+  // Display notification to user
+  showInformation = (text, type, action) => {
+    // TODO ==> use type argument for style settings
+    // info or warning
+    this.setState({
+      alert: text
+    });
+    setTimeout(() => {
+      this.setState({ alert: "" });
+      action();
+    }, 5000);
+  };
+
   fetchProfil = profilId => {
     this.setState({
-      loader: true
+      loading: true
     });
     get(`/users/${profilId}`)
       .then(userInformations => {
@@ -95,15 +108,16 @@ class Profil extends Component {
           firstName: userInformations.firstName,
           lastName: userInformations.lastName,
           avatar: userInformations.avatar,
-          loader: false
+          loading: false,
+          alert: ""
         });
       })
       .catch(error => {
         this.setState({
-          loader: false
+          loading: false
         });
         console.log("ERROR", error);
-        this.props.history.goBack();
+        this.props.history.push(`/profil/${this.props.match.params.id}`);
       });
   };
 
@@ -113,11 +127,24 @@ class Profil extends Component {
 
   deleteProfil = () => {
     // TODO rajouter l'id pour checker un db si user identique et pour les actions admin
-    del("/users")
+    post("/users/deleteOne", { _id: this.props.match.params.id })
       .then(() => {
-        console.log("deleteProfil");
-        localStorage.removeItem("token");
-        this.props.history.push("/login");
+        if (
+          this.props.user.profile === "admin" &&
+          this.props.match.params.id !== this.props.user.id
+        ) {
+          this.showInformation("L'utilisateur a été supprimé", "info", () => {
+            return this.props.history.push(`/profil/${this.props.user.id}`);
+          });
+        } else {
+          console.log("deleteProfil");
+          localStorage.removeItem("token");
+          this.showInformation(
+            "Votre profil a été supprimé. A bientôt",
+            "info",
+            () => this.props.history.push("/login")
+          );
+        }
       })
       .catch(error => {
         console.log(error);
@@ -125,11 +152,13 @@ class Profil extends Component {
   };
 
   render() {
-    const isCurrentUser =
-      this.props.user && this.props.match.params.id === this.props.user.id;
+    const isCurrentUserOrAdmin =
+      (this.props.user && this.props.match.params.id === this.props.user.id) ||
+      (this.props.user && this.props.user.profile === "admin");
+    console.log(this.props);
     return (
       <PageBody className="Home">
-        {this.state.loader ? (
+        {this.state.loading ? (
           <p>Loading...</p>
         ) : (
           <FlexExtend>
@@ -152,11 +181,12 @@ class Profil extends Component {
                   {this.state.city && <span>{this.state.city}</span>}
                 </DetailsUser>
               </div>
-              {isCurrentUser && (
+              {isCurrentUserOrAdmin && (
                 <Actions>
                   <DeleteButton
                     delete={this.deleteProfil}
-                    text="Supprimer le profil"
+                    buttonText="Supprimer le profil"
+                    alertText="Etes vous de vouloir supprimer votre profil ?"
                   />
                   <SmallButton onClick={this.editProfil}>
                     Editer mon profil
@@ -168,6 +198,7 @@ class Profil extends Component {
             <PostsList />
           </FlexExtend>
         )}
+        {this.state.alert}
       </PageBody>
     );
   }
