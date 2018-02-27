@@ -70,11 +70,7 @@ class SetProfil extends Component {
   render() {
     return (
       <div>
-        <p>
-          Bienvenue {this.props.match.params.pseudo}, Vous venez de rejoindre la
-          communauté Cumulus. Avant de commencer, renseignez votre profil afin
-          que les autres membres puissent mieux vous connaître et vous trouver.
-        </p>
+        <h2>Modifier votre profil</h2>
         <form onSubmit={this.updateProfil}>
           <label>
             {" "}

@@ -72,7 +72,7 @@ const deleteProfil = (req, res) => {
 };
 const deleteAllProfils = (req, res) => {
   userService
-    .deleteAllProfils(req.__user)
+    .deleteAllProfils()
     .then(result => {
       res.status(result.status).json(result.response);
     })
@@ -113,7 +113,7 @@ router.route("/newPassword").post(passwordService.setNewPassword);
 
 // DELETE USERS
 router
-  .route("/all")
+  .route("/deleteAll")
   .delete(permission("canDeleteAllProfils"), deleteAllProfils);
 module.exports = router;
 

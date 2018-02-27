@@ -28,8 +28,6 @@ const socketServer = require("./services/socket/socket.service").onConnection(
   io
 );
 
-io.set("origins", process.env.CORS_ORIGINS);
-
 dbService.connect((error, db) => {
   if (error) {
     console.log("impossible de se connecter à la base de donnée", error);

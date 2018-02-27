@@ -122,13 +122,39 @@ const deleteProfil = id => {
     .catch(error => error);
 };
 
-const deleteAllProfils = id => {
+const deleteAllProfils = () => {
   return dbService
     .deleteMany(COLLECTION_NAME, { profile: { $ne: "admin" } })
     .then(() => {
-      return;
-    })
-    .catch(error => error);
+      dbService
+        .find("users", {})
+        .then(users => {
+          users.map(user => {
+            user = user._id.String();
+          });
+          dbService
+            .deleteMany("friendRequests", {
+              $or: [
+                { author: { $nin: [users] } },
+                { recipient: { $nin: [users] } }
+              ]
+            })
+            .then(() => {
+              dbService
+                .updateMany(
+                  "users",
+                  {},
+                  { $pull: { friends: { $nin: [users] } } }
+                )
+                .then(() => {
+                  return "ok";
+                })
+                .catch(error => error);
+            })
+            .catch(error => error);
+        })
+        .catch(error => error);
+    });
 };
 
 const create = newUser =>
