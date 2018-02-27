@@ -3,7 +3,6 @@ import { Route, Switch, Redirect, withRouter } from "react-router-dom";
 import { connect, subscribe } from "./sockets";
 import TYPES from "./sockets/types";
 
-import "./App.css";
 import Nav from "./components/Nav";
 import Login from "./containers/Login";
 import Profil from "./containers/Profil";
@@ -79,7 +78,7 @@ export class App extends Component {
           <Redirect to="/login" />
         </Switch>
         {this.state.user && <Chat />}
-        <a href="/about">A propos</a>
+        ./
       </AppContainer>
     );
   }

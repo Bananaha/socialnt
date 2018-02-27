@@ -71,7 +71,7 @@ const CustomLink = styled.a`
   }
 `;
 
-const NavLink = CustomLink.withComponent(Link);
+const FooterLink = CustomLink.withComponent(Link);
 
 class Nav extends Component {
   searchResults = query => {
@@ -84,9 +84,9 @@ class Nav extends Component {
 
   renderNavLink = (href, name, onClick) => {
     return (
-      <NavLink to={href} onClick={onClick}>
+      <FooterLink to={href} onClick={onClick}>
         {name}
-      </NavLink>
+      </FooterLink>
     );
   };
 
@@ -98,25 +98,9 @@ class Nav extends Component {
     const { user } = this.props;
     return (
       <Navigation login={!user}>
-        <h1>Unicorn's Corner</h1>
-        {user && (
-          <Links>
-            {this.renderNavLink(`/profil/${user.id}`, user.pseudo)}
-            {this.renderNavLink("/friendRequests", "Invitations")}
-            {this.renderNavLink("/mail/", "Messagerie")}
-            {user.profile === "admin" &&
-              this.renderNavLink("/admin", "Administration")}
-            {this.renderNavLink("/login", "Déconnexion", this.disconnect)}
-          </Links>
-        )}
-        {user && (
-          <SearchBar
-            onSubmit={this.searchResults}
-            onSelect={this.goTo}
-            requestPath="/users/search/"
-            placeholder="Chercher un utilisateur"
-          />
-        )}
+        <Links>
+          {this.renderNavLink("/login", "Déconnexion", this.disconnect)}
+        </Links>
       </Navigation>
     );
   }

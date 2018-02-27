@@ -29,7 +29,7 @@ export const emit = (event, payload) => {
 };
 
 export const connect = () => {
-  socket = openSocket("http://localhost:5000");
+  socket = openSocket(process.env.REACT_APP_HOST);
   socket.emit(TYPES.USER_INFO, token);
 
   Object.values(TYPES).forEach(eventType => {
