@@ -197,10 +197,13 @@ class Mail extends Component {
   // @newRecipient object {_id: string, pseudo: string}
   renderRecipientsList = newRecipient => {
     return (
-      <span key={newRecipient._id}>
+      <span key={newRecipient._id} className="Mails__user">
         {newRecipient.pseudo}
-        <button onClick={id => this.removeRecipient(newRecipient._id)}>
-          supprimer
+        <button
+          className="button--small Mails__remove-user"
+          onClick={id => this.removeRecipient(newRecipient._id)}
+        >
+          x
         </button>
       </span>
     );
@@ -214,16 +217,18 @@ class Mail extends Component {
       return;
     }
     return (
-      <div className="Mails__list" key={conversation._id}>
-        <div key={conversation.messages[0]._id}>
-          <span>
+      <div className="Mails__list card" key={conversation._id}>
+        <div>
+          <div className="Mails__list__users">
             {conversation.recipients.map(recipient => (
               <span key={recipient.pseudo}>{recipient.pseudo}</span>
             ))}
+          </div>
+          <span className="Mails__list__date">
+            {conversation.formattedDate}
           </span>
-          <p>{conversation.messages[0].text}</p>
-          <span>{conversation.formattedDate}</span>
-          <div>
+          <p className="Mails__list__text">{conversation.messages[0].text}</p>
+          <div className="Mails__list__footer">
             {user && conversation.owner._id === user.id ? (
               <DeleteButton
                 delete={(conversationId, ownerId) =>
@@ -237,11 +242,14 @@ class Mail extends Component {
             ) : (
               ""
             )}
+            <button
+              className="button--small"
+              value={conversation._id}
+              onClick={this.showConversation}
+            >
+              Voir
+            </button>
           </div>
-
-          <button value={conversation._id} onClick={this.showConversation}>
-            Voir
-          </button>
         </div>
       </div>
     );
@@ -256,6 +264,7 @@ class Mail extends Component {
     if (!conversation) {
       return;
     }
+<<<<<<< HEAD
     return conversation.messages.map(message => {
       return (
         <div key={message._id}>
@@ -266,31 +275,52 @@ class Mail extends Component {
               {conversation.recipients.map((recipient, index) => {
                 if (recipient._id !== message.author._id) {
                   const key = `${recipient._id}_${index}`;
+=======
+    return (
+      <div className="Mails__thread">
+        <h3 className="page-title">Fil de conversation</h3>
+        {conversation.messages.map(message => {
+          return (
+            <div key={message._id} className="card">
+              <div>
+                <div className="Mails__list__users">
+                  <p>from: {message.author.pseudo}</p>
+                  <div>
+                    to:{" "}
+                    {conversation.recipients.map((recipient, index) => {
+                      if (recipient._id !== message.author._id) {
+                        const key = `${recipient._id}_${index}`;
+>>>>>>> style
 
-                  return <span key={key}>{recipient.pseudo}</span>;
-                }
-              })}
-              <p>{message.formattedDate}</p>
+                        return <span key={key}>{recipient.pseudo}</span>;
+                      }
+                    })}
+                  </div>
+                </div>
+                <p className="Mails__list__date">{message.formattedDate}</p>
+                <div className="Mails__list__text">{message.text}</div>
+                <div className="Mails__list__footer">
+                  {user && message.author._id === user.id ? (
+                    <DeleteButton
+                      delete={(messageId, authorId, conversationId) =>
+                        this.deleteMessage(
+                          message._id,
+                          message.author._id,
+                          conversation._id
+                        )
+                      }
+                      buttonText="Supprimer le message"
+                    />
+                  ) : (
+                    ""
+                  )}
+                </div>
+              </div>
             </div>
-            <div>{message.text}</div>
-            {user && message.author._id === user.id ? (
-              <DeleteButton
-                delete={(messageId, authorId, conversationId) =>
-                  this.deleteMessage(
-                    message._id,
-                    message.author._id,
-                    conversation._id
-                  )
-                }
-                buttonText="Supprimer le message"
-              />
-            ) : (
-              ""
-            )}
-          </div>
-        </div>
-      );
-    });
+          );
+        })}{" "}
+      </div>
+    );
   };
 
   // render the text editor for new conversation or new reply
@@ -305,26 +335,27 @@ class Mail extends Component {
       placeholderText = "Répondre....";
     }
     return (
-      <div>
+      <div className="card RequestList__form">
         {/* if the message is a new conversation, show the searchBar and and the recipient list */}
         {messageType === "newConversation" ? (
           <div>
-            <SearchBar
-              onSubmit={this.addRecipient}
-              onSelect={this.addRecipient}
-              requestPath="/users/search/friends/"
-              placeholder="Ajouter un destinataire"
-              showButton="false"
-            />
             <div>
               {this.state.newRecipients.length > 0 ? (
-                <div>
+                <div className="Mails__users">
                   {this.state.newRecipients.map(this.renderRecipientsList)}
                 </div>
               ) : (
                 "Choisissez un ou plusieurs destinataires"
               )}
             </div>
+            <SearchBar
+              hasBorder={true}
+              onSubmit={this.addRecipient}
+              onSelect={this.addRecipient}
+              requestPath="/users/search/friends/"
+              placeholder="Ajouter un destinataire"
+              showButton="false"
+            />
           </div>
         ) : (
           ""
@@ -338,6 +369,7 @@ class Mail extends Component {
             onInput={this.handleMessageEditChange}
           />
           <button
+            className="button--small"
             type="submit"
             value={messageType}
             onClick={event =>
@@ -356,8 +388,8 @@ class Mail extends Component {
   }
   render() {
     return (
-      <div>
-        <h2>Messagerie</h2>
+      <div className="page-body">
+        <h2 className="page-title">Messagerie</h2>
         <button onClick={this.toogleMessageEditor}>
           {this.state.editorIsOpen
             ? "Fermer"
@@ -396,7 +428,7 @@ class Mail extends Component {
               {this.renderEditor("newReply", this.state.displayedConversation)}
             </div>
           ) : (
-            "empty state"
+            <p className="Mails__empty">Vous n'avez aucune conversation</p>
           )}
         </div>
         <div>{this.state.alert}</div>

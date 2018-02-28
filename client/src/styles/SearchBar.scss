@@ -14,6 +14,13 @@
     box-sizing: border-box;
   }
 
+  &--border {
+    input {
+      border: 1px solid #eee;
+      width: 100%;
+    }
+  }
+
   button {
     font-size: 12px;
     height: 30px;

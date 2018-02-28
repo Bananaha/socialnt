@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { get, post } from "../services/request.service";
 import { withRouter } from "react-router-dom";
 import "whatwg-fetch";
+import "../styles/RequestList.css";
 
 class RequestsList extends Component {
   state = {
@@ -74,6 +75,7 @@ class RequestsList extends Component {
         this.showInformation(confirmationMessage, "info", () =>
           this.getFriendRequests()
         );
+        window.location.reload();
       })
 
       .catch(() => {
@@ -88,7 +90,8 @@ class RequestsList extends Component {
     const { user } = this.props;
 
     return (
-      <div>
+      <div className="RequestList page-body">
+        <h3 className="page-title">Invitations</h3>
         {user && (
           <div>
             {user ? (
@@ -101,18 +104,29 @@ class RequestsList extends Component {
                         user._id === request.author
                       ) {
                         return (
-                          <div key={request._id}>
-                            <p>
+                          <div
+                            className="card RequestList__item RequestList__item--in"
+                            key={request._id}
+                          >
+                            <p className="RequestList__name">
                               {request.recipient.pseudo || request.recipient}
                             </p>
-                            <span>En attente de confirmation</span>
+                            <span className="RequestList__status">
+                              En attente de confirmation
+                            </span>
                           </div>
                         );
                       } else {
                         return (
-                          <div key={request._id}>
-                            <p>{request.author.pseudo || request.author}</p>
+                          <div
+                            className="card RequestList__item RequestList__item--out"
+                            key={request._id}
+                          >
+                            <p className="RequestList__name">
+                              {request.author.pseudo || request.author}
+                            </p>
                             <button
+                              className="button--small"
                               onClick={(requestId, status, author) =>
                                 this.answerRequest(
                                   request._id,
@@ -124,6 +138,7 @@ class RequestsList extends Component {
                               Accepter
                             </button>
                             <button
+                              className="button--small"
                               onClick={(requestId, status, author) =>
                                 this.answerRequest(
                                   request._id,

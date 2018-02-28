@@ -1,0 +1,17 @@
+@import "variables.scss";
+
+.UsersList {
+  &__item {
+    width: 100%;
+    display: flex;
+    align-items: center;
+  }
+
+  &__name {
+    font-weight: 500;
+    color: #555;
+    margin: 0;
+    flex: 1;
+    margin-left: 12px;
+  }
+}

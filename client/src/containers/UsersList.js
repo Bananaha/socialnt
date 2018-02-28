@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import { get, post } from "../services/request.service";
+import { Link } from "react-router-dom";
 import "whatwg-fetch";
+import "../styles/UsersList.css";
 
 class UsersList extends Component {
   state = {
@@ -88,7 +90,10 @@ class UsersList extends Component {
 
   render() {
     return (
-      <div>
+      <div className="page-body">
+        <h3 className="page-title">
+          Résultat de votre recherche pour {this.props.match.params.query}
+        </h3>
         {this.state.loading
           ? ""
           : this.state.users.map((user, index) => {
@@ -98,7 +103,7 @@ class UsersList extends Component {
                 avatar = "default_avatar.png";
               }
               return (
-                <div key={user.pseudo}>
+                <div className="card UsersList__item" key={user.pseudo}>
                   <img
                     style={{
                       width: 50 + "px",
@@ -109,15 +114,16 @@ class UsersList extends Component {
                     src={"/images/" + avatar}
                     alt="avatar"
                   />
-                  <p>{user.pseudo}</p>
+                  <p className="UsersList__name">{user.pseudo}</p>
                   {user.isFriend ? (
-                    <a href={`/profil/${user._id}`}>Voir le profil</a>
+                    <Link to={`/profil/${user._id}`}>Voir le profil</Link>
                   ) : (
                     <div>
                       {user.isInvited ? (
                         <span>Invitation envoyée</span>
                       ) : (
                         <button
+                          className="button--small"
                           value={user._id}
                           onClick={this.sendFriendRequest}
                         >

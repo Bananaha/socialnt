@@ -1,18 +1,19 @@
 @import "variables.scss";
 
-.RequestList {
+.FriendList {
+  margin-top: 24px;
+  border-top: 2px dotted rgba(0, 0, 0, 0.2);
+  padding-top: 12px;
+
   &__item {
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
 
-  &__name {
+  a {
     flex: 1;
-    font-weight: 500;
-    color: #555;
-    font-size: 18px;
-    margin: 0;
+    font-size: 14px;
   }
 
   button {

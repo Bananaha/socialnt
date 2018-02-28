@@ -81,7 +81,10 @@ export class App extends Component {
           />
           <Redirect to="/login" />
         </Switch>
-        {this.state.user && <Chat user={this.state.user} />}
+        {this.state.user &&
+          this.state.user.profile !== "visitor" && (
+            <Chat user={this.state.user} />
+          )}
         <Footer />
       </div>
     );

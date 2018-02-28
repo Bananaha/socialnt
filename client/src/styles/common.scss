@@ -54,6 +54,10 @@ textarea {
   background: white;
   margin: 12px auto;
   padding: 15px;
+
+  + .card {
+    margin-top: 12px;
+  }
 }
 
 a {
@@ -85,4 +89,10 @@ a {
   width: 600px;
   margin: 0 auto;
   // background: white;
+}
+
+.page-title {
+  font-family: "Lobster";
+  font-size: 32px;
+  color: #555;
 }
