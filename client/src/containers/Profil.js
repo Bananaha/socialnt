@@ -3,6 +3,9 @@ import { get, post } from "../services/request.service";
 import { withRouter } from "react-router-dom";
 import "whatwg-fetch";
 
+import moment from "moment";
+import "moment/locale/fr";
+
 import DeleteButton from "../components/DeleteButton";
 import PostsList from "../components/PostsList";
 import FriendsList from "../components/FriendsList";
@@ -49,7 +52,7 @@ class Profil extends Component {
       .then(userInformations => {
         this.setState({
           sex: userInformations.sex,
-          birthDate: userInformations.birthDate,
+          birthDate: moment(userInformations.birthDate).format("DD/MM/YYYY"),
           city: userInformations.city,
           pseudo: userInformations.pseudo,
           firstName: userInformations.firstName,
@@ -104,7 +107,7 @@ class Profil extends Component {
             <div className="card Profil__header-card">
               <img
                 style={{ width: 200 + "px", height: "auto" }}
-                src={"/images/" + this.state.avatar}
+                src={"statics/images/" + this.state.avatar}
                 alt="avatar"
               />
               <div className="Profil__header">
