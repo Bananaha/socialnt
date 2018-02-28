@@ -140,8 +140,8 @@ class Profil extends Component {
                 )}
               </div>
             </div>
-            <FriendsList />
             <PostsList />
+            <FriendsList user={this.props.user} />
           </div>
         )}
         {this.state.alert}

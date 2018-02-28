@@ -4,6 +4,7 @@ import { get, post } from "../services/request.service";
 import "whatwg-fetch";
 
 import SearchBar from "../components/SearchBar";
+import "../styles/FriendList.css";
 
 class FriendsList extends Component {
   state = {
@@ -82,6 +83,7 @@ class FriendsList extends Component {
           "info",
           () => this.getFriends()
         );
+        window.location.reload();
       })
       .catch(error => {
         this.showInformation(
@@ -90,72 +92,98 @@ class FriendsList extends Component {
         );
       });
   };
+
   render() {
+    const sameUser =
+      this.props.user && this.props.match.params.id === this.props.user.id;
     return (
       <div>
-        {this.state.loading ? (
-          "Chargement..."
-        ) : (
-          <div>
-            {this.state.friends.map(friend => {
-              const href = `/profil/${friend._id}`;
-              return (
-                <div key={friend._id}>
-                  <a href={href}>{friend.pseudo}</a>
-                  {this.state.friends.length <= 1 ? (
-                    ""
-                  ) : (
-                    <div>
-                      {this.state.recommendationDest._id &&
-                      this.state.wantToRecommend._id === friend._id ? (
-                        <div>
-                          <span>
-                            Recommander {friend.pseudo} à{" "}
-                            {this.state.recommendationDest.pseudo} ?
-                          </span>
-                          <button onClick={this.sendRecommendation}>Ok</button>
-                          <button onClick={this.cancelRecommendation}>
-                            Annuler
-                          </button>
-                        </div>
-                      ) : (
-                        <button
-                          onClick={(friendId, friendPseudo) =>
-                            this.handleRecommendation(friend._id, friend.pseudo)
-                          }
-                        >
-                          Recommander {friend.pseudo} à un ami
-                        </button>
-                      )}
-                      {this.state.wantToRecommend &&
-                      this.state.wantToRecommend._id === friend._id &&
-                      !this.state.recommendationDest._id ? (
-                        <SearchBar
-                          onSubmit={this.chooseFriend}
-                          onSelect={this.chooseFriend}
-                          requestPath="/users/search/friends/"
-                          placeholder="Choisissez un ami"
-                          showButton="false"
-                        />
-                      ) : (
+        {this.state.loading ||
+        (this.state.friends && this.state.friends.length) ? (
+          <div className="FriendList">
+            <h3 className="page-title">
+              {sameUser ? "Mes amis" : "Ses amis"}{" "}
+            </h3>
+            {this.state.loading ? (
+              "Chargement..."
+            ) : (
+              <div>
+                {this.state.friends.map(friend => {
+                  const href = `/profil/${friend._id}`;
+                  return (
+                    <div key={friend._id} className="card FriendList__item">
+                      <a href={href}>{friend.pseudo}</a>
+                      {this.state.friends.length <= 1 ? (
                         ""
+                      ) : (
+                        <div>
+                          {this.state.recommendationDest._id &&
+                          this.state.wantToRecommend._id === friend._id ? (
+                            <div>
+                              <span>
+                                Recommander {friend.pseudo} à{" "}
+                                {this.state.recommendationDest.pseudo} ?
+                              </span>
+                              <button
+                                className="button--small"
+                                onClick={this.sendRecommendation}
+                              >
+                                Ok
+                              </button>
+                              <button
+                                className="button--small"
+                                onClick={this.cancelRecommendation}
+                              >
+                                Annuler
+                              </button>
+                            </div>
+                          ) : (
+                            <button
+                              className="button--small"
+                              onClick={(friendId, friendPseudo) =>
+                                this.handleRecommendation(
+                                  friend._id,
+                                  friend.pseudo
+                                )
+                              }
+                            >
+                              Recommander {friend.pseudo} à un ami
+                            </button>
+                          )}
+                          {this.state.wantToRecommend &&
+                          this.state.wantToRecommend._id === friend._id &&
+                          !this.state.recommendationDest._id ? (
+                            <SearchBar
+                              onSubmit={this.chooseFriend}
+                              onSelect={this.chooseFriend}
+                              requestPath="/users/search/friends/"
+                              placeholder="Choisissez un ami"
+                              showButton="false"
+                            />
+                          ) : (
+                            ""
+                          )}
+                        </div>
                       )}
-                    </div>
-                  )}
 
-                  <button
-                    onClick={(friendId, friendPseudo) =>
-                      this.removeFriends(friend._id, friend.pseudo)
-                    }
-                  >
-                    Supprimer
-                  </button>
-                </div>
-              );
-            })}
+                      <button
+                        className="button--small"
+                        onClick={(friendId, friendPseudo) =>
+                          this.removeFriends(friend._id, friend.pseudo)
+                        }
+                      >
+                        Supprimer
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+            {this.state.alert}
           </div>
+        ) : (
+          ""
         )}
-        {this.state.alert}
       </div>
     );
   }

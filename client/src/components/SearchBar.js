@@ -62,7 +62,12 @@ class SearchBar extends Component {
 
   render() {
     return (
-      <form className="SearchBar" onSubmit={this.onSubmit}>
+      <form
+        className={classnames("SearchBar", {
+          "SearchBar--border": this.props.hasBorder
+        })}
+        onSubmit={this.onSubmit}
+      >
         <input
           onInput={this.handleChange}
           type="text"
