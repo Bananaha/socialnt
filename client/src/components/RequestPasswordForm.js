@@ -67,7 +67,7 @@ class RequestPasswordForm extends Component {
                   className="form-control"
                 />
               </div>
-              <button type="submit" className="btn btn-danger btn-block">
+              <button type="submit" className="btn btn-primary btn-block">
                 Réinitialiser
               </button>
               <button

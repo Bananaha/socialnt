@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import RequestPasswordForm from "../components/RequestPasswordForm";
 import ChangePasswordForm from "../components/ChangePasswordForm";
+import "../styles/ResetPassword.css";
 
 class ResetPassword extends Component {
   state = {
@@ -18,7 +19,7 @@ class ResetPassword extends Component {
 
   render() {
     return (
-      <div>
+      <div className="ResetPassword">
         {this.state.showRequestPassword ? (
           <RequestPasswordForm />
         ) : (
