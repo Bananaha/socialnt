@@ -49,12 +49,12 @@ class FriendsList extends Component {
     });
   };
 
-  sendRecommendation = event => {
-    event.preventDefault();
+  sendRecommendation = friendId => {
+    console.log(friendId);
 
     post("/friendrequest/recommendation", {
       targetUser: this.state.recommendationDest._id,
-      requestRecipient: this.state.recommendationDest._id
+      requestRecipient: friendId
     })
       .then(() => {
         this.cancelRecommendation();
@@ -126,7 +126,9 @@ class FriendsList extends Component {
                               </span>
                               <button
                                 className="button--small"
-                                onClick={this.sendRecommendation}
+                                onClick={friendId =>
+                                  this.sendRecommendation(friend._id)
+                                }
                               >
                                 Ok
                               </button>
