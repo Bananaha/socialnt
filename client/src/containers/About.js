@@ -23,7 +23,7 @@ export default class About extends Component {
             de moi.
           </p>
           <div>
-            <h3 className="About__title">La stack du projet</h3>
+            <h4 className="About__title">La stack du projet</h4>
             <div className="About__stack-container">
               <div>React</div>
               <div>Express</div>
@@ -33,7 +33,7 @@ export default class About extends Component {
             </div>
           </div>
           <div>
-            <h2 className="About__title">And last but not least,</h2>
+            <h4 className="About__title">And last but not least,</h4>
             <p>
               Un grand merci à l'ensemble de l'équipe pédagogique de l'IFOCOP
               Parix XI, (you're Da Best !), à Quatre Epingles qui m'a fait
@@ -43,7 +43,7 @@ export default class About extends Component {
               de favoritisme), c'était chouette <del>(HouHouuuu!!)</del>{" "}
               pardon..
             </p>
-            <h3 className="About__title accent">A bientôt. Claire</h3>
+            <h4 className="About__title accent">A bientôt. Claire</h4>
           </div>
         </div>
       </div>
