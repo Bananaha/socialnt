@@ -1,11 +1,10 @@
 import React, { Component } from "react";
-import { del } from "../services/request.service";
-
+import "../styles/About.css";
 export default class About extends Component {
   render() {
     return (
-      <div>
-        <h2>Bonjour, je m'appelle Claire,</h2>
+      <div className="About">
+        <h2 className="About__title">Bonjour, je m'appelle Claire,</h2>
         <p>
           J'ai travaillé de nombreuses années dans les Ressources Humaines avant
           de trouver ma <del>voix</del> voie dans le Développement Web.
@@ -24,11 +23,11 @@ export default class About extends Component {
         </p>
         <div>
           <h3>La stack du projet</h3>
-          <div>Icone React</div>
-          <div>Icone Express</div>
-          <div>Icone Node</div>
-          <div>Icone Socket.io</div>
-          <div>Icone Mongo</div>
+          <div>React</div>
+          <div>Express</div>
+          <div>Node</div>
+          <div>Socket.io</div>
+          <div>Mongo</div>
         </div>
         <div>
           <h2>And last but not least,</h2>

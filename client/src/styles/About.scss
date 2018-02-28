@@ -1,0 +1,9 @@
+@import "variables.scss";
+
+.About {
+  display: flex;
+  align-items: center;
+  &__title {
+    color: #a749e5;
+  }
+}
