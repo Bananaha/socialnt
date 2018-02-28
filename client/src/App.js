@@ -1,7 +1,5 @@
 import React, { Component } from "react";
 import { Route, Switch, Redirect, withRouter } from "react-router-dom";
-import fontawesome from "@fortawesome/fontawesome";
-import FontAwesomeIcon from "@fortawesome/react-fontawesome";
 import { connect, subscribe } from "./sockets";
 import TYPES from "./sockets/types";
 
@@ -22,11 +20,8 @@ import moment from "moment";
 import "moment/locale/fr";
 import "typeface-lobster";
 import "typeface-roboto";
-import solid from "@fortawesome/fontawesome-free-solid";
 import "./index.css";
 import "./styles/common.css";
-
-fontawesome.library.add(solid);
 
 moment.locale("fr");
 
