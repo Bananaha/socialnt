@@ -5,13 +5,20 @@ const ObjectId = require("mongodb").ObjectID;
 const LINK = `${process.env.SERVER_URL}/`;
 
 const mailConfig = {
-  host: "smtp.ethereal.email",
-  port: 587,
-  auth: {
-    user: "z4wgthl5vniwji2x@ethereal.email",
-    pass: "Cp6U5RwJb9nrRSVm9v"
+  host: process.env.SMTP_HOST,
+  port: process.env.PORT,
+  tls: {
+    rejectUnauthorized: false
   }
 };
+
+const { SMTP_AUTH_PASS, SMTP_AUTH_USER } = process.env;
+if (SMTP_AUTH_PASS && SMTP_AUTH_USER) {
+  mailConfig.auth = {
+    user: SMTP_AUTH_USER,
+    pass: SMTP_AUTH_PASS
+  };
+}
 
 const gifDictionnaire = {
   welcome: "https://media.giphy.com/media/xUPGGDNsLvqsBOhuU0/giphy.gif",
