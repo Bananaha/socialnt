@@ -11,7 +11,6 @@ const isVisitorRoute = url => {
 const handleFetchResponse = async (response, url) => {
   if (response.status === 401) {
     if (!isVisitorRoute(response.url)) {
-      console.log("pas auth");
     }
   }
   try {
@@ -63,7 +62,7 @@ const appendFormData = (formData, data, name = "") => {
     formData.append(name, data);
   }
 };
-// TODO quand un fichier est join la requete plante. L'objet envoyé dans la requete update du profil est vide
+
 const toFormData = (data, files) => {
   const formData = new FormData();
   appendFormData(formData, data);

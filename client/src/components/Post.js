@@ -38,7 +38,6 @@ export default class Post extends Component {
       content,
       formattedDate
     } = this.props.post;
-    console.log(comments);
     return (
       <div className="card Post" key={_id}>
         <div className="Post__header">

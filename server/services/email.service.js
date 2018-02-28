@@ -20,58 +20,6 @@ const gifDictionnaire = {
 
 const transporter = nodemailer.createTransport(mailConfig);
 
-// send mail with defined transport object
-
-// const MAIL_TYPES = {
-//   resetPassword: "resetPassword",
-//   welcome: "welcome",
-//   friendRequest: "friendRequest",
-//   postNotification: "postNotification"
-// };
-
-// const getUserInfomations = id => {
-//   const userId = typeof id === "string" ? id : id.toString();
-//   return dbService
-//     .getOne("users", { _id: ObjectId(userId) })
-//     .then(user => user)
-//     .catch(error => `Error in getUserInfomation from emailService : ${error}`);
-// };
-// const getUsersInfomations = ids => {
-//   ids.map(id => id.toString())
-
-//   dbService
-//     .getOne("users", { _id: { $in: extractedUsers }})
-//     .then(users => users)
-//     .catch(error => `Error in getUserInfomation from emailService : ${error}`);
-// };
-
-// const emailDispatcher = (bulk, mailType, recipients) => {
-//   if (!bulk) {
-//     const userInformations = getUserInfomations(recipients)
-//     MAIL_TYPES.forEach(mailType => {
-//       if (MAIL_TYPES[mailType]) {
-//         mailType(userInformations)
-//       } else {
-//         return
-//       }
-
-//   } else {
-//     const usersInformations = getUsersInfomations(recipients)
-//     const mailPromises = []
-
-//     usersInformations.forEach(user => {
-//       const promise = new Promise((resolve, reject) => {
-//         MAIL_TYPES.forEach(mailType => {
-//           if (MAIL_TYPES[mailType]) {
-//             resolve(mailType(userInformations))
-//           } else {
-//             reject();
-//           }
-//         })
-//       })
-//     })
-//   }
-// }
 const resetPassword = user => {
   const mailOptions = {
     from: '"Claire" <claire.poyo@gmail.com>',
@@ -113,7 +61,6 @@ const resetPassword = user => {
 };
 
 const welcome = user => {
-  console.log("in welcomeMail");
   const mailOptions = {
     from: '"Claire" <claire.poyo@gmail.com>',
     to: user.email,
@@ -147,7 +94,6 @@ const welcome = user => {
 };
 
 const friendRequest = user => {
-  console.log("in friendRequest", user.email, user.pseudo);
   const mailOptions = {
     from: '"Claire" <claire.poyo@gmail.com>',
     to: user.email,

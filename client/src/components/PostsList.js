@@ -38,12 +38,10 @@ class PostsList extends Component {
 
   // request all posts where the author or recipient is the profile owner
   updatePosts = (page = 1) => {
-    console.log("update");
     const id = this.props.match.params.id;
     get(`/post/${id}/${page}`)
       .then(this.computeResult)
       .catch(error => {
-        console.error(error);
         this.setState({
           alert: error.alert
         });

@@ -31,24 +31,19 @@ class SearchBar extends Component {
     }
     clearTimeout(this.timeOut);
     this.timeOut = setTimeout(() => {
-      get(`${this.props.requestPath}${value}`)
-        .then(users => {
-          console.log(users);
-          if (users.length > 0) {
-            this.setState({
-              loader: false,
-              results: users
-            });
-          } else {
-            this.setState({
-              loader: true,
-              alert: "Pas de correspondance."
-            });
-          }
-        })
-        .catch(error => {
-          console.log("handleChange SearchBar", error);
-        });
+      get(`${this.props.requestPath}${value}`).then(users => {
+        if (users.length > 0) {
+          this.setState({
+            loader: false,
+            results: users
+          });
+        } else {
+          this.setState({
+            loader: true,
+            alert: "Pas de correspondance."
+          });
+        }
+      });
     }, 300);
   };
 

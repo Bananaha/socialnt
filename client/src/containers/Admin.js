@@ -14,7 +14,6 @@ class Admin extends Component {
   };
 
   renderUserToDelete = userToDelete => {
-    console.log(userToDelete);
     return (
       <span>
         {userToDelete.pseudo}
@@ -31,7 +30,6 @@ class Admin extends Component {
     });
   };
   selectUserToDelete = (id, pseudo) => {
-    console.log(id, pseudo);
     this.setState({
       userToDelete: { _id: id, pseudo: pseudo },
       disabled: true
@@ -59,7 +57,6 @@ class Admin extends Component {
       });
   };
   deleteOneMember = () => {
-    console.log(this.state.userToDelete);
     const userToDelete = this.state.userToDelete;
     post("/users/deleteOne", { _id: userToDelete._id })
       .then(() =>
@@ -79,8 +76,6 @@ class Admin extends Component {
     return;
   };
   showInformation = (text, type, action) => {
-    // TODO ==> use type argument for style settings
-    // info or warning
     this.setState({
       alert: text
     });

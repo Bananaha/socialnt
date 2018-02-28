@@ -42,7 +42,6 @@ const suppressAll = (req, res) => {
 };
 
 const find = (req, res) => {
-  console.log(req.params);
   postService
     .find(req.params.id, req.params.page)
     .then(result => {
@@ -70,7 +69,6 @@ const createComment = (req, res) => {
 
 const deleteComment = (req, res) => {};
 
-// TODO => manque des permissions
 router.route("/newPost").post(permission("canSendPost"), send);
 router.route("/deletePost").delete(suppressOne);
 router.route("/deleteAllPosts").delete(suppressAll);

@@ -8,7 +8,6 @@ class DeleteButton extends Component {
     item: null
   };
   requestConfirmation = event => {
-    console.log(event.target);
     this.setState({ showModal: true });
   };
 

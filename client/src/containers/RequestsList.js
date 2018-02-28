@@ -12,8 +12,6 @@ class RequestsList extends Component {
   };
   // Display notification to user
   showInformation = (text, type, action) => {
-    // TODO ==> use type argument for style settings
-    // info or warning
     this.setState({
       alert: text
     });
@@ -24,11 +22,9 @@ class RequestsList extends Component {
       }
     }, 5000);
   };
-  // TODO ==> gérer le probleme du reload de page
   getFriendRequests = () => {
     get("/friendRequest")
       .then(({ requests }) => {
-        console.log(requests);
         if (requests.length > 0) {
           this.setState({
             loading: false,
@@ -61,7 +57,6 @@ class RequestsList extends Component {
   }
 
   answerRequest = (requestId, status, autor) => {
-    console.log(requestId, status, autor);
     this.setState({
       loading: true
     });
@@ -75,7 +70,7 @@ class RequestsList extends Component {
           status === "accept"
             ? `Vous êtes maintenant ami avec ${autor}`
             : `Vous avez rejeté l'invitation de ${autor}`;
-        // TODO => je veux passer une fonction en argument pour qu'elle s'execute à la fin du timeout mais elle n'est pas reconnue comme fonction
+
         this.showInformation(confirmationMessage, "info", () =>
           this.getFriendRequests()
         );

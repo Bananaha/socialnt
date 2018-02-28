@@ -257,7 +257,6 @@ class Mail extends Component {
       return;
     }
     return conversation.messages.map(message => {
-      console.log("message", message);
       return (
         <div key={message._id}>
           <div>

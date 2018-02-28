@@ -13,7 +13,6 @@ const canFriendRequest = helper.isNotSameAndNotFriend;
 const canSearchFriends = () => true;
 const canSearch = () => true;
 const canFindUserProfil = () => true;
-// TODO ==> securiser la supression du profil
 const canDeleteProfil = () => true;
 const canFindFriendRequests = () => true;
 const canDeleteAllProfils = () => false;

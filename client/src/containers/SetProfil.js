@@ -31,22 +31,18 @@ class SetProfil extends Component {
   };
 
   componentDidMount() {
-    get("/users/" + this.props.match.params.id)
-      .then(userInformations => {
-        this.setState({
-          sex: userInformations.sex,
-          birthDate: userInformations.birthDate,
-          city: userInformations.city,
-          pseudo: userInformations.pseudo,
-          firstName: userInformations.firstName,
-          lastName: userInformations.lastName,
-          email: userInformations.email,
-          file: userInformations.file
-        });
-      })
-      .catch(error => {
-        console.log("handleFileChange setProfil", error);
+    get("/users/" + this.props.match.params.id).then(userInformations => {
+      this.setState({
+        sex: userInformations.sex,
+        birthDate: userInformations.birthDate,
+        city: userInformations.city,
+        pseudo: userInformations.pseudo,
+        firstName: userInformations.firstName,
+        lastName: userInformations.lastName,
+        email: userInformations.email,
+        file: userInformations.file
       });
+    });
   }
 
   skipEditingProfil = () => {
@@ -57,14 +53,10 @@ class SetProfil extends Component {
     event.preventDefault();
     const userValues = this.state;
     userValues.targetUser = this.props.match.params.id;
-    console.log(userValues);
-    post("/users/editProfil", userValues, userValues.file)
-      .then(() => {
-        this.props.history.push("/profil/" + this.props.match.params.id);
-      })
-      .catch(error => {
-        console.log("ERROR", error);
-      });
+
+    post("/users/editProfil", userValues, userValues.file).then(() => {
+      this.props.history.push("/profil/" + this.props.match.params.id);
+    });
   };
 
   render() {

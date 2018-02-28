@@ -47,7 +47,6 @@ const deleteOneConversation = (req, res) => {
 };
 
 const deleteOneMessage = (req, res) => {
-  console.log(req.body);
   mailService
     .deleteOneMessage(req.body.messageId, req.body.conversationId)
     .then(() => {

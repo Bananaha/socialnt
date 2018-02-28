@@ -26,7 +26,6 @@ class LogInForm extends Component {
         this.props.history.push("/profil/" + response.id);
       })
       .catch(error => {
-        console.log(error);
         this.setState({ alert: error.alert });
       });
   };

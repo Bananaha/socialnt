@@ -35,14 +35,11 @@ class UsersList extends Component {
             "Oh Oh! Houston nous avons un problème, votre requête n'a pu aboutir",
           loading: false
         });
-        console.log("getMtchingUsers UserList", error);
       });
   };
 
   // Display notification to user
   showInformation = (text, type, action) => {
-    // TODO ==> use type argument for style settings
-    // info or warning
     this.setState({
       alert: text
     });
@@ -77,13 +74,11 @@ class UsersList extends Component {
     event.preventDefault();
     post("/friendrequest", { targetUser: event.target.value })
       .then(result => {
-        // TODO => je veux passer une fonction en argument pour qu'elle s'execute à la fin du timeout mais elle n'est pas reconnue comme fonction
         this.showInformation(result.friends.alert, "info", () =>
           this.getMatchingUsers()
         );
       })
       .catch(error => {
-        console.log(error);
         this.showInformation(
           "Oh Oh! Houston nous avons un problème, votre requête n'a pu aboutir",
           "warning"
@@ -111,7 +106,7 @@ class UsersList extends Component {
                       borderRadius: 50 + "px",
                       border: 1 + "px"
                     }}
-                    src={process.env.REACT_APP_HOST + "/images/" + avatar}
+                    src={"/images/" + avatar}
                     alt="avatar"
                   />
                   <p>{user.pseudo}</p>

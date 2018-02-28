@@ -15,21 +15,15 @@ class FriendsList extends Component {
   };
 
   getFriends = () => {
-    get(`/users/friends/${this.props.match.params.id}`)
-      .then(result => {
-        console.log(result.friends);
-        return this.setState({ loading: false, friends: result.friends });
-      })
-      .catch(error => console.log(error));
+    get(`/users/friends/${this.props.match.params.id}`).then(result => {
+      return this.setState({ loading: false, friends: result.friends });
+    });
   };
 
   componentDidMount() {
     this.getFriends();
   }
-  // Display notification to user
   showInformation = (text, type, action) => {
-    // TODO ==> use type argument for style settings
-    // info or warning
     this.setState({
       alert: text
     });
@@ -69,7 +63,6 @@ class FriendsList extends Component {
         );
       })
       .catch(error => {
-        console.log(error);
         this.showInformation(
           `La recommandation de ${this.state.wantToRecommend.pseudo} à ${
             this.state.recommendationDest.pseudo

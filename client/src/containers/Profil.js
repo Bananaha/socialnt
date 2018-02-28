@@ -63,7 +63,6 @@ class Profil extends Component {
         this.setState({
           loading: false
         });
-        console.log("ERROR", error);
         this.props.history.push(`/profil/${this.props.match.params.id}`);
       });
   };
@@ -73,27 +72,23 @@ class Profil extends Component {
   };
 
   deleteProfil = () => {
-    post("/users/deleteOne", { _id: this.props.match.params.id })
-      .then(() => {
-        if (
-          this.props.user.profile === "admin" &&
-          this.props.match.params.id !== this.props.user.id
-        ) {
-          this.showInformation("L'utilisateur a été supprimé", "info", () => {
-            return this.props.history.push(`/profil/${this.props.user.id}`);
-          });
-        } else {
-          localStorage.removeItem("token");
-          this.showInformation(
-            "Votre profil a été supprimé. A bientôt",
-            "info",
-            () => this.props.history.push("/login")
-          );
-        }
-      })
-      .catch(error => {
-        console.log(error);
-      });
+    post("/users/deleteOne", { _id: this.props.match.params.id }).then(() => {
+      if (
+        this.props.user.profile === "admin" &&
+        this.props.match.params.id !== this.props.user.id
+      ) {
+        this.showInformation("L'utilisateur a été supprimé", "info", () => {
+          return this.props.history.push(`/profil/${this.props.user.id}`);
+        });
+      } else {
+        localStorage.removeItem("token");
+        this.showInformation(
+          "Votre profil a été supprimé. A bientôt",
+          "info",
+          () => this.props.history.push("/login")
+        );
+      }
+    });
   };
 
   render() {
@@ -109,9 +104,7 @@ class Profil extends Component {
             <div className="card Profil__header-card">
               <img
                 style={{ width: 200 + "px", height: "auto" }}
-                src={
-                  process.env.REACT_APP_HOST + "/images/" + this.state.avatar
-                }
+                src={"/images/" + this.state.avatar}
                 alt="avatar"
               />
               <div className="Profil__header">

@@ -23,20 +23,15 @@ class Chat extends Component {
       return;
     }
 
-    get(`/chat/${id}`)
-      .then(conversation => {
-        this.setState({
-          conversations: this.state.conversations.concat(conversation)
-        });
-      })
-      .catch(error => {
-        console.log("getConversation", error);
+    get(`/chat/${id}`).then(conversation => {
+      this.setState({
+        conversations: this.state.conversations.concat(conversation)
       });
+    });
   };
 
   componentDidMount() {
     subscribe(TYPES.ON_CHAT_MESSAGE, payload => {
-      console.log(payload);
       const message = payload.message;
       let conversations = this.state.conversations;
       if (conversations.length > 0) {

@@ -95,7 +95,6 @@ const request = (targetUser, currentUser, requestRecipient) => {
     })
     .catch(error => {
       console.log("request firendRequestService 2", error);
-      // res.status(500).json({ alert: "Votre requête n'a pu aboutir." });
     });
 };
 

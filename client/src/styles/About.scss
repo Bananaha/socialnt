@@ -1,9 +1,36 @@
 @import "variables.scss";
 
 .About {
-  display: flex;
-  align-items: center;
+  background: #fff;
+  flex: 1;
+
   &__title {
+    padding: 10px 20px;
+    text-align: center;
+  }
+  p {
+    text-align: justify;
+    padding: 5px 20px;
+    line-height: 20px;
+  }
+  body {
+    width: 100%;
+    margin: -20px 0 0;
+  }
+  a {
+    color: #a749e5;
+    text-decoration: none;
+  }
+
+  &__stack-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-around;
+    align-content: stretch;
+    padding: 0 20px;
+  }
+  .accent {
     color: #a749e5;
   }
 }

@@ -4,7 +4,6 @@ import "../styles/AlertModal.css";
 
 class AlertModal extends Component {
   getUserConfirmation = event => {
-    console.log(event.target.value);
     this.props.getUserConfirmation(event.target.value);
   };
 
