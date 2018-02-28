@@ -1,0 +1,66 @@
+@import "variables.scss";
+
+.SearchBar {
+  display: flex;
+  position: relative;
+
+  input {
+    font-size: 14px;
+    border: none;
+    height: 30px;
+    width: 200px;
+    padding-left: 10px;
+    padding-right: 10px;
+    box-sizing: border-box;
+  }
+
+  button {
+    font-size: 12px;
+    height: 30px;
+    line-height: 30px;
+    padding: 0 6px;
+    border: none;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    cursor: pointer;
+
+    &:hover,
+    &:focus {
+      background-color: $BUTTON_COLOR;
+      color: white;
+    }
+  }
+
+  &__results {
+    position: absolute;
+    background: white;
+    width: 200px;
+    margin: 0;
+    padding: 10px;
+    box-sizing: border-box;
+    top: 100%;
+
+    li {
+      list-style: none;
+      font-size: 13px;
+      cursor: pointer;
+
+      &:hover,
+      &:focus {
+        color: $COLOR_PINK;
+      }
+    }
+
+    &--empty {
+      padding: 0 !important;
+    }
+
+    &--alert {
+      font-size: 13px;
+      color: #ccc;
+      text-align: center;
+    }
+  }
+}

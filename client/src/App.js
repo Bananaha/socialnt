@@ -1,9 +1,12 @@
 import React, { Component } from "react";
 import { Route, Switch, Redirect, withRouter } from "react-router-dom";
+import fontawesome from "@fortawesome/fontawesome";
+import FontAwesomeIcon from "@fortawesome/react-fontawesome";
 import { connect, subscribe } from "./sockets";
 import TYPES from "./sockets/types";
 
 import Nav from "./components/Nav";
+import Footer from "./components/Footer";
 import Login from "./containers/Login";
 import Profil from "./containers/Profil";
 import SetProfil from "./containers/SetProfil";
@@ -15,21 +18,17 @@ import Chat from "./components/Chat";
 import Mail from "./containers/Mail";
 import About from "./containers/About";
 import "normalize.css";
-import "./index.css";
 import moment from "moment";
 import "moment/locale/fr";
-import styled from "styled-components";
 import "typeface-lobster";
 import "typeface-roboto";
+import solid from "@fortawesome/fontawesome-free-solid";
+import "./index.css";
+import "./styles/common.css";
+
+fontawesome.library.add(solid);
 
 moment.locale("fr");
-
-const AppContainer = styled.div`
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: ${props => (props.login ? "center" : "flex-start")};
-`;
 
 export class App extends Component {
   state = {
@@ -50,7 +49,7 @@ export class App extends Component {
   render() {
     const isLogin = this.props.location.pathname.indexOf("/login") === 0;
     return (
-      <AppContainer login={isLogin}>
+      <div login={isLogin} className="flex-extend">
         <Nav user={this.state.user} />
         <Switch>
           <Route exact path="/login" component={Login} />
@@ -61,7 +60,12 @@ export class App extends Component {
           />
           <Route exact path="/setProfil/:id" component={SetProfil} />
           <Route exact path="/resetPassword/" component={ResetPassword} />
-          <Route exact path="/resetPassword/:token" component={ResetPassword} />
+          <Route
+            exact
+            path="/resetPassword/:token"
+            component={ResetPassword}
+            className="wrapper"
+          />
           <Route exact path="/search/:query" component={UsersList} />
           <Route exact path="/admin" component={Admin} />
           <Route exact path="/about" component={About} />
@@ -77,9 +81,9 @@ export class App extends Component {
           />
           <Redirect to="/login" />
         </Switch>
-        {this.state.user && <Chat />}
-        ./
-      </AppContainer>
+        {this.state.user && <Chat user={this.state.user} />}
+        <Footer />
+      </div>
     );
   }
 }

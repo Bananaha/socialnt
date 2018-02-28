@@ -1,0 +1,64 @@
+@import "variables.scss";
+
+.Nav:not(.Nav--login) {
+  background: #fefefe;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  justify-content: space-between;
+  position: relative;
+}
+
+.Nav {
+  display: flex;
+  align-items: flex-end;
+  padding-left: 3px;
+  padding-right: 3px;
+
+  h1 {
+    margin: 0;
+    font-family: "Lobster";
+    color: $COLOR_PINK;
+    font-size: 30px;
+  }
+
+  &--login {
+    border-bottom: none;
+    text-align: center;
+    justify-content: center;
+    margin-top: 60px;
+
+    h1 {
+      color: white;
+      font-size: 44px;
+      text-shadow: 1px 1px 6px rgba(50, 50, 0, 0.4);
+      position: relative;
+      z-index: 1;
+    }
+  }
+
+  &__links {
+    display: flex;
+    border-left: 1px solid rgba(0, 0, 0, 0.15);
+    margin-left: 0;
+  }
+
+  &__link {
+    flex: 1;
+    text-align: center;
+    margin-left: 40px;
+    transition: 0.3s ease-out;
+    transition-property: border-color, background-color, color;
+    text-decoration: none;
+    color: $COLOR_GREY;
+    font-weight: 300;
+    font-size: 14px;
+    border-bottom: 2px solid transparent;
+    padding: 16px 0 4px;
+
+    &:hover,
+    &:focus {
+      border-bottom-color: rgba(0, 0, 0, 0.2);
+      background-color: rgba(255, 255, 255, 0.3);
+      color: $COLOR_PINK;
+    }
+  }
+}

@@ -3,48 +3,9 @@ import { get } from "../services/request.service";
 import { withRouter } from "react-router-dom";
 import { subscribe } from "../sockets/index";
 import TYPES from "../sockets/types";
-
 import ChatConversation from "../components/ChatConversation";
 import SearchBar from "../components/SearchBar";
-import styled from "styled-components";
-
-const ChatContainer = styled.div`
-  position: fixed;
-  bottom: 0;
-  right: 3px;
-  display: flex;
-
-  h2 {
-    font-family: "Lobster";
-    font-size: 20px;
-    align-items: flex-end;
-    margin: 0 12px 0 0;
-  }
-
-  ul {
-    top: auto;
-    bottom: 100%;
-  }
-
-  form > div {
-    bottom: 100%;
-    top: auto;
-  }
-`;
-
-const Friends = styled.ul`
-  /* position: absolute;
-  bottom: 100%;
-  background: white;
-  top: auto;
-  border: 1px solid red; */
-`;
-
-const ChatConversations = styled.div`
-  position: fixed;
-  bottom: 0;
-  left: 10px;
-`;
+import "../styles/Chat.css";
 
 class Chat extends Component {
   state = {
@@ -108,7 +69,7 @@ class Chat extends Component {
 
   render() {
     return (
-      <ChatContainer>
+      <div className="Chat">
         <h2>Chat:</h2>
         <SearchBar
           onSubmit={this.getConversation}
@@ -117,19 +78,20 @@ class Chat extends Component {
           placeholder="Chercher un ami"
         />
         {!this.state.loading && (
-          <Friends className="friends">
+          <ul className="friends">
             {this.state.friends.map(this.renderFriend)}
-          </Friends>
+          </ul>
         )}
-        <ChatConversations>
+        <div className="Chat__conversations">
           {this.state.conversations.map(conversation => (
             <ChatConversation
+              user={this.props.user}
               key={conversation._id}
               conversation={conversation}
             />
           ))}
-        </ChatConversations>
-      </ChatContainer>
+        </div>
+      </div>
     );
   }
 }

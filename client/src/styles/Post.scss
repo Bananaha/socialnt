@@ -1,0 +1,130 @@
+@import "variables.scss";
+
+.Post {
+  width: 100%;
+
+  &:last-child {
+    border-bottom: none;
+    padding-bottom: none;
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    margin-bottom: 12px;
+
+    &__user {
+      font-weight: 600;
+      color: #333;
+    }
+  }
+
+  &__date {
+    font-weight: 300;
+    font-size: 12px;
+    color: #888;
+  }
+
+  &__content {
+    position: relative;
+    padding: 10px;
+
+    &::before,
+    &::after {
+      font-family: "Times New Roman", Times, serif;
+      font-size: 40px;
+      color: rgba(0, 0, 0, 0.3);
+      position: absolute;
+      line-height: 0;
+    }
+
+    &::before {
+      content: "‘";
+      top: 10px;
+      left: -5px;
+    }
+
+    &::after {
+      content: "’";
+      bottom: 0;
+      right: 0;
+    }
+  }
+
+  &__form {
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    margin: 0 -15px -15px;
+    padding: 6px;
+    display: flex;
+
+    input {
+      margin: 0;
+    }
+
+    button.button--small {
+      height: 28px;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+      border-top-right-radius: 8px;
+      border-bottom-right-radius: 8px;
+      padding: 0 6px;
+      line-height: 28px;
+      font-size: 12px;
+    }
+  }
+
+  &__comments {
+    background: #f3f3f3;
+    font-size: 12px;
+    margin: 0 -15px;
+    padding: 20px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  &__showButton {
+    text-align: right;
+    margin: 0 -15px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+
+    button {
+      background: none;
+      color: $BUTTON_COLOR;
+
+      &:hover,
+      &:focus {
+        background: none;
+      }
+    }
+  }
+}
+
+.Comment {
+  background: #fff;
+  border-radius: 30px;
+  padding: 3px 20px;
+
+  + .Comment {
+    margin-top: 12px;
+  }
+
+  &__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__date {
+    color: #888;
+  }
+
+  &__user {
+    color: #555;
+    font-weight: 500;
+    margin-right: 12px;
+  }
+
+  &__text {
+  }
+}

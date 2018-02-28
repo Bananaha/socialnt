@@ -5,10 +5,12 @@ export default class Comment extends Component {
     const { _id, text, user, formattedDate } = this.props.comment;
 
     return (
-      <div>
-        <p>{formattedDate}</p>
-        <span>{user.pseudo}</span>
-        <p>{text}</p>
+      <div className="Comment">
+        <div className="Comment__head">
+          <div className="Comment__user">{user.pseudo}</div>
+          <div className="Comment__date">{formattedDate}</div>
+        </div>
+        <div className="Comment__text">{text}</div>
       </div>
     );
   }

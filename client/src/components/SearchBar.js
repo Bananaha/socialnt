@@ -2,75 +2,8 @@ import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import { get } from "../services/request.service";
 import "whatwg-fetch";
-import { Input, Button, Card } from "../styles/common";
-import styled from "styled-components";
-import { BUTTON_COLOR, COLOR_PINK } from "../styles/variables";
-
-const Form = styled.form`
-  display: flex;
-  position: relative;
-
-  input {
-    font-size: 14px;
-    border: none;
-    height: 30px;
-    width: 200px;
-    padding-left: 10px;
-    padding-right: 10px;
-    box-sizing: border-box;
-  }
-
-  button {
-    transition: 0.2s ease-out;
-    transition-property: background-color, color;
-    font-size: 14px;
-    height: 30px;
-    border: none;
-    background: none;
-    border-top-right-radius: 3px;
-    border-bottom-right-radius: 3px;
-    cursor: pointer;
-
-    &:hover,
-    &:focus {
-      background-color: ${BUTTON_COLOR};
-      color: white;
-    }
-  }
-`;
-
-const ResultsContainer = Card.withComponent("ul").extend`
-  position: absolute;
-  background: white;
-  width: 200px;
-  margin: 0;
-  padding: 10px;
-  box-sizing: border-box;
-  top: 100%;
-
-  ${props =>
-    props.empty &&
-    `
-    padding: 0;
-  `};
-
-  li {
-    list-style: none;
-    font-size: 13px;
-    cursor: pointer;
-    
-    &:hover,
-    &:focus {
-      color: ${COLOR_PINK};
-    }
-  }
-`;
-
-const Alert = ResultsContainer.withComponent("div").extend`
-  font-size: 13px;
-  color: #CCC;
-  text-align: center;
-`;
+import "../styles/SearchBar.css";
+import classnames from "classnames";
 
 class SearchBar extends Component {
   state = {
@@ -134,8 +67,8 @@ class SearchBar extends Component {
 
   render() {
     return (
-      <Form onSubmit={this.onSubmit}>
-        <Input
+      <form className="SearchBar" onSubmit={this.onSubmit}>
+        <input
           onInput={this.handleChange}
           type="text"
           value={this.state.searchQuery || ""}
@@ -147,8 +80,11 @@ class SearchBar extends Component {
         ) : (
           <button type="submit">Ok</button>
         )}
-        <ResultsContainer
-          empty={this.state.loader || this.state.results.length === 0}
+        <ul
+          className={classnames("card SearchBar__results", {
+            "SearchBar__results--empty":
+              this.state.loader || this.state.results.length === 0
+          })}
         >
           {this.state.loader
             ? ""
@@ -164,9 +100,13 @@ class SearchBar extends Component {
                   </li>
                 );
               })}
-        </ResultsContainer>
-        {this.state.alert && <Alert>{this.state.alert}</Alert>}
-      </Form>
+        </ul>
+        {this.state.alert && (
+          <div className="SearchBar__results SearchBar__results--alert">
+            {this.state.alert}
+          </div>
+        )}
+      </form>
     );
   }
 }

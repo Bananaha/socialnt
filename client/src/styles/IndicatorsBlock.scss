@@ -1,0 +1,46 @@
+@import "variables.scss";
+
+.IndicatorsBlock {
+  display: flex;
+  align-items: center;
+  width: 380px;
+  max-width: 100%;
+  position: relative;
+  z-index: 1;
+
+  > div {
+    display: flex;
+    flex: 1;
+    /* justify-content: center; */
+    align-items: center;
+    margin-top: 12px;
+    /* text-align: left; */
+
+    &:first-child {
+      justify-content: flex-end;
+      border-right: 1px solid rgba(255, 255, 255, 0.1);
+      padding-right: 22px;
+    }
+
+    &:last-child {
+      padding-left: 22px;
+      padding-right: 0;
+    }
+  }
+
+  b {
+    font-family: "lobster";
+    font-size: 36px;
+    margin-right: 12px;
+    color: #fff;
+    opacity: 0.8;
+  }
+
+  span {
+    font-weight: 400;
+    font-size: 14px;
+    width: 30px;
+    color: #fff;
+    opacity: 0.8;
+  }
+}

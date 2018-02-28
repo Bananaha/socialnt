@@ -1,13 +1,11 @@
-import styled from "styled-components";
-import { BUTTON_COLOR, LINK_COLOR, BORDER_COLOR } from "./variables";
-import { lighten } from "polished";
+@import "variables.scss";
 
-export const Button = styled.button`
+button {
   cursor: pointer;
   transition: background-color 0.2s ease-out;
   background: none;
   border: none;
-  background: ${BUTTON_COLOR};
+  background: $BUTTON_COLOR;
   color: white;
   border-radius: 3px;
   font-weight: 100;
@@ -19,19 +17,20 @@ export const Button = styled.button`
   letter-spacing: 0.07em;
 
   &:hover {
-    background-color: ${lighten(0.1, BUTTON_COLOR)};
+    background-color: lighten($BUTTON_COLOR, 0.1);
   }
-`;
 
-export const SmallButton = Button.extend`
-  padding: 6px 8px;
-  font-size: 12px;
-  font-weight: 400;
-  text-transform: none;
-`;
+  &.button--small {
+    padding: 6px 8px;
+    font-size: 12px;
+    font-weight: 400;
+    text-transform: none;
+  }
+}
 
-export const Input = styled.input`
-  border: 1px solid ${BORDER_COLOR};
+input,
+textarea {
+  border: 1px solid $BORDER_COLOR;
   padding: 3px;
   background: white;
   display: block;
@@ -39,29 +38,28 @@ export const Input = styled.input`
   box-sizing: border-box;
   margin-bottom: 6px;
   font-family: "Roboto";
-`;
+}
 
-export const Textarea = Input.withComponent("textarea").extend`
+textarea {
   height: 70px;
   resize: none;
   font-size: 13px;
   padding: 12px;
-  font-family: "Roboto";
   font-weight: 300;
-`;
+}
 
-export const Card = styled.div`
+.card {
   box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
   border-radius: 3px;
   background: white;
   margin: 12px auto;
   padding: 15px;
-`;
+}
 
-export const A = styled.a`
+a {
   cursor: pointer;
   text-decoration: underline;
-  color: ${LINK_COLOR};
+  color: $LINK_COLOR;
   font-weight: 100;
   background: none;
   padding: 0;
@@ -70,19 +68,21 @@ export const A = styled.a`
   &:hover {
     text-decoration: none;
   }
-`;
+}
 
-export const FlexExtend = styled.div`
+.flex-extend {
   flex: 1;
   display: flex;
   flex-direction: column;
-`;
+}
 
-export const PageBody = FlexExtend.extend`
-  padding: 20px;
+.page-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 0;
   max-width: 100%;
   width: 600px;
   margin: 0 auto;
-  background: white;
-  flex: 1;
-`;
+  // background: white;
+}

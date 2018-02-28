@@ -1,51 +1,29 @@
 import React, { Component } from "react";
-import styled from "styled-components";
 import Comment from "./Comment";
 import PostCommentForm from "./PostCommentForm";
-
-const PostContainer = styled.div`
-  border-bottom: 1px solid #ccc;
-  padding-bottom: 12px;
-  margin-bottom: 12px;
-
-  &:last-child {
-    border-bottom: none;
-    padding-bottom: none;
-  }
-`;
-
-const PostHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const PostDate = styled.div`
-  font-weight: 100;
-  font-size: 12px;
-`;
+import "../styles/Post.css";
 
 export default class Post extends Component {
   state = {
     showComments: false,
-    toogleButtonText: "Voir plus"
+    toogleButtonText: "Voir les commentaires"
   };
 
   handleCommentSubmit = () => {
     this.props.handleCommentSubmit();
-    console.log("submit");
   };
+
   toogleCommentsVisibility = () => {
     this.setState({
       showComments: !this.state.showComments
     });
     if (this.state.showComments) {
       this.setState({
-        toogleButtonText: "Voir plus"
+        toogleButtonText: "Voir les commentaires"
       });
     } else {
       this.setState({
-        toogleButtonText: "Masquer"
+        toogleButtonText: "Masquer les commentaires"
       });
     }
   };
@@ -62,9 +40,9 @@ export default class Post extends Component {
     } = this.props.post;
     console.log(comments);
     return (
-      <PostContainer key={_id}>
-        <PostHeader>
-          <div>
+      <div className="card Post" key={_id}>
+        <div className="Post__header">
+          <div className="Post__header__user">
             <span>{author && author.pseudo}</span>
             {dest &&
               dest._id !== author._id && (
@@ -75,17 +53,27 @@ export default class Post extends Component {
               )}
           </div>
 
-          <PostDate>{formattedDate}</PostDate>
-        </PostHeader>
+          <div className="Post__date">{formattedDate}</div>
+        </div>
 
-        <p>{content}</p>
-        <div>
-          {this.state.showComments ? (
-            <div>
-              {comments.map(comment => (
-                <Comment key={comment.id} comment={comment} />
-              ))}
-            </div>
+        <p className="Post__content">{content}</p>
+        {this.state.showComments ? (
+          <div className="Post__comments">
+            {comments.map(comment => (
+              <Comment key={comment.id} comment={comment} />
+            ))}
+          </div>
+        ) : (
+          ""
+        )}
+        <div className="Post__showButton">
+          {comments.length > 0 ? (
+            <button
+              className="button--small"
+              onClick={this.toogleCommentsVisibility}
+            >
+              {this.state.toogleButtonText}
+            </button>
           ) : (
             ""
           )}
@@ -94,16 +82,7 @@ export default class Post extends Component {
           postId={_id}
           handleCommentSubmit={this.handleCommentSubmit}
         />
-        <div>
-          {comments.length > 0 ? (
-            <button onClick={this.toogleCommentsVisibility}>
-              {this.state.toogleButtonText}
-            </button>
-          ) : (
-            ""
-          )}
-        </div>
-      </PostContainer>
+      </div>
     );
   }
 }

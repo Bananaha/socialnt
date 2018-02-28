@@ -36,14 +36,18 @@ export default class PostCommentForm extends Component {
 
   render() {
     return (
-      <form onSubmit={this.onSubmit}>
+      <form className="Post__form" onSubmit={this.onSubmit}>
         <input
           placeholder="Commenter ce post"
           type="text"
           value={this.state.text}
           onChange={this.onChange}
         />
-        <button type="submit" disabled={!this.state.text}>
+        <button
+          className="button--small"
+          type="submit"
+          disabled={!this.state.text}
+        >
           Envoyer
         </button>
       </form>

@@ -77,26 +77,53 @@ class ChangePasswordForm extends Component {
 
   render() {
     return (
-      <div>
-        <form onSubmit={this.submitForm}>
-          <input
-            name="password"
-            onChange={this.handleChange("password")}
-            type="password"
-            placeholder="Nouveau mot de passe"
-            required
-          />
-          <input
-            name="confirmedPassword"
-            onChange={this.handleChange("confirmedPassword")}
-            type="password"
-            placeholder="Confirmer votre nouveau mot de passe"
-            required
-          />
-          <button type="submit">Modifier mon mot de passe</button>
-          <button>Annuler</button>
-        </form>
-        <p>{this.state.alert}</p>
+      <div className="block-center mt-xl wd-xl">
+        <div className="panel panel-dark panel-flat">
+          <div className="panel-heading text-center">
+            <p className="text-center pv">Changer votre mot de passe</p>
+          </div>
+          <div className="panel-body">
+            <form onSubmit={this.submitForm}>
+              <p className="text-center">
+                Renseigner votre adresse mail pour recevoir un lien de
+                réinitialisation.
+              </p>
+              <div className="form-group has-feedback">
+                <label htmlFor="resetInputEmail1" className="text-muted">
+                  Mot de passe
+                </label>
+                <input
+                  name="password"
+                  onChange={this.handleChange("password")}
+                  type="password"
+                  placeholder="Nouveau mot de passe"
+                  required
+                  autoComplete="off"
+                  className="form-control"
+                />
+              </div>
+              <div className="form-group has-feedback">
+                <label htmlFor="resetInputEmail1" className="text-muted">
+                  Confirmer votre nouveau mot de passe
+                </label>
+
+                <input
+                  autoComplete="off"
+                  className="form-control"
+                  name="confirmedPassword"
+                  onChange={this.handleChange("confirmedPassword")}
+                  type="password"
+                  placeholder="Confirmer votre nouveau mot de passe"
+                  required
+                />
+              </div>
+              <button type="submit" className="btn btn-danger btn-block">
+                Modifier mon mot de passe
+              </button>
+            </form>
+            <p>{this.state.alert}</p>
+          </div>
+        </div>
       </div>
     );
   }

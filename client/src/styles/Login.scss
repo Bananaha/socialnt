@@ -1,0 +1,80 @@
+@import "variables.scss";
+
+.Login {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  &::before {
+    content: "";
+    background: linear-gradient(135deg, red, blue);
+    position: fixed;
+    top: -20px;
+    right: -20px;
+    left: -20px;
+    bottom: -20px;
+  }
+
+  &__title {
+    font-size: 16px;
+    text-align: center;
+    font-weight: 500;
+    color: #9d126b;
+  }
+
+  &__alert {
+    font-size: 12px;
+    margin: 0 12px 6px;
+    text-align: center;
+    color: #9d126b;
+  }
+
+  &__inner {
+    &--big {
+      width: 300px;
+    }
+  }
+
+  input {
+    border: 1px solid #e3e3e3;
+    font-family: "Roboto";
+    padding: 8px;
+    font-weight: 300;
+  }
+
+  &__box {
+    margin: 100px 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  &__button-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+
+  &__bottom-links {
+    padding: 0;
+    background: none;
+    font-weight: 100;
+    text-transform: none;
+    transition: opacity 0.2s ease-out;
+    font-size: 13px;
+    color: #fff;
+    opacity: 0.8;
+    text-decoration: none;
+
+    &:not(:first-child) {
+      margin-left: 14px;
+    }
+
+    &:hover,
+    &:focus {
+      opacity: 1;
+      background: none;
+      color: #fff;
+    }
+  }
+}

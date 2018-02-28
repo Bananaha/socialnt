@@ -5,18 +5,7 @@ import moment from "moment";
 import SearchBar from "../components/SearchBar";
 import DeleteButton from "../components/DeleteButton";
 import "whatwg-fetch";
-import styled from "styled-components";
-
-const ConversationList = styled.div`
-  border-bottom: 1px solid #ccc;
-  font-size: 12px;
-`;
-
-const ConversationListContainer = styled.div`
-  border: 1px solid black;
-  height: 100%;
-  width: 30%;
-`;
+import "../styles/Mail.css";
 
 class Mail extends Component {
   state = {
@@ -225,7 +214,7 @@ class Mail extends Component {
       return;
     }
     return (
-      <ConversationList key={conversation._id}>
+      <div className="Mails__list" key={conversation._id}>
         <div key={conversation.messages[0]._id}>
           <span>
             {conversation.recipients.map(recipient => (
@@ -254,7 +243,7 @@ class Mail extends Component {
             Voir
           </button>
         </div>
-      </ConversationList>
+      </div>
     );
   };
   // show the conversation choose by the user
@@ -382,7 +371,7 @@ class Mail extends Component {
             ""
           )}
         </div>
-        <ConversationListContainer>
+        <div className="Mails__container">
           <h3>Messages reçus</h3>
           {this.state.loading ? (
             <p>Chargement</p>
@@ -400,7 +389,7 @@ class Mail extends Component {
               </div>
             </div>
           )}
-        </ConversationListContainer>
+        </div>
         <div>
           {this.state.displayedConversation ? (
             <div>

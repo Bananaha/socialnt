@@ -1,0 +1,56 @@
+@import "variables.scss";
+
+.Profil {
+  &__pseudo {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+
+    b {
+      font-weight: 600;
+      font-size: 24px;
+    }
+
+    span {
+      font-weight: 300;
+      margin-left: 12px;
+    }
+  }
+
+  &__user-details {
+    display: flex;
+    align-items: center;
+    margin-top: 12px;
+    font-size: 13px;
+    > span {
+      display: inline-block;
+    }
+    > span + span {
+      border-left: 1px solid #ccc;
+      margin-left: 6px;
+      padding-left: 6px;
+    }
+  }
+
+  body &__header-card {
+    width: 100%;
+    margin: -20px 0 0;
+  }
+
+  &__header {
+    display: flex;
+    flex: 0;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  &__actions {
+    display: flex;
+    align-items: flex-start;
+
+    button {
+      margin-left: 12px;
+    }
+  }
+}

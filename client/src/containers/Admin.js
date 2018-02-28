@@ -6,7 +6,6 @@ import SearchBar from "../components/SearchBar";
 import DeleteButton from "../components/DeleteButton";
 
 import "whatwg-fetch";
-import styled from "styled-components";
 
 class Admin extends Component {
   state = {

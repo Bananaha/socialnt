@@ -6,56 +6,7 @@ import "whatwg-fetch";
 import DeleteButton from "../components/DeleteButton";
 import PostsList from "../components/PostsList";
 import FriendsList from "../components/FriendsList";
-import { SmallButton, PageBody, FlexExtend } from "../styles/common";
-import styled from "styled-components";
-
-const Pseudo = styled.div`
-  display: flex;
-  align-items: center;
-  margin-top: 20px;
-
-  b {
-    font-weight: 600;
-    font-size: 24px;
-  }
-
-  span {
-    font-weight: 300;
-    margin-left: 12px;
-  }
-`;
-
-const DetailsUser = styled.div`
-  display: flex;
-  align-items: center;
-  margin-top: 12px;
-  font-size: 13px;
-  > span {
-    display: inline-block;
-  }
-  > span + span {
-    border-left: 1px solid #ccc;
-    margin-left: 6px;
-    padding-left: 6px;
-  }
-`;
-
-const Header = FlexExtend.extend`
-  display: flex;
-  flex: 0;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: flex-start;
-`;
-
-const Actions = styled.div`
-  display: flex;
-  align-items: flex-start;
-
-  button {
-    margin-left: 12px;
-  }
-`;
+import "../styles/Profil.css";
 
 class Profil extends Component {
   state = {
@@ -80,10 +31,7 @@ class Profil extends Component {
     this.fetchProfil(this.props.match.params.id);
   }
 
-  // Display notification to user
   showInformation = (text, type, action) => {
-    // TODO ==> use type argument for style settings
-    // info or warning
     this.setState({
       alert: text
     });
@@ -125,7 +73,6 @@ class Profil extends Component {
   };
 
   deleteProfil = () => {
-    // TODO rajouter l'id pour checker un db si user identique et pour les actions admin
     post("/users/deleteOne", { _id: this.props.match.params.id })
       .then(() => {
         if (
@@ -136,7 +83,6 @@ class Profil extends Component {
             return this.props.history.push(`/profil/${this.props.user.id}`);
           });
         } else {
-          console.log("deleteProfil");
           localStorage.removeItem("token");
           this.showInformation(
             "Votre profil a été supprimé. A bientôt",
@@ -154,51 +100,56 @@ class Profil extends Component {
     const isCurrentUserOrAdmin =
       (this.props.user && this.props.match.params.id === this.props.user.id) ||
       (this.props.user && this.props.user.profile === "admin");
-    console.log(this.props);
     return (
-      <PageBody className="Home">
+      <div className="Home page-body">
         {this.state.loading ? (
           <p>Loading...</p>
         ) : (
-          <FlexExtend>
-            <img
-              style={{ width: 200 + "px", height: "auto" }}
-              src={process.env.REACT_APP_HOST + "/images/" + this.state.avatar}
-              alt="avatar"
-            />
-            <Header>
-              <div>
-                <Pseudo>
-                  <b>{this.state.pseudo}</b>
-                  <span>
-                    ({this.state.firstName} {this.state.lastName})
-                  </span>
-                </Pseudo>
-                <DetailsUser>
-                  {this.state.birthDate && <span>{this.state.birthDate}</span>}
-                  {this.state.sex && <span>{this.state.sex}</span>}
-                  {this.state.city && <span>{this.state.city}</span>}
-                </DetailsUser>
+          <div className="flex-extend">
+            <div className="card Profil__header-card">
+              <img
+                style={{ width: 200 + "px", height: "auto" }}
+                src={
+                  process.env.REACT_APP_HOST + "/images/" + this.state.avatar
+                }
+                alt="avatar"
+              />
+              <div className="Profil__header">
+                <div>
+                  <div className="Profil__pseudo">
+                    <b>{this.state.pseudo}</b>
+                    <span>
+                      ({this.state.firstName} {this.state.lastName})
+                    </span>
+                  </div>
+                  <div className="Profil__user-details">
+                    {this.state.birthDate && (
+                      <span>{this.state.birthDate}</span>
+                    )}
+                    {this.state.sex && <span>{this.state.sex}</span>}
+                    {this.state.city && <span>{this.state.city}</span>}
+                  </div>
+                </div>
+                {isCurrentUserOrAdmin && (
+                  <div className="Profil__actions">
+                    <DeleteButton
+                      delete={this.deleteProfil}
+                      buttonText="Supprimer le profil"
+                      alertText="Etes vous de vouloir supprimer votre profil ?"
+                    />
+                    <button className="button--small" onClick={this.editProfil}>
+                      Editer mon profil
+                    </button>
+                  </div>
+                )}
               </div>
-              {isCurrentUserOrAdmin && (
-                <Actions>
-                  <DeleteButton
-                    delete={this.deleteProfil}
-                    buttonText="Supprimer le profil"
-                    alertText="Etes vous de vouloir supprimer votre profil ?"
-                  />
-                  <SmallButton onClick={this.editProfil}>
-                    Editer mon profil
-                  </SmallButton>
-                </Actions>
-              )}
-            </Header>
+            </div>
             <FriendsList />
             <PostsList />
-          </FlexExtend>
+          </div>
         )}
         {this.state.alert}
-      </PageBody>
+      </div>
     );
   }
 }

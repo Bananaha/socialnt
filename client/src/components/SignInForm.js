@@ -1,26 +1,11 @@
 import React, { Component } from "react";
+import FontAwesomeIcon from "@fortawesome/react-fontawesome";
 import { post } from "../services/request.service";
-import { withRouter } from "react-router-dom";
 import { signing } from "../services/user.service";
 import "whatwg-fetch";
-import { Input, Button, Card } from "../styles/common";
-import styled from "styled-components";
 
-const Form = Card.withComponent("form").extend`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 300px;
-
-  input {
-    text-align: center;
-    
-  }
-  
-  button {
-    align-self: flex-end;
-  }
-`;
+import { Grid, Row, Col, Panel, Button } from "react-bootstrap";
+import { Router, Route, Link, History, withRouter } from "react-router-dom";
 
 class SignInForm extends Component {
   state = {
@@ -66,53 +51,99 @@ class SignInForm extends Component {
 
   render() {
     return (
-      <div>
-        <Form onSubmit={this.submitForm}>
-          <Input
-            name="firstName"
-            onChange={this.handleChange("firstName")}
-            type="text"
-            placeholder="Prénom"
-            required
-          />
-          <Input
-            name="lastName"
-            onChange={this.handleChange("lastName")}
-            type="text"
-            placeholder="Nom"
-            required
-          />
-          <Input
-            name="pseudo"
-            onChange={this.handleChange("pseudo")}
-            type="text"
-            placeholder="Pseudonyme"
-            required
-          />
-          <Input
-            name="email"
-            onChange={this.handleChange("email")}
-            type="email"
-            placeholder="Adresse mail"
-            required
-          />
-          <Input
-            name="emailConfirmation"
-            onChange={this.handleChange("emailConfirmation")}
-            type="text"
-            placeholder="Confirmer l'adresse mail'"
-            required
-          />
-          <Input
-            name="password"
-            onChange={this.handleChange("password")}
-            type="password"
-            placeholder="Mot de Passe"
-            required
-          />
-          <Button type="submit">Valider</Button>
-        </Form>
-        <p>{this.state.alert}</p>
+      <div className="Login__inner--big">
+        <div className="block-center mt-xl wd-xl">
+          <div className="panel panel-dark panel-flat">
+            <div className="panel-heading text-center">
+              <p className="text-center pv Login__title">Inscription</p>
+            </div>
+            <div className="panel-body">
+              <form onSubmit={this.submitForm}>
+                <div className="form-group has-feedback">
+                  <label className="text-muted">Prénom</label>
+                  <input
+                    name="firstName"
+                    onChange={this.handleChange("firstName")}
+                    type="text"
+                    placeholder="Prénom"
+                    autoComplete="off"
+                    required="required"
+                    className="form-control"
+                  />
+                </div>
+                <div className="form-group has-feedback">
+                  <label className="text-muted">Nom</label>
+                  <input
+                    name="lastName"
+                    onChange={this.handleChange("lastName")}
+                    type="text"
+                    placeholder="Nom"
+                    autoComplete="off"
+                    required="required"
+                    className="form-control"
+                  />
+                </div>
+                <div className="form-group has-feedback">
+                  <label className="text-muted">Pseudo</label>
+                  <input
+                    name="pseudo"
+                    onChange={this.handleChange("pseudo")}
+                    type="text"
+                    placeholder="Pseudonyme"
+                    autoComplete="off"
+                    required="required"
+                    className="form-control"
+                  />
+                </div>
+                <div className="form-group has-feedback">
+                  <label className="text-muted">Adresse mail</label>
+                  <input
+                    name="email"
+                    onChange={this.handleChange("email")}
+                    type="email"
+                    placeholder="Adresse mail"
+                    autoComplete="off"
+                    required="required"
+                    className="form-control"
+                  />
+                </div>
+                <div className="form-group has-feedback">
+                  <label className="text-muted">Confirmer l'adresse mail</label>
+                  <input
+                    name="emailConfirmation"
+                    onChange={this.handleChange("emailConfirmation")}
+                    type="text"
+                    placeholder="Confirmer l'adresse mail"
+                    autoComplete="off"
+                    required="required"
+                    className="form-control"
+                  />
+                </div>
+                <div className="form-group has-feedback">
+                  <label className="text-muted">Mot de passe</label>
+                  <input
+                    name="password"
+                    onChange={this.handleChange("password")}
+                    type="password"
+                    placeholder="Mot de Passe"
+                    autoComplete="off"
+                    required="required"
+                    className="form-control"
+                  />
+                </div>
+                <Button
+                  type="submit"
+                  className="btn btn-block btn-primary mt-lg"
+                >
+                  Créer un compte
+                </Button>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div>
+          <p className="Login__alert text-center pv">{this.state.alert}</p>
+        </div>
       </div>
     );
   }

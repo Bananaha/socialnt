@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import AlertModal from "./AlertModal";
-import { SmallButton } from "../styles/common";
 
 class DeleteButton extends Component {
   state = {
@@ -32,9 +31,12 @@ class DeleteButton extends Component {
             getUserConfirmation={this.getConfirmation}
           />
         )}
-        <SmallButton onClick={this.requestConfirmation}>
+        <button
+          className="button button--small"
+          onClick={this.requestConfirmation}
+        >
           {this.props.buttonText}
-        </SmallButton>
+        </button>
       </div>
     );
   }

@@ -1,0 +1,14 @@
+@import "variables.scss";
+
+.Mails {
+  &__list {
+    border-bottom: 1px solid #ccc;
+    font-size: 12px;
+  }
+
+  &__container {
+    border: 1px solid black;
+    height: 100%;
+    width: 30%;
+  }
+}
