@@ -68,3 +68,65 @@
     }
   }
 }
+
+@media screen and (max-width: 1000px) {
+  .Nav {
+    h1 {
+      font-size: 20px;
+      line-height: 42px;
+    }
+
+    &__link {
+      font-size: 12px;
+      margin-left: 20px;
+    }
+
+    .SearchBar input {
+      width: 150px;
+      font-size: 12px;
+    }
+  }
+}
+
+@media screen and (max-width: 680px) {
+  .Nav {
+    h1 {
+      display: none;
+    }
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .Nav {
+    display: block;
+
+    &__links {
+      margin: 0 12px;
+      border: none;
+      justify-content: space-between;
+    }
+
+    &__link {
+      display: inline-block;
+      flex: 0;
+
+      &:first-child {
+        margin-left: 0;
+      }
+    }
+
+    .SearchBar {
+      display: none;
+    }
+  }
+}
+
+@media screen and (max-width: 680px) {
+  .Nav--about {
+    margin-top: 0;
+
+    h1 {
+      display: block;
+    }
+  }
+}
