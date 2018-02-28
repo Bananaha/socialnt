@@ -50,8 +50,6 @@ class FriendsList extends Component {
   };
 
   sendRecommendation = friendId => {
-    console.log(friendId);
-
     post("/friendrequest/recommendation", {
       targetUser: this.state.recommendationDest._id,
       requestRecipient: friendId
