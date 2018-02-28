@@ -264,18 +264,6 @@ class Mail extends Component {
     if (!conversation) {
       return;
     }
-<<<<<<< HEAD
-    return conversation.messages.map(message => {
-      return (
-        <div key={message._id}>
-          <div>
-            <p>from: {message.author.pseudo}</p>
-            <div>
-              to:{" "}
-              {conversation.recipients.map((recipient, index) => {
-                if (recipient._id !== message.author._id) {
-                  const key = `${recipient._id}_${index}`;
-=======
     return (
       <div className="Mails__thread">
         <h3 className="page-title">Fil de conversation</h3>
@@ -290,7 +278,6 @@ class Mail extends Component {
                     {conversation.recipients.map((recipient, index) => {
                       if (recipient._id !== message.author._id) {
                         const key = `${recipient._id}_${index}`;
->>>>>>> style
 
                         return <span key={key}>{recipient.pseudo}</span>;
                       }
