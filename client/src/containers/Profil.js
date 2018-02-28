@@ -40,7 +40,9 @@ class Profil extends Component {
     });
     setTimeout(() => {
       this.setState({ alert: "" });
-      action();
+      if (action) {
+        action();
+      }
     }, 5000);
   };
 
@@ -80,9 +82,9 @@ class Profil extends Component {
         this.props.user.profile === "admin" &&
         this.props.match.params.id !== this.props.user.id
       ) {
-        this.showInformation("L'utilisateur a été supprimé", "info", () => {
-          return this.props.history.push(`/profil/${this.props.user.id}`);
-        });
+        this.showInformation("L'utilisateur a été supprimé", "info", () =>
+          this.props.history.push(`/profil/${this.props.user.id}`)
+        );
       } else {
         localStorage.removeItem("token");
         this.showInformation(

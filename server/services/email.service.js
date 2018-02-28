@@ -27,17 +27,17 @@ const resetPassword = user => {
     subject: "Reinitialisation de votre mot de passe",
     text: `Pas de soucis, ça nous arrive d'oublier aussi. Bonjour ${
       user.pseudo
-    } ,Vous avez récemment demandé de réinitialiser le mot de passe du compte Cumulus de : ${
+    } ,Vous avez récemment demandé de réinitialiser le mot de passe du compte Unicorn's Corner de : ${
       user.email
     }
       Pour mettre à jour votre mot de passe, cliquez sur le bouton ci-dessous. ${
         user.link
-      } Modifier votre mot de passe A plus tard. :) Cumulus`,
-    html: `<div>
-      <div>
+      } Modifier votre mot de passe A plus tard. :) Unicorn's Corner`,
+    html: `<div style="margin: 20px; padding: 20px; font-size:16px;">
+    <div style="background-color: #6900CD; color: white;padding: 20px; font-size:16px;">
         <h1>Pas de soucis, ça nous arrive d'oublier aussi.</h1>
         <p>Bonjour  ${user.pseudo},</p>
-        <p>Vous avez récemment demandé à réinitialiser le mot de passe du compte Cumulus de :</p>
+        <p>Vous avez récemment demandé à réinitialiser le mot de passe du compte Unicorn's Corner de :</p>
         <p>${user.email}</p>
         <p>Pour mettre à jour votre mot de passe, cliquez sur le bouton ci-dessous.</p>
         <a href="${user.link}">
@@ -46,7 +46,7 @@ const resetPassword = user => {
       </div>
       <div>
         <p>A plus tard. :)</p>
-        <p>Cumulus</p>
+        <p>Unicorn's Corner</p>
       </div>
     </div>`
   };
@@ -64,24 +64,22 @@ const welcome = user => {
   const mailOptions = {
     from: '"Claire" <claire.poyo@gmail.com>',
     to: user.email,
-    subject: "Bienvenue sur Cumulus &#2728",
+    subject: "Bienvenue sur Unicorn's Corner &#2728",
     text: `Bienvenue ${
       user.pseudo
-    }! Vous venez de vous inscrire sur Cumulus et nous vous en remercions. N'hésitez pas à partager vos meilleurs moments avec la communauté Cumulus. A plus tard. :) Cumulus Team`,
-    html: `<div>
-      <div>
-        <img src=${
-          gifDictionnaire.welcome
-        } width="100" height="100" alt="GIF with a hard G" border="0">
-      </div>
-      <div>
-        <h1>Bienvenue ${user.pseudo}!</h1>
-        <p>Vous venez de vous inscrire sur Cumulus et c'est super !. N'hésitez pas à partager vos meilleurs moments avec la communauté Cumulus.</p>
-      </div>
-      <div>
-        <p>A plus tard. :)</p><p>Cumulus</p>
-      </div>
-    </div>`
+    }! Vous venez de vous inscrire sur Unicorn's Corner et nous vous en remercions. N'hésitez pas à partager vos meilleurs moments avec la communauté Unicorn's Corner. A plus tard. :) Unicorn's Corner Team`,
+    html: `<div style="margin: 20px; padding: 20px; font-size:16px;">
+        
+    <div style="background-color: #6900CD; color: white;padding: 20px; font-size:16px;">
+      <h1 style="font-weight: bold;font-size:20px;">Bienvenue ${
+        user.pseudo
+      }!</h1>
+      <p>Vous venez de vous inscrire sur Unicorn's Corner et c'est super !. N'hésitez pas à partager vos meilleurs moments avec la communauté Unicorn's Corner.</p>
+    </div>
+    <div style="color: #6900CD; font-weight: bold;padding: 20px; font-size:16px;">
+      <p>A plus tard. :)</p><p>Unicorn's Corner</p>
+    </div>
+  </div>`
   };
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
@@ -97,20 +95,20 @@ const friendRequest = user => {
   const mailOptions = {
     from: '"Claire" <claire.poyo@gmail.com>',
     to: user.email,
-    subject: "Cumulus, un membre veut vous ajouter à ses amis",
+    subject: "Unicorn's Corner, un membre veut vous ajouter à ses amis",
     text: `Hello  ${
       user.pseudo
-    }! Un membre Cumulus souhaite vous ajouter à ses amis. Rendez vous sur Cumulus pour répondre à sa demande. A plus tard. :) Cumulus Team`,
-    html: `<div>
-      <div>
-        <h1>Hello ${user.pseudo}!</h1>
-        <p>Un membre Cumulus souhaite vous ajouter à ses amis.</p>
+    }! Un membre Unicorn's Corner souhaite vous ajouter à ses amis. Rendez vous sur Unicorn's Corner pour répondre à sa demande. A plus tard. :) Unicorn's Corner Team`,
+    html: `<div style="margin: 20px; padding: 20px; font-size:16px;">
+    <div style="background-color: #6900CD; color: white;padding: 20px; font-size:16px;">
+    <h1 style="font-weight: bold;font-size:20px;">Hello ${user.pseudo}!</h1>
+        <p>Un membre Unicorn's Corner souhaite vous ajouter à ses amis.</p>
         <a href=${LINK}>
           <button>Jeter un oeil</button>
         </a>
       </div>
-      <div>
-        <p> A plus tard. :) Cumulus Team</p>
+      <div style="color: #6900CD; font-weight: bold;padding: 20px; font-size:16px;">
+        <p> A plus tard. :) Unicorn's Corner Team</p>
       </div>
     </div>`
   };
@@ -132,23 +130,21 @@ const postNotification = id => {
       const mailOptions = {
         from: '"Claire" <claire.poyo@gmail.com>',
         to: user.email,
-        subject: "Cumulus | Nouveau post",
+        subject: "Unicorn's Corner | Nouveau post",
         text: `Hello  ${
           user.pseudo
-        }! Un membre vient de publier un message sur votre profil. :) Cumulus Team`,
-        html: `<div>
-          <div>
-            <h1>Hello ${user.pseudo}!</h1>
+        }! Un membre vient de publier un message sur votre profil. :) Unicorn's Corner Team`,
+        html: `<div style="margin: 20px; padding: 20px; font-size:16px;">
+        <div style="background-color: #6900CD; color: white;padding: 20px; font-size:16px;">
+        <h1 style="font-weight: bold;font-size:20px;">Hello ${user.pseudo}!</h1>
             <p>Un membre vient de publier un message sur votre profil.</p>
             <a href=${LINK}>
               <button>Jeter un oeil</button>
             </a>
           </div>
-          <div>
-            <p> A plus tard. :) Cumulus Team</p>
-            <img src=${
-              gifDictionnaire.thumbUp
-            } width="100" height="100" alt="ThumbUp" border="0">
+          <div style="color: #6900CD; font-weight: bold;padding: 20px; font-size:16px;">
+            <p> A plus tard. :) Unicorn's Corner Team</p>
+            
           </div>
         </div>`
       };
@@ -172,20 +168,20 @@ const recommendationNotification = id => {
       const mailOptions = {
         from: '"Claire" <claire.poyo@gmail.com>',
         to: user.email,
-        subject: "Cumulus | Recommandation d'ami",
+        subject: "Unicorn's Corner | Recommandation d'ami",
         text: `Hello  ${
           user.pseudo
-        }! Un membre vient de vous recommander un ami. A plus tard. :) Cumulus Team`,
-        html: `<div>
-            <div>
-              <h1>Hello ${user.pseudo}!</h1>
+        }! Un membre vient de vous recommander un ami. A plus tard. :) Unicorn's Corner Team`,
+        html: `<div style="margin: 20px; padding: 20px; font-size:16px;">
+        <div style="background-color: #6900CD; color: white;padding: 20px; font-size:16px;">
+        <h1 style="font-weight: bold;font-size:20px;">Hello ${user.pseudo}!</h1>
               <p>Un membre vient de vous recommander un ami.</p>
               <a href=${LINK}>
                 <button>Jeter un oeil</button>
               </a>
             </div>
-            <div>
-              <p> A plus tard. :) Cumulus Team</p>
+            <div style="color: #6900CD; font-weight: bold;padding: 20px; font-size:16px;">
+              <p> A plus tard. :) Unicorn's Corner Team</p>
             </div>
           </div>`
       };

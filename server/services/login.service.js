@@ -29,7 +29,7 @@ const signIn = userInformations => {
         }),
         id: user._id.toString(),
         pseudo: user._id.toString(),
-        alert: "Bravo, vous êtes maintenant inscrit sur Cumulus."
+        alert: "Bravo, vous êtes maintenant inscrit sur Unicorn's Corner."
       };
     });
 };

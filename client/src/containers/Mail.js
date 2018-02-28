@@ -56,14 +56,15 @@ class Mail extends Component {
     this.updateConversations(page);
   };
   // Display notification to user
-  showInformation = (text, type) => {
-    // TODO ==> use type argument for style settings
-    // info or warning
+  showInformation = (text, type, action) => {
     this.setState({
       alert: text
     });
     setTimeout(() => {
       this.setState({ alert: "" });
+      if (action) {
+        action();
+      }
     }, 5000);
   };
 
@@ -122,8 +123,9 @@ class Mail extends Component {
 
     post(`/mail/${messageType}`, messagePayload)
       .then(() => {
-        this.updateConversations();
-        this.showInformation("Message envoyé", "info");
+        this.showInformation("Message envoyé", "info", () =>
+          this.updateConversations()
+        );
         this.setState({ newMessage: "", newRecipients: [] });
         if (messageType === "newConversation") {
           this.setState({
@@ -157,8 +159,11 @@ class Mail extends Component {
     };
     post("/mail/deleteOneConversation", conversationToDelete)
       .then(() => {
-        this.showInformation("Conversation supprimée avec succès", "success");
-        this.updateConversations();
+        this.showInformation(
+          "Conversation supprimée avec succès",
+          "success",
+          () => this.updateConversations()
+        );
       })
       .catch(() => {
         this.showInformation(
@@ -176,8 +181,9 @@ class Mail extends Component {
     };
     post("/mail/deleteOneMessage", messageToDelete)
       .then(() => {
-        this.showInformation("Message supprimé avec succès", "info");
-        this.updateConversations();
+        this.showInformation("Message supprimé avec succès", "info", () =>
+          this.updateConversations()
+        );
       })
       .catch(error => {
         this.showInformation(

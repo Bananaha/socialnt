@@ -59,9 +59,16 @@ class Admin extends Component {
   deleteOneMember = () => {
     const userToDelete = this.state.userToDelete;
     post("/users/deleteOne", { _id: userToDelete._id })
-      .then(() =>
-        this.showInformation("L'utilisateur a été supprimé avec succès", "info")
-      )
+      .then(() => {
+        this.setState({
+          userToDelete: undefined,
+          disabled: false
+        });
+        this.showInformation(
+          "L'utilisateur a été supprimé avec succès",
+          "info"
+        );
+      })
       .catch(() =>
         this.showInformation(
           "Une erreur inattendue à empêché l'execution de votre requête.",
@@ -71,7 +78,8 @@ class Admin extends Component {
   };
   disableOnSubmit = () => {
     this.setState({
-      userToDelete: undefined
+      userToDelete: undefined,
+      disabled: false
     });
     return;
   };

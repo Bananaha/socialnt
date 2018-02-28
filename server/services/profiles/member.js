@@ -47,13 +47,7 @@ const canReplyToConversation = req =>
   req.body.recipients.some(
     recipient => recipient._id === req.__user.toString()
   );
-const canRecommendFriend = req => {
-  return helper.isFriend(
-    req.__user,
-    req.query.targetUser,
-    req.query.requestRecipient
-  );
-};
+const canRecommendFriend = () => true;
 
 const canRemoveFriend = req => helper.isFriend(req.__user, req.body.targetUser);
 
