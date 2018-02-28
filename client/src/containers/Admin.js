@@ -4,7 +4,7 @@ import { withRouter } from "react-router-dom";
 import moment from "moment";
 import SearchBar from "../components/SearchBar";
 import DeleteButton from "../components/DeleteButton";
-
+import "../styles/Admin.css";
 import "whatwg-fetch";
 
 class Admin extends Component {
@@ -96,13 +96,14 @@ class Admin extends Component {
   };
   render() {
     return (
-      <div>
-        <h2>Gestion des profils</h2>
+      <div className="page-body Admin">
+        <h2 className="page-title">Gestion des profils</h2>
         <div>
           <div>
             <h3>Supprimer un utilisateur</h3>
-            <div>
+            <div className="card">
               <SearchBar
+                hasBorder={true}
                 onSubmit={this.disableOnSubmit}
                 onSelect={this.selectUserToDelete}
                 requestPath="/users/search/friends/"
@@ -110,7 +111,7 @@ class Admin extends Component {
                 showButton="false"
                 disabled={this.state.disabled ? "disabled" : ""}
               />
-              <div>
+              <div className="Admin__section">
                 {this.state.userToDelete ? (
                   <div>
                     <div>

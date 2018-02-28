@@ -1,0 +1,22 @@
+@import "variables.scss";
+
+.Admin {
+  .card {
+    text-align: center;
+  }
+
+  &__section {
+    margin: 24px -15px;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+    padding: 15px;
+
+    > div > div {
+      margin: 12px;
+
+      > span > button {
+        margin-left: 12px;
+      }
+    }
+  }
+}
