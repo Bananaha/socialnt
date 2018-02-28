@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import FontAwesomeIcon from "@fortawesome/react-fontawesome";
 import { post } from "../services/request.service";
 import { signing } from "../services/user.service";
 import "whatwg-fetch";

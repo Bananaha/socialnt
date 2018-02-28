@@ -107,7 +107,7 @@ class Profil extends Component {
             <div className="card Profil__header-card">
               <img
                 style={{ width: 200 + "px", height: "auto" }}
-                src={"statics/images/" + this.state.avatar}
+                src={"/images/" + this.state.avatar}
                 alt="avatar"
               />
               <div className="Profil__header">

@@ -24,12 +24,6 @@ const request = (targetUser, currentUser, requestRecipient) => {
   return dbService
     .aggregate("users", "_id", target, othersCollections)
     .then(user => {
-      console.log(
-        targetUser,
-        currentUser,
-        requestRecipient,
-        targetUser === requestRecipient
-      );
       if (targetUser === requestRecipient) {
         Promise.reject({
           alert: "Vous ne pouvez pas recommander un utilisateur à lui même."
@@ -124,24 +118,10 @@ const populateRequestsWithUsers = (requests, users) => {
       _id: user._id,
       pseudo: user.pseudo
     };
-    console.log("========ACC=======");
-    console.log(acc);
-    console.log("===============");
     return acc;
   }, {});
   requests.forEach(request => {
-    console.log("========REQUEST LOOP=======");
-    console.log(request);
-    console.log("===============");
     USER_KEYS.forEach(key => {
-      console.log("=======USER_KEY_LOOP========");
-      console.log(
-        "REQUEST[key]",
-        request[key],
-        "usersDictionnary[request[key]]",
-        usersDictionnary[request[key]]
-      );
-      console.log("===============");
       if (request[key] && usersDictionnary[request[key]]) {
         request[key] = usersDictionnary[request[key]];
       }
@@ -170,7 +150,6 @@ const getAll = userId => {
 };
 
 const ignore = requestId => {
-  console.log(requestId, typeof requestId);
   return dbService
     .updateAndReturn(
       "friendRequests",
@@ -182,7 +161,6 @@ const ignore = requestId => {
       }
     )
     .then(requestIgnored => {
-      console.log(requestIgnored);
       return;
     })
     .catch(error => {
