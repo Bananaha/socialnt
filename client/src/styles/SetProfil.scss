@@ -1,0 +1,22 @@
+@import "variables.scss";
+
+.SetProfil {
+  form {
+    width: 100%;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 24px;
+
+    > span {
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    input {
+      font-weight: 400;
+      padding: 6px;
+    }
+  }
+}

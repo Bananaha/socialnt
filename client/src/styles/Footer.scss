@@ -1,0 +1,20 @@
+@import "variables.scss";
+
+.Footer {
+  text-align: center;
+  margin: 48px 12px;
+  color: #888;
+  letter-spacing: 0.05em;
+  font-weight: 300;
+
+  &--login {
+    color: white;
+    font-size: 12px;
+    position: relative;
+    margin-bottom: 12px;
+
+    a {
+      color: white;
+    }
+  }
+}

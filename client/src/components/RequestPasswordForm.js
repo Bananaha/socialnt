@@ -41,7 +41,7 @@ class RequestPasswordForm extends Component {
 
   render() {
     return (
-      <div className="block-center mt-xl wd-xl">
+      <div className="block-center mt-xl wd-xl Login__box">
         <div className="panel panel-dark panel-flat">
           <div className="panel-heading text-center">
             <p className="text-center pv">Reinitialisation du mot de passe</p>
@@ -67,16 +67,18 @@ class RequestPasswordForm extends Component {
                   className="form-control"
                 />
               </div>
-              <button type="submit" className="btn btn-primary btn-block">
-                Réinitialiser
-              </button>
-              <button
-                type="button"
-                className="btn btn-info btn-block"
-                onClick={this.goBack}
-              >
-                Annuler
-              </button>
+              <div className="Login__button-container">
+                <button
+                  type="button"
+                  className="btn btn-info btn-block"
+                  onClick={this.goBack}
+                >
+                  Annuler
+                </button>
+                <button type="submit" className="btn btn-primary btn-block">
+                  Réinitialiser
+                </button>
+              </div>
             </form>
             <p>{this.state.alert}</p>
           </div>

@@ -3,20 +3,16 @@ import { get } from "../services/request.service";
 import { withRouter } from "react-router-dom";
 import SearchBar from "./SearchBar";
 import { Link } from "react-router-dom";
+import "../styles/Footer.css";
+import classnames from "classnames";
 
 class Footer extends Component {
-  renderNavLink = (href, name, onClick) => {
-    return (
-      <a to={href} onClick={onClick}>
-        {name}
-      </a>
-    );
-  };
-
   render() {
     return (
-      <div>
-        <a href="/about">A propos</a>
+      <div
+        className={classnames("Footer", { "Footer--login": this.props.login })}
+      >
+        Unicorn's Corner - 2018 - <Link to="/about">A propos</Link>
       </div>
     );
   }

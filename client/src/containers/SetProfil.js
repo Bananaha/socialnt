@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { post, get } from "../services/request.service";
 import { withRouter } from "react-router-dom";
 import "whatwg-fetch";
-
+import "../styles/SetProfil.css";
 import FileUpload from "../components/FileUpload";
 
 class SetProfil extends Component {
@@ -54,19 +54,22 @@ class SetProfil extends Component {
     const userValues = this.state;
     userValues.targetUser = this.props.match.params.id;
 
-    post("/users/editProfil", userValues, userValues.file).then(() => {
+    post(
+      `/users/editProfil/${this.props.match.params.id}`,
+      userValues,
+      userValues.file
+    ).then(() => {
       this.props.history.push("/profil/" + this.props.match.params.id);
     });
   };
 
   render() {
     return (
-      <div>
-        <h2>Modifier votre profil</h2>
-        <form onSubmit={this.updateProfil}>
+      <div className="SetProfil page-body">
+        <h2 className="page-title">Modifier votre profil</h2>
+        <form onSubmit={this.updateProfil} className="card">
           <label>
-            {" "}
-            Prénom
+            <span>Prénom :</span>
             <input
               name="firstName"
               value={this.state.firstName}
@@ -77,8 +80,7 @@ class SetProfil extends Component {
             />
           </label>
           <label>
-            {" "}
-            Nom :
+            <span>Nom :</span>
             <input
               name="lastName"
               value={this.state.lastName}
@@ -89,7 +91,7 @@ class SetProfil extends Component {
             />
           </label>
           <label>
-            Pseudo :
+            <span>Pseudo :</span>
             <input
               name="pseudo"
               value={this.state.pseudo}
@@ -100,7 +102,7 @@ class SetProfil extends Component {
             />
           </label>
           <label>
-            Email :
+            <span>Email :</span>
             <input
               name="email"
               value={this.state.email}
@@ -111,7 +113,7 @@ class SetProfil extends Component {
             />
           </label>
           <label>
-            Genre :
+            <span>Genre :</span>
             <select
               name="sex"
               value={this.state.sex || ""}
@@ -123,7 +125,7 @@ class SetProfil extends Component {
             </select>
           </label>
           <label>
-            Date de naissance :
+            <span>Date de naissance :</span>
             <input
               name="birthDate"
               type="date"
@@ -133,7 +135,7 @@ class SetProfil extends Component {
             />
           </label>
           <label>
-            Ville :
+            <span>Ville :</span>
             <input
               name="city"
               type="text"
@@ -143,7 +145,7 @@ class SetProfil extends Component {
             />
           </label>
           <label>
-            Photo de profil :
+            <span>Photo de profil :</span>
             <FileUpload
               name="file"
               value={this.state.file}

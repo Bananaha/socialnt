@@ -1,6 +1,6 @@
 @import "variables.scss";
 
-.Nav:not(.Nav--login) {
+.Nav:not(.Nav--login):not(.Nav--about) {
   background: #fefefe;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   justify-content: space-between;
@@ -20,7 +20,8 @@
     font-size: 30px;
   }
 
-  &--login {
+  &--login,
+  &--about {
     border-bottom: none;
     text-align: center;
     justify-content: center;
@@ -33,6 +34,11 @@
       position: relative;
       z-index: 1;
     }
+  }
+
+  &--about h1 {
+    color: #666;
+    text-shadow: none;
   }
 
   &__links {

@@ -77,7 +77,7 @@ class ChangePasswordForm extends Component {
 
   render() {
     return (
-      <div className="block-center mt-xl wd-xl">
+      <div className="block-center mt-xl wd-xl Login__box">
         <div className="panel panel-dark panel-flat">
           <div className="panel-heading text-center">
             <p className="text-center pv">Changer votre mot de passe</p>

@@ -1,6 +1,6 @@
 const path = require("path");
 
-const HTML5_ROUTES_BLACKLIST = ["/static", "/api"];
+const HTML5_ROUTES_BLACKLIST = ["/static", "/api", "/images"];
 
 const indexFile = path.join(__dirname, "static", "index.html");
 

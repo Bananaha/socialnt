@@ -29,8 +29,18 @@ class Nav extends Component {
 
   render() {
     const { user } = this.props;
+    const isLogin =
+      this.props.location.pathname.indexOf("/login") === 0 ||
+      this.props.location.pathname.indexOf("/resetPassword") === 0;
+    const isAbout = this.props.location.pathname.indexOf("/about") === 0;
+
     return (
-      <div className={classnames("Nav", { "Nav--login": !user })}>
+      <div
+        className={classnames("Nav", {
+          "Nav--login": isLogin,
+          "Nav--about": isAbout
+        })}
+      >
         <h1>Unicorn's Corner</h1>
         {user && (
           <div className="Nav__links">

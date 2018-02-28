@@ -7,7 +7,9 @@ const canViewProfil = helper.isSameOrFriend;
 
 const canSendPost = helper.isSameOrFriend;
 
-const canEditProfil = helper.isSameOrFriend;
+const canEditProfil = req => {
+  return helper.isSameUser(req.__user, req.params.targetUser);
+};
 const canFriendRequest = helper.isNotSameAndNotFriend;
 
 const canSearchFriends = () => true;

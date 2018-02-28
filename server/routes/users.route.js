@@ -101,7 +101,7 @@ const getFriends = (req, res) => {
 
 // EDIT PROFIL
 router
-  .route("/editProfil")
+  .route("/editProfil/:targetUser")
   .post(permission("canEditProfil"), upload.single("file"), userService.update);
 
 // SEARCH USERS OR FRIENDS

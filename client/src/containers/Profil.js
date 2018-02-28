@@ -100,6 +100,7 @@ class Profil extends Component {
     const isCurrentUserOrAdmin =
       (this.props.user && this.props.match.params.id === this.props.user.id) ||
       (this.props.user && this.props.user.profile === "admin");
+
     return (
       <div className="Home page-body">
         {this.state.loading ? (
@@ -109,7 +110,9 @@ class Profil extends Component {
             <div className="card Profil__header-card">
               <img
                 style={{ width: 200 + "px", height: "auto" }}
-                src={"/images/" + this.state.avatar}
+                src={`${process.env.REACT_APP_HOST}/images/${
+                  this.state.avatar
+                }`}
                 alt="avatar"
               />
               <div className="Profil__header">

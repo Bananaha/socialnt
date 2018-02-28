@@ -47,7 +47,7 @@ class LogInForm extends Component {
             >
               <div className="form-group has-feedback">
                 <input
-                  autocomplete="off"
+                  autoComplete="off"
                   name="pseudo"
                   onChange={this.handleChange("pseudo")}
                   type="text"
@@ -59,7 +59,7 @@ class LogInForm extends Component {
               </div>
               <div className="form-group has-feedback">
                 <input
-                  autocomplete="off"
+                  autoComplete="off"
                   name="password"
                   onChange={this.handleChange("password")}
                   type="password"

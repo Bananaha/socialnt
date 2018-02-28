@@ -1,12 +1,15 @@
 @import "variables.scss";
 
 .About {
-  background: #fff;
+  // background: #fff;
   flex: 1;
+  letter-spacing: 0.06em;
+  line-height: 1.8;
 
   &__title {
     padding: 10px 20px;
     text-align: center;
+    font-family: "Lobster";
   }
   p {
     text-align: justify;
@@ -28,7 +31,7 @@
     flex-wrap: nowrap;
     justify-content: space-around;
     align-content: stretch;
-    padding: 0 20px;
+    margin: 20px;
   }
   .accent {
     color: #a749e5;

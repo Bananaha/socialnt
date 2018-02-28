@@ -19,7 +19,7 @@ class ResetPassword extends Component {
 
   render() {
     return (
-      <div className="ResetPassword">
+      <div className="Login">
         {this.state.showRequestPassword ? (
           <RequestPasswordForm />
         ) : (

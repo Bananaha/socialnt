@@ -42,7 +42,9 @@ export class App extends Component {
   }
 
   render() {
-    const isLogin = this.props.location.pathname.indexOf("/login") === 0;
+    const isLogin =
+      this.props.location.pathname.indexOf("/login") === 0 ||
+      this.props.location.pathname.indexOf("/resetPassword") === 0;
     return (
       <div login={isLogin} className="flex-extend">
         <Nav user={this.state.user} />
@@ -80,7 +82,7 @@ export class App extends Component {
           this.state.user.profile !== "visitor" && (
             <Chat user={this.state.user} />
           )}
-        <Footer />
+        <Footer login={isLogin} />
       </div>
     );
   }
